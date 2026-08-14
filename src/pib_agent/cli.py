@@ -5,6 +5,7 @@ import typer
 from pib_agent import __version__
 from pib_agent.config import get_settings
 from pib_agent.db.backup import BackupError, backup_database
+from pib_agent.db.diagnostics import DatabaseNotReadyError, check_database_ready
 from pib_agent.enrichment import run_enrich
 from pib_agent.logging_config import setup_logging
 from pib_agent.orchestration import (
@@ -98,6 +99,12 @@ def serve(
     import uvicorn
 
     settings = get_settings()
+    try:
+        check_database_ready()
+    except DatabaseNotReadyError as exc:
+        typer.echo(f"Cannot start: {exc}")
+        raise typer.Exit(code=1) from exc
+
     mark_interrupted_runs()
     uvicorn.run(
         "pib_agent.api.app:app",
@@ -128,6 +135,12 @@ def run() -> None:
 @app.command()
 def bot() -> None:
     """Run the Telegram bot (long polling) so users can manage subscriptions."""
+    try:
+        check_database_ready()
+    except DatabaseNotReadyError as exc:
+        typer.echo(f"Cannot start: {exc}")
+        raise typer.Exit(code=1) from exc
+
     try:
         run_bot()
     except TelegramConfigError as exc:
