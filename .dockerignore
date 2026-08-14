@@ -1,0 +1,30 @@
+# Secrets must never reach the image — they're set as platform variables.
+.env
+.env.*
+!.env.example
+frontend/.env.local
+
+# Local state
+.venv/
+data/
+logs/
+*.db
+*.db-shm
+*.db-wal
+
+# Build output rebuilt inside the image
+frontend/node_modules/
+frontend/dist/
+src/pib_agent/static/
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+.git/
+.github/
+.claude/
+tests/

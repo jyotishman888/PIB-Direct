@@ -1,0 +1,71 @@
+[project]
+name = "pib-agent"
+version = "0.1.0"
+description = "Scrapes daily PIB (Press Information Bureau) releases, enriches them with Claude, and serves a ministry-wise dashboard with Telegram subscriptions."
+readme = "README.md"
+authors = [
+    { email = "jyotishman.parasar8496@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.19.1",
+    "anthropic>=0.121.0",
+    "apscheduler>=3.11.0",
+    "beautifulsoup4>=4.15.0",
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "lxml>=6.1.1",
+    "numpy>=2.5.2",
+    "psycopg[binary]>=3.2.12",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2",
+    "pyjwt[crypto]>=2.10.1",
+    "python-telegram-bot>=22.8",
+    "rich>=15.0.0",
+    "sentence-transformers>=5.7.0",
+    "sqlalchemy>=2.0.51",
+    "tenacity>=9.1.4",
+    "typer>=0.27.1",
+    "tzdata>=2025.2",
+    "uvicorn[standard]>=0.52.1",
+]
+
+[project.scripts]
+pib-agent = "pib_agent:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+# Live tests hit the real PIB site, so they're excluded from the default run
+# (offline, no network flakiness in CI) — run them with `pytest -m live`.
+addopts = "-m 'not live'"
+markers = [
+    "slow: exercises the real local sentence-transformers model (first run downloads weights).",
+    "live: fetches the real PIB website; catches upstream markup changes fixtures can't.",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# FastAPI's Depends()/Query() dependency-injection pattern requires calling
+# them as argument defaults — that's the framework's documented API, not the
+# mutable-default-argument footgun B008 is meant to catch.
+"src/pib_agent/api/routers/*.py" = ["B008"]
+"src/pib_agent/api/deps.py" = ["B008"]

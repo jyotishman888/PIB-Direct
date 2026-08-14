@@ -1,0 +1,1041 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>
+	Press Release Page | Press Information Bureau
+</title><link href="css/style.css" rel="stylesheet" type="text/css" /><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="alternate stylesheet" href="css/change.css" media="screen" title="change" /><link rel="alternate stylesheet" href="css/green.css" media="screen" title="green" /><link rel="alternate stylesheet" href="css/yellow.css" media="screen" title="yellow" /><link rel="stylesheet" type="text/css" href="css/prtint.css" media="print" /><link rel="stylesheet" href="css/style3.1.css" type="text/css" />
+
+
+      <script src="js/jquery.min.js" type="text/javascript"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" /><link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" />
+
+      <script type="text/javascript">
+            $(document).ready(function () {
+                  function getParameterByName(name) {
+                        var url = window.location.href;
+                        name = name.replace(/[\[\]]/g, '\\$&');
+                        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                              results = regex.exec(url);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                  }
+                  // Get the IDs from the current page's URL
+                  let prid = parseInt(getParameterByName('PRID'), 10);
+
+                  if (!isNaN(prid) && prid > 0) {
+                        $.ajax({
+                              type: "POST",
+                              url: "AjaxMethod.aspx/UpdatePRHitCount",
+                              async: false,
+                              data: JSON.stringify({ 'PermId': prid }),
+                              contentType: "application/json; charset=utf-8",
+                              dataType: "json",
+                              success: function (response) {
+                                    console.log(response);
+                              },
+                              error: function (error) {
+                                    console.log("Error in AJAX request", error);
+                              }
+                        });
+                  } else {
+                        console.log("Invalid parameters:", prid);
+                  }
+
+            });
+      </script>
+      <style type="text/css">
+            .table-responsive {
+                  width: 100%;
+                  overflow-x: auto;
+            }
+
+            .banner {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  background-color: #000;
+                  color: #fff;
+                  padding: 20px;
+            }
+
+            full-width {
+                  width: 100%;
+            }
+
+            .logo-left, .logo-center, .countdown {
+                  display: flex;
+                  align-items: center;
+            }
+
+                  .logo-left img, .logo-center img {
+                        height: 70px;
+                  }
+
+            .countdown {
+                  text-align: center;
+                  background-color: #444;
+                  border-radius: 10px;
+                  padding: 10px;
+                  border: 2px solid grey;
+            }
+
+            .firstnumber {
+                  color: #000000;
+                  position: absolute;
+                  top: 50px;
+                  right: 90px;
+                  font-size: 30px;
+            }
+
+            .secondnumber {
+                  position: absolute;
+                  color: #000000;
+                  right: 45px;
+                  top: 50px;
+                  font-size: 30px;
+            }
+
+            .countdown .days {
+                  font-size: 35px;
+                  color: gold;
+            }
+
+            .countdown p {
+                  margin: 0;
+            }
+
+            .countdown .text {
+                  font-size: 16px;
+            }
+
+            a {
+                  word-break: break-all;
+            }
+
+            iframe, img {
+                  max-width: 100%;
+            }
+
+            @media(max-width:1199px) {
+                  .firstnumber {
+                        top: 40px;
+                        right: 72px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 35px;
+                        top: 40px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:990px) {
+                  .firstnumber {
+                        top: 25px;
+                        right: 54px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 25px;
+                        top: 25px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:768px) {
+                  .countdown, .days {
+                        font-size: 12px !important;
+                  }
+
+
+                  .firstnumber {
+                        top: 25%;
+                        right: 8%;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 4.5%;
+                        top: 25%;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:475px) {
+                  .countdown, .days {
+                        font-size: 10px !important;
+                        top: 20%;
+                  }
+
+                  .bannerimgdiv {
+                        padding: 0 !important;
+                  }
+
+                  .bannerimg {
+                        width: 108% !important;
+                  }
+            }
+      </style>
+      <script type="text/javascript">
+            $(function () {
+                  $("[id*=printPDF]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+            $(function () {
+                  $("[id*=printPDFEvent]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+      </script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112591026-1"></script>
+      <script>
+
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() { dataLayer.push(arguments); }
+
+            gtag('js', new Date());
+
+
+
+            gtag('config', 'UA-112591026-1');
+
+      </script>
+
+<meta property="og:title" content="Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman &amp; Nicobar Islands" /><meta property="og:url" content="www.pib.gov.in/Pressreleaseshare.aspx?PRID=2296750" /><meta property="og:description" content="Vice-President Shri C. P. Radhakrishnan today inaugurated the ‘Har Ghar Tiranga Abhiyan’ by hoisting" /><meta property="og:image" content="https:/pib.gov.in/images/indian-emblem.png" />
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="C4E7H-KSCMC-422L4-W3EM5-U36MF",function(){function e(){if(!i){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.parentNode.appendChild(e),i=!0}}function t(e){i=!0;var n,t,a,r,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o.parentNode,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",r=(a.frameElement||a).style,r.width=0,r.height=0,r.border=0,r.display="none",o.parentNode.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void(0);",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=12,window.BOOMR.url=n+"C4E7H-KSCMC-422L4-W3EM5-U36MF";var o=document.currentScript||document.getElementsByTagName("script")[0],i=!1,r=document.createElement("link");if(r.relList&&"function"==typeof r.relList.supports&&r.relList.supports("preload")&&"as"in r)window.BOOMR.snippetMethod="p",r.href=window.BOOMR.url,r.rel="preload",r.as="script",r.addEventListener("load",e),r.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!i)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.parentNode.appendChild(r);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="eqcqeaniasmd6jafaiabmmatabvhrndv-f-766f8d59d-clienttons-s.akamaihd.net",o="false"=="true"?2:1,i={"ak.v":"41","ak.cp":"1825201","ak.ai":parseInt("1215205",10),"ak.ol":"0","ak.cr":4,"ak.ipv":6,"ak.proto":"http/1.1","ak.rid":"fc9a28e","ak.r":34469,"ak.a2":n,"ak.m":"dscb","ak.n":"ff","ak.cport":65165,"ak.gh":"184.84.221.69","ak.quicv":"","ak.tlsv":"tls1.2","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"bbr","ak.t":"1786295413","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==4NhnD5YbLfbSMWLLaD0imf5IRvxLETDa9LCLdv0Vzq9qyMUSyf8O4SZ+ugifDv9Atphsg3xwRksUFdG/rL4SXIpQWCzA8xfhm4mXcMQ7hi9SmnqYIKlFerZpr+ybPjKQ0yORYwUXz+pW0C/3UflSoVtT50Xs4dSA2CvdArA4VrsQ3eNJAcI10iC6DRDWIgYWM6IVgzImDumYQUmC4yzR5XwW0j9u56YX8TID8ZMpOrnPHRJGs/gEiaAmwKZE8ertantRrhiwzabPXie02xP/mcfFb1vfl/Yr2G5cBM0pz/q1WpWRuzxiY+gjuThzNLEMT1ANq86BP2JGGEu/iE75nCF807xrrC4hjR1cPJoF0PUE3Uzfd31F+7JB24D0DHmnMyGP8D4L552aY78+yn5u7R066ouo1KYFrZ6aR11f2hM=","ak.pv":"9","ak.dpoabenc":"","ak.tf":o};if(""!==t)i["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))i["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(i)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:i,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body>
+      <form method="post" action="./PressReleasePage.aspx?PRID=2296750&amp;reg=3&amp;lang=1" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="sc_HiddenField" id="sc_HiddenField" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=b94hX14NMWluUQ9a73g0LYFvtKhY52TK8cbDkYB_F2GuPre4tdh-ebiiI4xuhXnRu6Q5dQjaQA4oN3PEeL0GrtKEyEY1&amp;t=638942408819057530" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=YwOa_0w_u3oCLFqmIIOf-XEz4GWZ1DuyQIpxIA4LVkywj39sZSps12NbK5wNl5XN9JF3m7d-ey7BFDgj6i0380qRQ5IMWCL54sYNVU1IjMmiOWpp0&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=_shmykYI80CxCNR43Ii1nLy9PBGhuSe6SPp3CEYu0wDEuLqDAuIcsXVNhTIgQn0iyiwPorMflXuK31FftDX9GnB0m366MCEoOmY-eKQ3YAO9xRL0gIigzgRbtbVOgSQkJbJpFg2&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/PressReleasePage.aspx?_TSM_HiddenField_=sc_HiddenField&amp;_TSM_CombinedScripts_=%3b%3bAjaxControlToolkit%2c+Version%3d3.5.7.123%2c+Culture%3dneutral%2c+PublicKeyToken%3d28f01b0e84b6d53e%3aen-US%3a5a4df314-b4a2-4da2-a207-9284f1b1e96c%3ade1feab2%3af2c8e708%3a720a52bf%3af9cec9bc%3a589eaa30%3aa67c2700%3aab09e3fe%3a87104b7c%3a8613aea7%3a3202a5a2%3abe6fb298" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="59B53027" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="lnHvYBscCYRV61m3tEdMUit8AeMjfrecIloq7lo/sqghazvU5VmrD0y10lIvYgx/osNdkNuATsZDo55QWiVbiHjI9PB6bEXlKi0Tq2xZERMJ6KAHfTpOTYcqGKPhB5vz6o3BhtvX+H4ShLGwL31r2MGu6OTyZWO6FiP63EwwXdEMNaODVwGvfFswNwBgK2ZYJTyInVaQTctWjq1clG65fLJiHLy+/aYkMCDQNQQis2ZtOgJzFEnN3UNfYpT5ieIUCsNzPazB9OSqZcV/+B6xYutGHjlbfcDur6RNIVJrKaWio6hx" />
+</div>
+                              
+            <div id="templateCss"></div>
+            <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('sc', 'form1', ['tupdate12','update12'], [], [], 90, '');
+//]]>
+</script>
+
+            <input type="hidden" name="hfGridHtml" id="hfGridHtml" />
+            <div class="container" style='margin-bottom: 50px;'>
+                  <div id="accessories">
+
+                        
+                        <div class="pull-right" style="display: flex">
+                              <div id="voll"></div>
+                              <div id="vollDT"></div>
+                              
+                              
+<div class="print-icons">
+<input type="image" name="Print1$print" id="Print1_print" aria-label="Print" src="images/printer_icon.png" alt="print page button" style="padding: 5px 10px 5px 10px;" />
+</div>
+                        </div>
+                  </div>
+                  <input type="hidden" name="hydpermid" id="hydpermid" value="2296750" />
+                  
+
+
+
+                  <div class="innner-page-main-about-us-content-right-part">
+
+                        <div id="MinistryName" class="MinistryNameSubhead text-center">
+                              Vice President's Secretariat
+                        </div>
+                        
+                        <div id="lg_g"><div class='log_oo'>  <img src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2021/aug/ph202183101.png' alt='azadi ka amrit mahotsav' /> </div></div>
+
+
+
+
+
+                        <div class="text-center event-heading-background">
+                              
+                              <h2 id="Titleh2">
+                                    Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands
+                              </h2>
+                              <h3 id="Subtitleh3">
+                                    <span id="ltrSubtitle"><br/>Vice-President says Andaman &amp; Nicobar Islands are a sacred land of sacrifice and an eternal symbol of India’s freedom struggle<br/><br/>“Bharat is one and will always remain one”: Vice-President<br/><br/>Vice-President says Great Nicobar Development Project will strengthen India’s maritime capabilities and unlock new opportunities for growth<br/><br/>Vice President calls upon every citizen to proudly display the Tricolour and uphold its values of courage, unity and patriotism</span>
+                              </h3>
+                        </div>
+
+                        <div id="PrDateTime" class="ReleaseDateSubHeaddateTime text-center pt20">
+                              Posted On:
+                09 AUG 2026 12:45PM by PIB Delhi
+                        </div>
+                        
+                        <div class='pt20'>
+                        </div>
+                        <input type="hidden" name="hydphotoUrl" id="hydphotoUrl" />
+                        
+                        <p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Vice-President Shri C. P. Radhakrishnan today inaugurated the &lsquo;Har Ghar Tiranga Abhiyan&rsquo; by hoisting the National Flag at Flag Point, Sri Vijaya Puram, on the occasion of August Kranti Diwas, commemorating the Quit India Movement of 1942.</span></span></p>
+
+<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Hoisted the National Flag at Flag Point, Sri Vijaya Puram, today under the <a href="https://x.com/hashtag/HarGharTiranga?src=hash&amp;ref_src=twsrc%5Etfw">#HarGharTiranga</a> Abhiyaan, a historic site where Netaji Subhas Chandra Bose hoisted the Tricolour on December 30, 1943, proclaiming the Andaman &amp; Nicobar Islands free from British rule.<br><br>On Quit India… <a href="https://t.co/vA8x5wLNzW">pic.twitter.com/vA8x5wLNzW</a></p>&mdash; Vice-President of India (@VPIndia) <a href="https://x.com/VPIndia/status/2086310573940285635?ref_src=twsrc%5Etfw">August 9, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></center>
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Addressing the gathering at the State Function and Tiranga Concert on Vande Mataram at the DBRAIT Auditorium, the Vice-President said there could be no more appropriate place to launch the campaign than these historic islands, which are deeply associated with India&rsquo;s freedom struggle and the history of the Tricolour.</span></span></p>
+
+<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Vice President Shri C. P. Radhakrishnan graced the State Function on ‘Har Ghar Tiranga - Dedicated to the Spirit of Vande Mataram’ at the DBRAIT Auditorium, in Sri Vijaya Puram, Andaman &amp; Nicobar Islands today. <br><br>The Vice-President said there could be no more appropriate place to… <a href="https://t.co/T6YDjhHWxU">pic.twitter.com/T6YDjhHWxU</a></p>&mdash; Vice-President of India (@VPIndia) <a href="https://x.com/VPIndia/status/2086342698793836985?ref_src=twsrc%5Etfw">August 9, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></center>
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Recalling the immortal words of the great Tamil poet Subramania Bharati, Shri C. P. Radhakrishnan said Bharati&rsquo;s celebration of the &lsquo;Mani Kodi&rsquo; reflects the eternal courage of the Indian spirit and the glory of the flag of Mother Bharat. He said the Har Ghar Tiranga Abhiyan carries forward this spirit by bringing every citizen together under one National Flag, one motherland and one common destiny.<br />
+<br />
+Recalling the sacrifices of freedom fighters who endured the dreaded Kala Pani, the Vice President said the Andaman &amp; Nicobar Islands are much more than a geographical part of Bharat; they are a sacred land of sacrifice. He paid heartfelt tributes to Veer Vinayak Damodar Savarkar and countless other patriots who suffered in the Cellular Jail, saying their courage, patriotism and sacrifice continue to inspire generations.<br />
+<br />
+The Vice-President recalled that Mahatma Gandhi&rsquo;s clarion call of &ldquo;Do or Die&rdquo; on August 8, 1942, awakened millions of Indians and gave a decisive impetus to the freedom struggle. He also highlighted the unique place of the islands in the history of the Tricolour, recalling that Netaji Subhas Chandra Bose hoisted the Indian National Flag here on December 30, 1943, marking a landmark moment in India&rsquo;s freedom struggle.<br />
+<br />
+Highlighting the significance of Har Ghar Tiranga, Shri Radhakrishnan said the campaign, initiated by Prime Minister Shri Narendra Modi, has evolved into a nationwide people&rsquo;s movement. He called upon every citizen to proudly display the Tricolour and imbibe the values of patriotism, unity and collective responsibility that it represents. &ldquo;Bharat is one and will always remain one,&rdquo; he affirmed.<br />
+<br />
+The Vice-President highlighted the islands as a living example of &lsquo;Unity in Diversity&rsquo; and &lsquo;Ek Bharat, Shreshtha Bharat&rsquo;, while acknowledging their rich tribal heritage and recent progress in connectivity, healthcare, education and infrastructure. He said the Great Nicobar Island Development Project would further strengthen India&rsquo;s maritime capabilities, connectivity and economic opportunities, while balancing development with environmental conservation.<br />
+<br />
+Emphasising the need for national strength alongside India&rsquo;s tradition of peace and generosity, Shri Radhakrishnan said, &ldquo;India has always been generous, but our generosity should never be mistaken for weakness. We must remain prepared to protect our national interests and sovereignty.&rdquo; He called upon citizens to let the Tricolour inspire them with courage, unity and hope, and to carry forward the legacy of the freedom fighters in building a stronger and developed Bharat.<br />
+<br />
+The Vice-President also attended a cultural programme and visited the &lsquo;Har Ghar Tiranga&rsquo; Exhibition, showcasing the spirit of the campaign and its message of national unity and patriotism.<br />
+<br />
+The event was attended by Lieutenant Governor of Andaman &amp; Nicobar Islands Admiral D. K. Joshi (Retd.), Chief Secretary Smt. Chanchal Yadav, Chairperson of Sri Vijaya Puram Municipal Council Smt. M. Vasantha and Adhyaksh, Zilla Parishad, Shri P. Ummer, among other dignitaries.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">*****</span></span></p>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">PR/ASM/VMJ</span></span></p>
+
+
+                        
+                        <div id="reel_pic">
+                        </div>
+
+
+
+                        
+                        <br />
+                        <span id="ReleaseId">(Release ID: 2296750)</span>
+                        <span id="lblViews">Visitor Counter : 682</span>
+                        <div>
+                              
+                        </div>
+                        
+
+                        <span id="lblRefPhoto"></span>
+
+                        <div class="BackgroundRelease">
+                              
+                        </div>
+                        <div>
+                              
+                        </div>
+                        <div class="ReleaseLang">Read this release in: 
+                        
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296816' target="_blank">
+                                          Urdu </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296772' target="_blank">
+                                          हिन्दी </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296794' target="_blank">
+                                          Marathi </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296925' target="_blank">
+                                          Assamese </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296798' target="_blank">
+                                          Gujarati </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296784' target="_blank">
+                                          Tamil </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296895' target="_blank">
+                                          Telugu </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296829' target="_blank">
+                                          Malayalam </a>
+                              
+                        </div>
+
+                        <div class="RelTag">
+                              <ul>
+                                    
+                              </ul>
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div id="RelLink" class="RelLink">
+                              <ul>
+                                    
+                                    
+                              </ul>
+                        </div>
+                        <center>
+                              
+                        </center>
+                  </div>
+
+                  <div id="update12">
+	
+                              
+                              <input type="hidden" name="Hidden" id="Hidden" />
+                              <div id="P_CategoryManagement" class="ModalWindow" style="border-width:0px;height:60%;width:60%;overflow:auto;display: none">
+		
+                                    <div>
+                                          <input type="image" name="btnClose" id="btnClose" src="images/close_flat_icon.png" />
+                                    </div>
+                                    <div id="description">
+                                    </div>
+                                    <div class="text-center">
+                                          <h2>
+                                                
+                                                <br>
+                                                
+                                          </h2>
+                                    </div>
+                                    <br />
+                                    <div class="clear">
+                                    </div>
+                                    
+                              
+	</div>
+                        
+</div>
+            </div>
+            
+            <div id="PdfDiv" style="display: none;">
+                  <table width="100%">
+                        <tr>
+                              <td style="font-weight: 200; text-align: center">
+                                    Vice President's Secretariat
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          <div style='height:30px;width:100%;'></div>Vice-President says Andaman &amp; Nicobar Islands are a sacred land of sacrifice and an eternal symbol of India’s freedom struggle<div style='height:30px;width:100%;'></div><div style='height:30px;width:100%;'></div>“Bharat is one and will always remain one”: Vice-President<div style='height:30px;width:100%;'></div><div style='height:30px;width:100%;'></div>Vice-President says Great Nicobar Development Project will strengthen India’s maritime capabilities and unlock new opportunities for growth<div style='height:30px;width:100%;'></div><div style='height:30px;width:100%;'></div>Vice President calls upon every citizen to proudly display the Tricolour and uphold its values of courage, unity and patriotism
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="text-align: center; font-size: 14px;">
+                                          Posted On:
+                        09 AUG 2026 12:45PM by PIB Delhi
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: left; font-size: 16px;">
+                                          <p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Vice-President Shri C. P. Radhakrishnan today inaugurated the &lsquo;Har Ghar Tiranga Abhiyan&rsquo; by hoisting the National Flag at Flag Point, Sri Vijaya Puram, on the occasion of August Kranti Diwas, commemorating the Quit India Movement of 1942.</span></span></p>
+
+<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Hoisted the National Flag at Flag Point, Sri Vijaya Puram, today under the <a href="https://x.com/hashtag/HarGharTiranga?src=hash&amp;ref_src=twsrc%5Etfw">#HarGharTiranga</a> Abhiyaan, a historic site where Netaji Subhas Chandra Bose hoisted the Tricolour on December 30, 1943, proclaiming the Andaman &amp; Nicobar Islands free from British rule.<br><br>On Quit India… <a href="https://t.co/vA8x5wLNzW">pic.twitter.com/vA8x5wLNzW</a></p>&mdash; Vice-President of India (@VPIndia) <a href="https://x.com/VPIndia/status/2086310573940285635?ref_src=twsrc%5Etfw">August 9, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></center>
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Addressing the gathering at the State Function and Tiranga Concert on Vande Mataram at the DBRAIT Auditorium, the Vice-President said there could be no more appropriate place to launch the campaign than these historic islands, which are deeply associated with India&rsquo;s freedom struggle and the history of the Tricolour.</span></span></p>
+
+<center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Vice President Shri C. P. Radhakrishnan graced the State Function on ‘Har Ghar Tiranga - Dedicated to the Spirit of Vande Mataram’ at the DBRAIT Auditorium, in Sri Vijaya Puram, Andaman &amp; Nicobar Islands today. <br><br>The Vice-President said there could be no more appropriate place to… <a href="https://t.co/T6YDjhHWxU">pic.twitter.com/T6YDjhHWxU</a></p>&mdash; Vice-President of India (@VPIndia) <a href="https://x.com/VPIndia/status/2086342698793836985?ref_src=twsrc%5Etfw">August 9, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></center>
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Recalling the immortal words of the great Tamil poet Subramania Bharati, Shri C. P. Radhakrishnan said Bharati&rsquo;s celebration of the &lsquo;Mani Kodi&rsquo; reflects the eternal courage of the Indian spirit and the glory of the flag of Mother Bharat. He said the Har Ghar Tiranga Abhiyan carries forward this spirit by bringing every citizen together under one National Flag, one motherland and one common destiny.<br />
+<br />
+Recalling the sacrifices of freedom fighters who endured the dreaded Kala Pani, the Vice President said the Andaman &amp; Nicobar Islands are much more than a geographical part of Bharat; they are a sacred land of sacrifice. He paid heartfelt tributes to Veer Vinayak Damodar Savarkar and countless other patriots who suffered in the Cellular Jail, saying their courage, patriotism and sacrifice continue to inspire generations.<br />
+<br />
+The Vice-President recalled that Mahatma Gandhi&rsquo;s clarion call of &ldquo;Do or Die&rdquo; on August 8, 1942, awakened millions of Indians and gave a decisive impetus to the freedom struggle. He also highlighted the unique place of the islands in the history of the Tricolour, recalling that Netaji Subhas Chandra Bose hoisted the Indian National Flag here on December 30, 1943, marking a landmark moment in India&rsquo;s freedom struggle.<br />
+<br />
+Highlighting the significance of Har Ghar Tiranga, Shri Radhakrishnan said the campaign, initiated by Prime Minister Shri Narendra Modi, has evolved into a nationwide people&rsquo;s movement. He called upon every citizen to proudly display the Tricolour and imbibe the values of patriotism, unity and collective responsibility that it represents. &ldquo;Bharat is one and will always remain one,&rdquo; he affirmed.<br />
+<br />
+The Vice-President highlighted the islands as a living example of &lsquo;Unity in Diversity&rsquo; and &lsquo;Ek Bharat, Shreshtha Bharat&rsquo;, while acknowledging their rich tribal heritage and recent progress in connectivity, healthcare, education and infrastructure. He said the Great Nicobar Island Development Project would further strengthen India&rsquo;s maritime capabilities, connectivity and economic opportunities, while balancing development with environmental conservation.<br />
+<br />
+Emphasising the need for national strength alongside India&rsquo;s tradition of peace and generosity, Shri Radhakrishnan said, &ldquo;India has always been generous, but our generosity should never be mistaken for weakness. We must remain prepared to protect our national interests and sovereignty.&rdquo; He called upon citizens to let the Tricolour inspire them with courage, unity and hope, and to carry forward the legacy of the freedom fighters in building a stronger and developed Bharat.<br />
+<br />
+The Vice-President also attended a cultural programme and visited the &lsquo;Har Ghar Tiranga&rsquo; Exhibition, showcasing the spirit of the campaign and its message of national unity and patriotism.<br />
+<br />
+The event was attended by Lieutenant Governor of Andaman &amp; Nicobar Islands Admiral D. K. Joshi (Retd.), Chief Secretary Smt. Chanchal Yadav, Chairperson of Sri Vijaya Puram Municipal Council Smt. M. Vasantha and Adhyaksh, Zilla Parishad, Shri P. Ummer, among other dignitaries.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">*****</span></span></p>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">PR/ASM/VMJ</span></span></p>
+
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 100; text-align: left; font-size: 16px;">
+                                          (Release ID: 2296750)
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                              </td>
+                        </tr>
+                        <tr>
+                              <td style="font-weight: 200; text-align: center; font-size: 24px;"></td>
+                        </tr>
+                  </table>
+            </div>
+            <div class="clearfix">
+            </div>
+
+            
+
+            <div class="section1">
+                  <div id="frst_t">
+                        <div id="arr_rm"><div class='sticky-social_mb'><ul class='social_mb'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='40' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750&text=Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='40' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='40' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='40' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750&title=Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='40' /></li></a></ul></div></div>
+                  </div>
+                  <div id="second_t">
+                        <div id="sndr_rm"><div class='sticky-social'><ul class='social'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='35' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750&text=Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='35' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='35' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='35' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296750&title=Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman & Nicobar Islands&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='35' /></li></a></ul></div></div>
+                  </div>
+            </div>
+            <input type="hidden" name="ltrTitlee" id="ltrTitlee" value="Vice-President Shri C. P. Radhakrishnan launches ‘Har Ghar Tiranga Abhiyan’ in Andaman &amp; Nicobar Islands" />
+            <input type="hidden" name="ltrSubtitlee" id="ltrSubtitlee" value="&lt;br/>Vice-President says Andaman &amp;amp; Nicobar Islands are a sacred land of sacrifice and an eternal symbol of India’s freedom struggle&lt;br/>&lt;br/>“Bharat is one and will always remain one”: Vice-President&lt;br/>&lt;br/>Vice-President says Great Nicobar Development Project will strengthen India’s maritime capabilities and unlock new opportunities for growth&lt;br/>&lt;br/>Vice President calls upon every citizen to proudly display the Tricolour and uphold its values of courage, unity and patriotism" />
+            <input type="hidden" name="ltrDescriptionn" id="ltrDescriptionn" value="&lt;p>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Vice-President Shri C. P. Radhakrishnan today inaugurated the &amp;lsquo;Har Ghar Tiranga Abhiyan&amp;rsquo; by hoisting the National Flag at Flag Point, Sri Vijaya Puram, on the occasion of August Kranti Diwas, commemorating the Quit India Movement of 1942.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;>Hoisted the National Flag at Flag Point, Sri Vijaya Puram, today under the &lt;a href=&quot;https://x.com/hashtag/HarGharTiranga?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;>#HarGharTiranga&lt;/a> Abhiyaan, a historic site where Netaji Subhas Chandra Bose hoisted the Tricolour on December 30, 1943, proclaiming the Andaman &amp;amp; Nicobar Islands free from British rule.&lt;br>&lt;br>On Quit India… &lt;a href=&quot;https://t.co/vA8x5wLNzW&quot;>pic.twitter.com/vA8x5wLNzW&lt;/a>&lt;/p>&amp;mdash; Vice-President of India (@VPIndia) &lt;a href=&quot;https://x.com/VPIndia/status/2086310573940285635?ref_src=twsrc%5Etfw&quot;>August 9, 2026&lt;/a> 
+&lt;p>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Addressing the gathering at the State Function and Tiranga Concert on Vande Mataram at the DBRAIT Auditorium, the Vice-President said there could be no more appropriate place to launch the campaign than these historic islands, which are deeply associated with India&amp;rsquo;s freedom struggle and the history of the Tricolour.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;>Vice President Shri C. P. Radhakrishnan graced the State Function on ‘Har Ghar Tiranga - Dedicated to the Spirit of Vande Mataram’ at the DBRAIT Auditorium, in Sri Vijaya Puram, Andaman &amp;amp; Nicobar Islands today. &lt;br>&lt;br>The Vice-President said there could be no more appropriate place to… &lt;a href=&quot;https://t.co/T6YDjhHWxU&quot;>pic.twitter.com/T6YDjhHWxU&lt;/a>&lt;/p>&amp;mdash; Vice-President of India (@VPIndia) &lt;a href=&quot;https://x.com/VPIndia/status/2086342698793836985?ref_src=twsrc%5Etfw&quot;>August 9, 2026&lt;/a> 
+&lt;p>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Recalling the immortal words of the great Tamil poet Subramania Bharati, Shri C. P. Radhakrishnan said Bharati&amp;rsquo;s celebration of the &amp;lsquo;Mani Kodi&amp;rsquo; reflects the eternal courage of the Indian spirit and the glory of the flag of Mother Bharat. He said the Har Ghar Tiranga Abhiyan carries forward this spirit by bringing every citizen together under one National Flag, one motherland and one common destiny.&lt;br />
+&lt;br />
+Recalling the sacrifices of freedom fighters who endured the dreaded Kala Pani, the Vice President said the Andaman &amp;amp; Nicobar Islands are much more than a geographical part of Bharat; they are a sacred land of sacrifice. He paid heartfelt tributes to Veer Vinayak Damodar Savarkar and countless other patriots who suffered in the Cellular Jail, saying their courage, patriotism and sacrifice continue to inspire generations.&lt;br />
+&lt;br />
+The Vice-President recalled that Mahatma Gandhi&amp;rsquo;s clarion call of &amp;ldquo;Do or Die&amp;rdquo; on August 8, 1942, awakened millions of Indians and gave a decisive impetus to the freedom struggle. He also highlighted the unique place of the islands in the history of the Tricolour, recalling that Netaji Subhas Chandra Bose hoisted the Indian National Flag here on December 30, 1943, marking a landmark moment in India&amp;rsquo;s freedom struggle.&lt;br />
+&lt;br />
+Highlighting the significance of Har Ghar Tiranga, Shri Radhakrishnan said the campaign, initiated by Prime Minister Shri Narendra Modi, has evolved into a nationwide people&amp;rsquo;s movement. He called upon every citizen to proudly display the Tricolour and imbibe the values of patriotism, unity and collective responsibility that it represents. &amp;ldquo;Bharat is one and will always remain one,&amp;rdquo; he affirmed.&lt;br />
+&lt;br />
+The Vice-President highlighted the islands as a living example of &amp;lsquo;Unity in Diversity&amp;rsquo; and &amp;lsquo;Ek Bharat, Shreshtha Bharat&amp;rsquo;, while acknowledging their rich tribal heritage and recent progress in connectivity, healthcare, education and infrastructure. He said the Great Nicobar Island Development Project would further strengthen India&amp;rsquo;s maritime capabilities, connectivity and economic opportunities, while balancing development with environmental conservation.&lt;br />
+&lt;br />
+Emphasising the need for national strength alongside India&amp;rsquo;s tradition of peace and generosity, Shri Radhakrishnan said, &amp;ldquo;India has always been generous, but our generosity should never be mistaken for weakness. We must remain prepared to protect our national interests and sovereignty.&amp;rdquo; He called upon citizens to let the Tricolour inspire them with courage, unity and hope, and to carry forward the legacy of the freedom fighters in building a stronger and developed Bharat.&lt;br />
+&lt;br />
+The Vice-President also attended a cultural programme and visited the &amp;lsquo;Har Ghar Tiranga&amp;rsquo; Exhibition, showcasing the spirit of the campaign and its message of national unity and patriotism.&lt;br />
+&lt;br />
+The event was attended by Lieutenant Governor of Andaman &amp;amp; Nicobar Islands Admiral D. K. Joshi (Retd.), Chief Secretary Smt. Chanchal Yadav, Chairperson of Sri Vijaya Puram Municipal Council Smt. M. Vasantha and Adhyaksh, Zilla Parishad, Shri P. Ummer, among other dignitaries.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>*****&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>PR/ASM/VMJ&lt;/span>&lt;/span>&lt;/p>
+" />
+            <script type="text/javascript">
+                  var mPlayer = document.getElementById("background_music");
+                  var mPlayAction = document.getElementById("playbutton");
+
+                  var isPlaying = false;
+
+                  function playAudio() {
+                        mPlayer.play();
+                        isPlaying = true;
+                        document.getElementById('stopA').style.display = "block";
+                        document.getElementById('playA').style.display = "none";
+                  }
+
+                  function pauseAudio() {
+                        mPlayer.pause();
+                        isPlaying = false;
+                        document.getElementById('playA').style.display = "block";
+                        document.getElementById('stopA').style.display = "none";
+                  }
+                  //function HandleAudio() {
+                  //    if (isPlaying == true) {
+                  //        //Playing already Pause it
+                  //        pauseAudio();
+                  //    } else {
+                  //        //Play the music
+                  //        playAudio();
+                  //    }
+                  //}
+            </script>
+            <script type="text/javascript">
+                  var synth = window.speechSynthesis;
+
+            
+                  function CleanHtml(html) {
+
+                        html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+
+                        return html;
+                  }
+                  function stripHtml(html) {
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = CleanHtml(html);
+                        return tmp.textContent || tmp.innerText || "";
+                  }
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        //for responsive tables
+                        $("table").each(function () {
+                              if (!$(this).closest(".table-responsive").length) {
+                                    $(this).wrap("<div class='table-responsive'></div>");
+                              }
+                        });
+
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            
+            <style type="text/css">
+                  @media print {
+                        .sticky-social, .sticky-social_mb, .pull-right, #printPDF {
+                              display: none !important;
+                        }
+                  }
+
+                  .f_vl {
+                        padding-right: 30px;
+                        font-size: 17px;
+                        cursor: pointer;
+                  }
+
+                  .log_oo {
+                        // width: 20%;
+                        display: flex;
+                        justify-content: space-between;
+                  }
+
+                        .log_oo img {
+                              width: 150px;
+                              /*width: 100%;
+                    height: auto;*/
+                        }
+
+                  .sticky-social_mb {
+                        position: fixed;
+                        bottom: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                        width: 100%;
+                  }
+
+                  .social_mb {
+                        list-style: none;
+                        display: flex;
+                        width: 100%;
+                        margin-bottom: -8px;
+                  }
+
+                        .social_mb a {
+                              padding: 8px 0px;
+                              font-size: 30px;
+                              transition: all 0.8s ease-in-out;
+                              width: 20% !important;
+                              text-align: center;
+                        }
+            </style>
+            <style type="text/css">
+                  .section1 {
+                        position: relative;
+                        padding: 10px 0px;
+                        width: 100%;
+                  }
+
+
+
+                  .sticky-social {
+                        position: fixed;
+                        top: 20px;
+                        left: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                  }
+
+                  .social {
+                        list-style: none;
+                  }
+
+                        .social a li {
+                              padding: 8px 12px;
+                              font-size: 25px;
+                              transition: all 0.8s ease-in-out;
+                        }
+
+                              .social a li:hover {
+                                    margin-right: -30px;
+                                    box-shadow: 2px 5px 10px grey;
+                              }
+
+                                    .social a li:hover .fa {
+                                          margin-left: 20px;
+                                    }
+
+                  .fb_b {
+                        /* background-color: rgb(59, 89, 152);*/
+                        background-color: rgba(65,103,178,255);
+                  }
+
+                  .twitter_r {
+                        /* background-color: rgb(29, 161, 242);*/
+                        background-color: #000000;
+                  }
+
+                  .whatsapp_r {
+                        /* background-color: rgb(77, 194, 71);*/
+                        background-color: rgba(13,191,67,255);
+                  }
+
+                  .fa-envelope_r {
+                        /* background-color: rgb(219, 68, 55);*/
+                        background-color: #e2123d;
+                  }
+
+                  .fa-linkedin_r {
+                        background-color: rgb(0, 119, 181);
+                  }
+            </style>
+            <style type="text/css">
+                  @media only screen and (max-device-width: 767px) {
+                        p span img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        p img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        h2 {
+                              font-size: 20px !important;
+                              font-weight: 600 !important;
+                        }
+
+                        h3 {
+                              font-size: 18px !important;
+                              font-weight: 600 !important;
+                        }
+                  }
+            </style>
+            <style type="text/css">
+                  /* === Film Roll Badge Styling(IFFI2025 countdown) === */
+                  .film-roll-badge {
+                        position: absolute;
+                        top:82%;
+                        right: 20px;
+                        width: 230px;
+                        height: 70px;
+                        background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 18px, #6e2b8b 18px, #6e2b8b 36px );
+                        border-top: 8px solid #9a2375;
+                        border-bottom: 8px solid #9a2375;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                        animation: moveFilm 8s linear infinite;
+                        z-index: 10;
+                  }
+
+                        /* film sprocket holes */
+                        .film-roll-badge::before,
+                        .film-roll-badge::after {
+                              content: "";
+                              position: absolute;
+                              width: 100%;
+                              height: 10px;
+                              background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 10px, #fff 10px, #fff 20px );
+                              left: 0;
+                              z-index: 2;
+                        }
+
+                        .film-roll-badge::before {
+                              top: -4px;
+                        }
+
+                        .film-roll-badge::after {
+                              bottom: -4px;
+                        }
+
+                  .film-roll-inner {
+                        position: relative;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: flicker 2s infinite ease-in-out;
+                  }
+
+                  .countdown-text {
+                        font-size: 1.3rem;
+                        font-weight: 700;
+                        color: #fff;
+                        text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px #000;
+                        white-space: nowrap;
+                  }
+
+                  /* === Animations === */
+                  @keyframes moveFilm {
+                        0% {
+                              background-position: 0 0;
+                        }
+
+                        100% {
+                              background-position: 120px 0;
+                        }
+                  }
+
+                  @keyframes flicker {
+                        0%, 100% {
+                              opacity: 1;
+                        }
+
+                        50% {
+                              opacity: 0.9;
+                        }
+
+                        25% {
+                              opacity: 0.95;
+                        }
+
+                        75% {
+                              opacity: 0.85;
+                        }
+                  }
+
+                  /* === Responsive Adjustments === */
+                  @media (max-width: 1500px) {
+                        .film-roll-badge {
+                              top: 68%;
+                              right: 18px;
+                              /* width: 220px; */
+                              height: 65px;
+                              font-size: 0.85rem;
+                        }
+
+                        .press-section {
+                              margin-top: 35px;
+                        }
+                  }
+
+                  @media (max-width: 992px) {
+                        .film-roll-badge {
+                              top: 52%;
+                              right: 10px;
+                               width: 200px; 
+                              height: 60px;
+                        }
+                  }
+
+                  @media (max-width: 768px) {
+                        .film-roll-badge {
+                              top: 56%;
+                              right: 10px;
+                               width: 124px; 
+                              height: 55px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.9rem;
+                        }
+                  }
+
+                  @media (max-width: 576px) {
+                        .film-roll-badge {
+                              top: 59%;
+                              right: 5px;
+                              /* width: 160px; */
+                              height: 50px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.85rem;
+                        }
+                  }
+            </style>
+          <script type="text/javascript">
+                const festivalStart = new Date("2025-11-20T00:00:00").getTime();
+                const festivalEnd = new Date("2025-11-28T23:59:59").getTime();
+
+                const countdownElement = document.getElementById("countdown");
+
+                const interval = setInterval(() => {
+                      const now = new Date().getTime();
+
+                      // BEFORE FESTIVAL — show days + hours left
+                      if (now < festivalStart) {
+                            const diff = festivalStart - now;
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                            countdownElement.innerHTML = `
+              ${days} Day${days !== 1 ? 's' : ''} 
+              ${hours} Hour${hours !== 1 ? 's' : ''} to go
+          `;
+
+                      }
+
+                      // DURING FESTIVAL — show 56th IFFI - Day X
+                      else if (now >= festivalStart && now <= festivalEnd) {
+                            const dayNumber = Math.floor((now - festivalStart) / (1000 * 60 * 60 * 24)) + 1;
+                            countdownElement.innerHTML = `56th IFFI - Day ${dayNumber}`;
+                      }
+
+                      // AFTER FESTIVAL — new message
+                      else {
+                            countdownElement.innerHTML = `✨ IFFI closes but never ends…`;
+
+                            // Width change logic
+                            const elements = document.querySelectorAll('.film-roll-badge');
+                            elements.forEach(el => el.style.width = "350px");
+
+                            clearInterval(interval);
+                      }
+
+                }, 1000);
+          </script>
+ <script type="text/javascript">
+
+               const miffStart = new Date("2026-06-15T00:00:00").getTime();
+               const miffEnd = new Date("2026-06-15T23:59:59").getTime();
+
+               const miffElement = document.getElementById("miff");
+
+               if (miffElement) {
+
+                   const miffInterval = setInterval(() => {
+
+                       const now = new Date().getTime();
+
+                       // Before MIFF
+                       if (now < miffStart) {
+
+                           const diff = miffStart - now;
+                           const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                           const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        
+
+                   /*  miffElement.innerHTML = `${days} Day${days !== 1 ? 's' : ''} ${hours} Hour${hours !== 1 ? 's' : ''} to MIFF`;*/
+                           miffElement.innerHTML = `${days} Day${days === 1 ? '' : 's'} to MIFF ...`;
+
+
+                     }
+
+                       // During MIFF
+                       else if (now >= miffStart && now <= miffEnd) {
+
+                           const dayNumber =
+                               Math.floor((now - miffStart) / (1000 * 60 * 60 * 24)) + 1;
+
+                           miffElement.innerHTML = `19th MIFF - Day ${dayNumber}`;
+                       }
+
+                       // After MIFF
+                       else {
+
+                           miffElement.innerHTML = `✨ MIFF concludes, cinema lives on...`;
+
+                           document.querySelectorAll('.film-roll-badge')
+                               .forEach(el => el.style.width = "350px");
+
+                           clearInterval(miffInterval);
+                       }
+
+                   }, 1000);
+               }
+
+</script>
+
+      
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {var fn = function() {$get("sc_HiddenField").value = '';Sys.Application.remove_init(fn);};Sys.Application.add_init(fn);})();Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","PopupControlID":"P_CategoryManagement","dynamicServicePath":"/PressReleasePage.aspx","id":"mpe"}, null, null, $get("Hidden"));
+});
+//]]>
+</script>
+<input type="hidden" name="__ncforminfo" value="LBtxN-vt9L1WeZ7DAknh_aDsA5ophCfWylg1CchU74pmeljY1QX8vWaQvzEnCtSaQrKdDC-XcJsDUvfizCKFmxtiUmvQlCfCW0dQ_9pAk6qNIYpPq04XfQ=="/></form>
+</body>
+</html>
+

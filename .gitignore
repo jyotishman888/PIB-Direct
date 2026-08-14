@@ -1,0 +1,36 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Environment / secrets
+# Broad on purpose: .env.local and friends hold real credentials, and the
+# example file is the only one that should ever be tracked.
+.env
+.env.*
+!.env.example
+frontend/.env.local
+frontend/.env.*
+!frontend/.env.example
+
+# Runtime data
+/data/
+/logs/
+
+# Test / tooling caches
+.pytest_cache/
+.ruff_cache/
+
+# Frontend (added in M5)
+node_modules/
+frontend/dist/
+
+
+# Built SPA copied in at image build time (see Dockerfile).
+src/pib_agent/static/

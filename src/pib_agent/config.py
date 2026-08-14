@@ -1,0 +1,149 @@
+from functools import lru_cache
+from pathlib import Path
+
+from pydantic import AliasChoices, Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=str(PROJECT_ROOT / ".env"),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    database_url: str = f"sqlite:///{PROJECT_ROOT / 'data' / 'pib_agent.db'}"
+    log_level: str = "INFO"
+    log_dir: Path = PROJECT_ROOT / "logs"
+
+    # PIB's `reg` query param selects a *regional bureau*, not a ministry —
+    # each bureau's listing shows a different, only-partly-overlapping set of
+    # ministries/organizations (confirmed live: reg=3 "PIB Delhi" alone
+    # misses Commerce, Culture, Education, Minority Affairs, Parliamentary
+    # Affairs, Statistics, Tourism, UPSC, President's Secretariat, all of
+    # which appear under reg=48 "National"). Scraping both is what actually
+    # gets full central-government ministry coverage; PRIDs are deduped
+    # across sources the same way they're deduped against the DB.
+    pib_listing_urls: list[str] = [
+        "https://pib.gov.in/allrel.aspx?reg=3&lang=1",  # PIB Delhi
+        "https://pib.gov.in/allrel.aspx?reg=48&lang=1",  # National
+    ]
+    pib_detail_url_template: str = "https://pib.gov.in/PressReleasePage.aspx?PRID={prid}"
+    # pib.gov.in's WAF 403s any User-Agent that doesn't look like a real browser
+    # (a custom "pib-agent/0.1 (...)" identifier was blocked in testing, even
+    # though robots.txt declares no crawling restrictions), so we present as
+    # a standard desktop browser here.
+    pib_request_user_agent: str = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    )
+    pib_request_timeout_seconds: float = 20.0
+    pib_request_max_retries: int = 3
+    # Politeness delay between successive detail-page fetches within one scrape pass.
+    pib_request_delay_seconds: float = 1.0
+
+    anthropic_api_key: str | None = None
+    anthropic_model: str = "claude-sonnet-5"
+    anthropic_max_retries: int = 2
+    # Politeness delay between successive enrichment calls within one enrich pass.
+    anthropic_request_delay_seconds: float = 0.5
+
+    # Claude rates each release 1-5 on how much study time it deserves (see
+    # the anchors in enrichment/prompts.py); this is the score at or above
+    # which an article counts as UPSC-relevant — which drives both the
+    # dashboard's "UPSC-relevant only" filter and whether subscribers get a
+    # Telegram message. It's a separate knob from the prompt's content bar
+    # (fixed at 3, the score from which questions get generated) precisely so
+    # notification strictness can be tuned without re-enriching the corpus:
+    # raise this to 4 to be notified only about substantive developments.
+    upsc_relevance_threshold: int = 3
+
+    # sentence-transformers model used to embed articles for similarity search.
+    embedding_model: str = "all-MiniLM-L6-v2"
+    similarity_top_k: int = 5
+    # Minimum cosine similarity (embeddings are unit-normalized) for a past
+    # article to even be considered a candidate before Claude adjudicates it.
+    similarity_threshold: float = 0.45
+
+    telegram_bot_token: str | None = None
+    # Delay between successive outbound sends in `notify`, to stay comfortably
+    # under Telegram's flood-control limits (30 msgs/sec globally).
+    telegram_send_delay_seconds: float = 0.2
+
+    # Chat that receives operational alerts when a pipeline run doesn't fully
+    # succeed. Without this the only symptom of a break is silence: PIB
+    # changed its listing markup on 2026-08-14 and every run failed for
+    # ~7 hours before anyone looked at a log. Accepts the older
+    # TELEGRAM_CHAT_ID spelling so existing .env files keep working.
+    telegram_admin_chat_id: int | None = Field(
+        default=None,
+        validation_alias=AliasChoices("TELEGRAM_ADMIN_CHAT_ID", "TELEGRAM_CHAT_ID"),
+    )
+    # Escape hatch for local experiments; alerts are on whenever a token and
+    # an admin chat are both configured.
+    ops_alerts_enabled: bool = True
+
+    # Off by default so a plain `pib-agent serve` for local dev/testing never
+    # silently starts spending Claude/Telegram API calls on a schedule — the
+    # user opts in explicitly for unattended daily operation.
+    scheduler_enabled: bool = False
+    # PIB has no push/webhook mechanism, so "real-time" means frequent
+    # polling — kept short since polling itself is nearly free (a couple of
+    # lightweight listing-page fetches; Claude spend only scales with new
+    # articles actually found, not with how often we check).
+    scheduler_interval_minutes: int = 5
+    scheduler_start_hour_ist: int = 9
+    scheduler_end_hour_ist: int = 21
+    scheduler_timezone: str = "Asia/Kolkata"
+    # Minimum gap between successive manual /admin/run-now triggers, so
+    # repeated clicks can't fire off duplicate full pipeline runs.
+    admin_run_now_min_interval_seconds: float = 60.0
+
+    # --- Sign-in -----------------------------------------------------------
+    # OAuth client ids. Google: Cloud Console -> OAuth 2.0 Client ID (Web).
+    # Telegram: BotFather -> your bot -> Login Widget (Telegram moved the
+    # widget to OpenID Connect; the old HMAC hash scheme is archived).
+    # Sign-in for a provider is simply unavailable while its id is unset.
+    google_client_id: str | None = None
+    telegram_client_id: str | None = None
+
+    session_ttl_days: int = 30
+    session_cookie_name: str = "pib_session"
+    # Must be True wherever the site is served over HTTPS. Left False by
+    # default so local http://localhost development works; production
+    # deployments have to set it.
+    session_cookie_secure: bool = False
+
+    api_host: str = "127.0.0.1"
+    api_port: int = 8000
+    # Origins allowed to call the API from a browser (the Vite dev server).
+    # Unused in production, where the API and SPA share one origin.
+    cors_allowed_origins: list[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+
+    @field_validator("database_url")
+    @classmethod
+    def _normalise_database_url(cls, value: str) -> str:
+        """Accept the DATABASE_URL managed Postgres platforms actually hand out.
+
+        Railway (and Heroku, and most others) set `postgresql://…` or the
+        legacy `postgres://…`. SQLAlchemy 2 needs an explicit driver, and this
+        project uses psycopg3, so both are rewritten to `postgresql+psycopg://`
+        — which means the platform's own variable works untouched instead of
+        failing at import with "Can't load plugin: sqlalchemy.dialects:postgres".
+        """
+        if value.startswith("postgresql+"):
+            return value  # already carries an explicit driver
+        for prefix in ("postgresql://", "postgres://"):
+            if value.startswith(prefix):
+                return "postgresql+psycopg://" + value[len(prefix) :]
+        return value
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()

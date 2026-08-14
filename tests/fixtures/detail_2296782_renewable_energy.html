@@ -1,0 +1,1062 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>
+	Press Release Page | Press Information Bureau
+</title><link href="css/style.css" rel="stylesheet" type="text/css" /><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="alternate stylesheet" href="css/change.css" media="screen" title="change" /><link rel="alternate stylesheet" href="css/green.css" media="screen" title="green" /><link rel="alternate stylesheet" href="css/yellow.css" media="screen" title="yellow" /><link rel="stylesheet" type="text/css" href="css/prtint.css" media="print" /><link rel="stylesheet" href="css/style3.1.css" type="text/css" />
+
+
+      <script src="js/jquery.min.js" type="text/javascript"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" /><link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" />
+
+      <script type="text/javascript">
+            $(document).ready(function () {
+                  function getParameterByName(name) {
+                        var url = window.location.href;
+                        name = name.replace(/[\[\]]/g, '\\$&');
+                        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                              results = regex.exec(url);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                  }
+                  // Get the IDs from the current page's URL
+                  let prid = parseInt(getParameterByName('PRID'), 10);
+
+                  if (!isNaN(prid) && prid > 0) {
+                        $.ajax({
+                              type: "POST",
+                              url: "AjaxMethod.aspx/UpdatePRHitCount",
+                              async: false,
+                              data: JSON.stringify({ 'PermId': prid }),
+                              contentType: "application/json; charset=utf-8",
+                              dataType: "json",
+                              success: function (response) {
+                                    console.log(response);
+                              },
+                              error: function (error) {
+                                    console.log("Error in AJAX request", error);
+                              }
+                        });
+                  } else {
+                        console.log("Invalid parameters:", prid);
+                  }
+
+            });
+      </script>
+      <style type="text/css">
+            .table-responsive {
+                  width: 100%;
+                  overflow-x: auto;
+            }
+
+            .banner {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  background-color: #000;
+                  color: #fff;
+                  padding: 20px;
+            }
+
+            full-width {
+                  width: 100%;
+            }
+
+            .logo-left, .logo-center, .countdown {
+                  display: flex;
+                  align-items: center;
+            }
+
+                  .logo-left img, .logo-center img {
+                        height: 70px;
+                  }
+
+            .countdown {
+                  text-align: center;
+                  background-color: #444;
+                  border-radius: 10px;
+                  padding: 10px;
+                  border: 2px solid grey;
+            }
+
+            .firstnumber {
+                  color: #000000;
+                  position: absolute;
+                  top: 50px;
+                  right: 90px;
+                  font-size: 30px;
+            }
+
+            .secondnumber {
+                  position: absolute;
+                  color: #000000;
+                  right: 45px;
+                  top: 50px;
+                  font-size: 30px;
+            }
+
+            .countdown .days {
+                  font-size: 35px;
+                  color: gold;
+            }
+
+            .countdown p {
+                  margin: 0;
+            }
+
+            .countdown .text {
+                  font-size: 16px;
+            }
+
+            a {
+                  word-break: break-all;
+            }
+
+            iframe, img {
+                  max-width: 100%;
+            }
+
+            @media(max-width:1199px) {
+                  .firstnumber {
+                        top: 40px;
+                        right: 72px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 35px;
+                        top: 40px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:990px) {
+                  .firstnumber {
+                        top: 25px;
+                        right: 54px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 25px;
+                        top: 25px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:768px) {
+                  .countdown, .days {
+                        font-size: 12px !important;
+                  }
+
+
+                  .firstnumber {
+                        top: 25%;
+                        right: 8%;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 4.5%;
+                        top: 25%;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:475px) {
+                  .countdown, .days {
+                        font-size: 10px !important;
+                        top: 20%;
+                  }
+
+                  .bannerimgdiv {
+                        padding: 0 !important;
+                  }
+
+                  .bannerimg {
+                        width: 108% !important;
+                  }
+            }
+      </style>
+      <script type="text/javascript">
+            $(function () {
+                  $("[id*=printPDF]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+            $(function () {
+                  $("[id*=printPDFEvent]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+      </script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112591026-1"></script>
+      <script>
+
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() { dataLayer.push(arguments); }
+
+            gtag('js', new Date());
+
+
+
+            gtag('config', 'UA-112591026-1');
+
+      </script>
+
+<meta property="og:title" content="India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity" /><meta property="og:url" content="www.pib.gov.in/Pressreleaseshare.aspx?PRID=2296782" /><meta property="og:description" content="In a major milestone for the nation&#39;s clean energy transition and climate action targets, India has " /><meta property="og:image" content="https:/pib.gov.in/images/indian-emblem.png" />
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="C4E7H-KSCMC-422L4-W3EM5-U36MF",function(){function e(){if(!i){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.parentNode.appendChild(e),i=!0}}function t(e){i=!0;var n,t,a,r,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o.parentNode,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",r=(a.frameElement||a).style,r.width=0,r.height=0,r.border=0,r.display="none",o.parentNode.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void(0);",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=12,window.BOOMR.url=n+"C4E7H-KSCMC-422L4-W3EM5-U36MF";var o=document.currentScript||document.getElementsByTagName("script")[0],i=!1,r=document.createElement("link");if(r.relList&&"function"==typeof r.relList.supports&&r.relList.supports("preload")&&"as"in r)window.BOOMR.snippetMethod="p",r.href=window.BOOMR.url,r.rel="preload",r.as="script",r.addEventListener("load",e),r.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!i)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.parentNode.appendChild(r);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="eqcqeaniasmd6jafaiabmmatabvhrndx-f-431e7837f-clienttons-s.akamaihd.net",o="false"=="true"?2:1,i={"ak.v":"41","ak.cp":"1825201","ak.ai":parseInt("1215205",10),"ak.ol":"0","ak.cr":4,"ak.ipv":6,"ak.proto":"http/1.1","ak.rid":"fc9c692","ak.r":34469,"ak.a2":n,"ak.m":"dscb","ak.n":"ff","ak.cport":65169,"ak.gh":"184.84.221.69","ak.quicv":"","ak.tlsv":"tls1.2","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"bbr","ak.t":"1786295415","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==QVdUtzX+TZzlfRoBM8UL9eWuwYakxqu/RkhpuLnHdzjjzxAi9ogrcjDjf36xB254WBaUOwj4b4hNjPEeMeQyf79r0WqX+yhYoIuu5hHy9cSyC+uIWexF3BlrFW4NEcmiZ42qfps7DVgZtGD3kpTmGTtTCPWbuRoK7u4cbFb9NRm+jI5pufOrxqMSnDOrWCRnhIEgU/irHCQ/UYPDGralgMn8dyn8rFxB9lsZltjHWXe9O8kBznRMrC7VJ/3SFHHMcGUXOCUcSIk81JVk7G1CCTWMT3N0GxGLu4FD5uwfh0nmvn1C4S0Y+ukXMNn9ftXkXO1Pp21Xb9cw+8WxRuZCLsKhI5MBPDB8ohD7BSOhbxktmmbZm1tK7qCOolwNVxsPV/4D9eXPGhS9eOl1oV0Kyyx5FEZOrLAadOFDel2isTg=","ak.pv":"9","ak.dpoabenc":"","ak.tf":o};if(""!==t)i["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))i["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(i)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:i,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body>
+      <form method="post" action="./PressReleasePage.aspx?PRID=2296782&amp;reg=3&amp;lang=1" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="sc_HiddenField" id="sc_HiddenField" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=b94hX14NMWluUQ9a73g0LYFvtKhY52TK8cbDkYB_F2GuPre4tdh-ebiiI4xuhXnRu6Q5dQjaQA4oN3PEeL0GrtKEyEY1&amp;t=638942408819057530" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=YwOa_0w_u3oCLFqmIIOf-XEz4GWZ1DuyQIpxIA4LVkywj39sZSps12NbK5wNl5XN9JF3m7d-ey7BFDgj6i0380qRQ5IMWCL54sYNVU1IjMmiOWpp0&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=_shmykYI80CxCNR43Ii1nLy9PBGhuSe6SPp3CEYu0wDEuLqDAuIcsXVNhTIgQn0iyiwPorMflXuK31FftDX9GnB0m366MCEoOmY-eKQ3YAO9xRL0gIigzgRbtbVOgSQkJbJpFg2&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/PressReleasePage.aspx?_TSM_HiddenField_=sc_HiddenField&amp;_TSM_CombinedScripts_=%3b%3bAjaxControlToolkit%2c+Version%3d3.5.7.123%2c+Culture%3dneutral%2c+PublicKeyToken%3d28f01b0e84b6d53e%3aen-US%3a5a4df314-b4a2-4da2-a207-9284f1b1e96c%3ade1feab2%3af2c8e708%3a720a52bf%3af9cec9bc%3a589eaa30%3aa67c2700%3aab09e3fe%3a87104b7c%3a8613aea7%3a3202a5a2%3abe6fb298" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="59B53027" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="QzWPjMXJKw1DreO98Tjt45TdEbf320NynsySk+WAFDjPLu3uNaG4eZsk5uTBhemzceYa3orpW4cthxGOMqJ15cw1cMI410VUVS0pZlCefpc+NIH969q1qwHcu+zaN2ZuU8UeMjC8XvybjUTxp9iYQonCMKz7s775mcZ9F+QpfAr4FmiV1/19Rx75Vd1tL6k8o0TzIfnnD8+Mg7HcJkh8f4B1ZBbs3FEcdk1DyRvJraoVwMVpxtFvDgl9SxxFvggIXsEyyo/MzdhERI9cTHHCQDVBwv7UZeEUJRK8wnU/zn/gvy3f" />
+</div>
+                              
+            <div id="templateCss"></div>
+            <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('sc', 'form1', ['tupdate12','update12'], [], [], 90, '');
+//]]>
+</script>
+
+            <input type="hidden" name="hfGridHtml" id="hfGridHtml" />
+            <div class="container" style='margin-bottom: 50px;'>
+                  <div id="accessories">
+
+                        
+                        <div class="pull-right" style="display: flex">
+                              <div id="voll"></div>
+                              <div id="vollDT"></div>
+                              
+                              
+<div class="print-icons">
+<input type="image" name="Print1$print" id="Print1_print" aria-label="Print" src="images/printer_icon.png" alt="print page button" style="padding: 5px 10px 5px 10px;" />
+</div>
+                        </div>
+                  </div>
+                  <input type="hidden" name="hydpermid" id="hydpermid" value="2296782" />
+                  
+
+
+
+                  <div class="innner-page-main-about-us-content-right-part">
+
+                        <div id="MinistryName" class="MinistryNameSubhead text-center">
+                              Ministry of New and Renewable Energy 
+                        </div>
+                        
+                        <div id="lg_g"><div class='log_oo'>  <img src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2021/aug/ph202183101.png' alt='azadi ka amrit mahotsav' /> </div></div>
+
+
+
+
+
+                        <div class="text-center event-heading-background">
+                              
+                              <h2 id="Titleh2">
+                                    India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity
+                              </h2>
+                              <h3 id="Subtitleh3">
+                                    <span id="ltrSubtitle"></span>
+                              </h3>
+                        </div>
+
+                        <div id="PrDateTime" class="ReleaseDateSubHeaddateTime text-center pt20">
+                              Posted On:
+                09 AUG 2026 2:31PM by PIB Delhi
+                        </div>
+                        
+                        <div class='pt20'>
+                        </div>
+                        <input type="hidden" name="hydphotoUrl" id="hydphotoUrl" />
+                        
+                        <p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">In a major milestone for the nation&#39;s clean energy transition and climate action targets, <strong>India has crossed 300 GW of non-fossil fuel-based installed electricity generation capacity as on 31<sup>st</sup> July, 2026;</strong> over 60% of the 500 GW capacity targeted to be achieved by 2030. &nbsp;</span></span></span></p>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Breakdown</span></strong><span style="color:#1f1f1f"> of Non-Fossil Fuel Capacity (as on 31.07.2026):</span></span></span></p>
+
+<ul style="margin-left:40px">
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Solar Power:</span></strong><strong><span style="color:#1f1f1f"> 164.59 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Wind Power:</span></strong><strong><span style="color:#1f1f1f"> 58.14 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Hydro Power (Large &amp; Small):</span></strong><strong><span style="color:#1f1f1f"> 57.24 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Bio-power:</span></strong><strong><span style="color:#1f1f1f"> 11.75 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Nuclear Power:</span></strong><strong><span style="color:#1f1f1f"> 8.78 GW </span></strong></span></span></li>
+</ul>
+
+<ul style="margin-left:40px">
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Total Non-Fossil Capacity:</span></strong><strong><span style="color:#1f1f1f"> 300.50 GW</span></strong></span></span></li>
+</ul>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The share of non-fossil fuel electricity capacity in the country&rsquo;s total electricity generation capacity (which is around 552 GW at present), has reached over 54%.&nbsp; </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">Backed through the key policy enablers provided by the Government for this transformation, this monumental achievement highlights India&rsquo;s rapid progress towards building an <em>Aatmanirbhar</em> energy ecosystem and securing the target of 500 GW non-fossil capacity by 2030. &nbsp;</span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The growth in clean energy generation has been anchored by stellar contributions across sectors. Solar energy remains the key growth engine with around 165 GW at present from just 2.8 GW in 2014.&nbsp; Concurrently, the wind energy sector has also seen strong momentum reaching to over 58 GW from 21 GW in 2014.</span> </span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">During 2025-26, a record capacity of 55.29 GW non-fossil fuel based electricity capacity was installed in the country with key contributions from 44.6 GW solar power and 6 GW wind power.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The rapid progress in renewable energy capacity is also reflected in renewable energy generation in the country which has increased from 190.96 billion units in 2014-15 to 477.79 BU in 2025-26. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">To support this rapid expansion and ensure supply chain independence, India has transformed its domestic manufacturing capabilities. Driven by the Production Linked Incentive (PLI) scheme focusing on the nation&#39;s solar installations with high-efficiency, indigenously produced modules, the enlisted capacity under the Approved List of Models and Manufacturers (ALMM) for Solar PV Modules has crossed the historic 200 GW milestone, rising from just 2.3 GW in 2014.</span> </span></span></p>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">Clean energy transition is no longer just a climate commitment&mdash;it is central to shaping India&#39;s industrial competitiveness, energy independence, and economic resilience. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The Ministry of New and Renewable Energy is also driving deep industrial decarbonization, positioning India to become a global hub for the production, usage, and export of Green Hydrogen and its derivatives, through the implementation of the National Green Hydrogen Mission. </span>&nbsp;</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">****</span></span></span></p>
+
+<p><br />
+<span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">Nihi Sharma/ Laxya Lohan</span></span></span></p>
+
+
+                        
+                        <div id="reel_pic">
+                        </div>
+
+
+
+                        
+                        <br />
+                        <span id="ReleaseId">(Release ID: 2296782)</span>
+                        <span id="lblViews">Visitor Counter : 1121</span>
+                        <div>
+                              
+                        </div>
+                        
+
+                        <span id="lblRefPhoto"></span>
+
+                        <div class="BackgroundRelease">
+                              
+                        </div>
+                        <div>
+                              
+                        </div>
+                        <div class="ReleaseLang">Read this release in: 
+                        
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296828' target="_blank">
+                                          Kannada </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296834' target="_blank">
+                                          Urdu </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296819' target="_blank">
+                                          हिन्दी </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296815' target="_blank">
+                                          Marathi </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296859' target="_blank">
+                                          Tamil </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296910' target="_blank">
+                                          Malayalam </a>
+                              
+                        </div>
+
+                        <div class="RelTag">
+                              <ul>
+                                    
+                              </ul>
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div id="RelLink" class="RelLink">
+                              <ul>
+                                    
+                                    
+                              </ul>
+                        </div>
+                        <center>
+                              
+                        </center>
+                  </div>
+
+                  <div id="update12">
+	
+                              
+                              <input type="hidden" name="Hidden" id="Hidden" />
+                              <div id="P_CategoryManagement" class="ModalWindow" style="border-width:0px;height:60%;width:60%;overflow:auto;display: none">
+		
+                                    <div>
+                                          <input type="image" name="btnClose" id="btnClose" src="images/close_flat_icon.png" />
+                                    </div>
+                                    <div id="description">
+                                    </div>
+                                    <div class="text-center">
+                                          <h2>
+                                                
+                                                <br>
+                                                
+                                          </h2>
+                                    </div>
+                                    <br />
+                                    <div class="clear">
+                                    </div>
+                                    
+                              
+	</div>
+                        
+</div>
+            </div>
+            
+            <div id="PdfDiv" style="display: none;">
+                  <table width="100%">
+                        <tr>
+                              <td style="font-weight: 200; text-align: center">
+                                    Ministry of New and Renewable Energy 
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="text-align: center; font-size: 14px;">
+                                          Posted On:
+                        09 AUG 2026 2:31PM by PIB Delhi
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: left; font-size: 16px;">
+                                          <p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">In a major milestone for the nation&#39;s clean energy transition and climate action targets, <strong>India has crossed 300 GW of non-fossil fuel-based installed electricity generation capacity as on 31<sup>st</sup> July, 2026;</strong> over 60% of the 500 GW capacity targeted to be achieved by 2030. &nbsp;</span></span></span></p>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Breakdown</span></strong><span style="color:#1f1f1f"> of Non-Fossil Fuel Capacity (as on 31.07.2026):</span></span></span></p>
+
+<ul style="margin-left:40px">
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Solar Power:</span></strong><strong><span style="color:#1f1f1f"> 164.59 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Wind Power:</span></strong><strong><span style="color:#1f1f1f"> 58.14 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Hydro Power (Large &amp; Small):</span></strong><strong><span style="color:#1f1f1f"> 57.24 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Bio-power:</span></strong><strong><span style="color:#1f1f1f"> 11.75 GW</span></strong></span></span></li>
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Nuclear Power:</span></strong><strong><span style="color:#1f1f1f"> 8.78 GW </span></strong></span></span></li>
+</ul>
+
+<ul style="margin-left:40px">
+	<li><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong><span style="color:#1f1f1f">Total Non-Fossil Capacity:</span></strong><strong><span style="color:#1f1f1f"> 300.50 GW</span></strong></span></span></li>
+</ul>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The share of non-fossil fuel electricity capacity in the country&rsquo;s total electricity generation capacity (which is around 552 GW at present), has reached over 54%.&nbsp; </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">Backed through the key policy enablers provided by the Government for this transformation, this monumental achievement highlights India&rsquo;s rapid progress towards building an <em>Aatmanirbhar</em> energy ecosystem and securing the target of 500 GW non-fossil capacity by 2030. &nbsp;</span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The growth in clean energy generation has been anchored by stellar contributions across sectors. Solar energy remains the key growth engine with around 165 GW at present from just 2.8 GW in 2014.&nbsp; Concurrently, the wind energy sector has also seen strong momentum reaching to over 58 GW from 21 GW in 2014.</span> </span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">During 2025-26, a record capacity of 55.29 GW non-fossil fuel based electricity capacity was installed in the country with key contributions from 44.6 GW solar power and 6 GW wind power.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The rapid progress in renewable energy capacity is also reflected in renewable energy generation in the country which has increased from 190.96 billion units in 2014-15 to 477.79 BU in 2025-26. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">To support this rapid expansion and ensure supply chain independence, India has transformed its domestic manufacturing capabilities. Driven by the Production Linked Incentive (PLI) scheme focusing on the nation&#39;s solar installations with high-efficiency, indigenously produced modules, the enlisted capacity under the Approved List of Models and Manufacturers (ALMM) for Solar PV Modules has crossed the historic 200 GW milestone, rising from just 2.3 GW in 2014.</span> </span></span></p>
+
+<p><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">Clean energy transition is no longer just a climate commitment&mdash;it is central to shaping India&#39;s industrial competitiveness, energy independence, and economic resilience. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">The Ministry of New and Renewable Energy is also driving deep industrial decarbonization, positioning India to become a global hub for the production, usage, and export of Green Hydrogen and its derivatives, through the implementation of the National Green Hydrogen Mission. </span>&nbsp;</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">****</span></span></span></p>
+
+<p><br />
+<span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:#1f1f1f">Nihi Sharma/ Laxya Lohan</span></span></span></p>
+
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 100; text-align: left; font-size: 16px;">
+                                          (Release ID: 2296782)
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                              </td>
+                        </tr>
+                        <tr>
+                              <td style="font-weight: 200; text-align: center; font-size: 24px;"></td>
+                        </tr>
+                  </table>
+            </div>
+            <div class="clearfix">
+            </div>
+
+            
+
+            <div class="section1">
+                  <div id="frst_t">
+                        <div id="arr_rm"><div class='sticky-social_mb'><ul class='social_mb'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='40' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782&text=India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='40' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='40' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='40' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782&title=India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='40' /></li></a></ul></div></div>
+                  </div>
+                  <div id="second_t">
+                        <div id="sndr_rm"><div class='sticky-social'><ul class='social'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='35' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782&text=India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='35' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='35' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='35' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296782&title=India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='35' /></li></a></ul></div></div>
+                  </div>
+            </div>
+            <input type="hidden" name="ltrTitlee" id="ltrTitlee" value="India Achieves Landmark 300 GW Non-Fossil Fuel Power Capacity" />
+            <input type="hidden" name="ltrSubtitlee" id="ltrSubtitlee" />
+            <input type="hidden" name="ltrDescriptionn" id="ltrDescriptionn" value="&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>In a major milestone for the nation&amp;#39;s clean energy transition and climate action targets, &lt;strong>India has crossed 300 GW of non-fossil fuel-based installed electricity generation capacity as on 31st July, 2026;&lt;/strong> over 60% of the 500 GW capacity targeted to be achieved by 2030. &amp;nbsp;&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;>Breakdown&lt;/span>&lt;/strong>&lt;span style=&quot;color:#1f1f1f&quot;> of Non-Fossil Fuel Capacity (as on 31.07.2026):&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;ul style=&quot;margin-left:40px&quot;>
+	&lt;li>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;>Solar Power:&lt;/span>&lt;/strong>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;> 164.59 GW&lt;/span>&lt;/strong>&lt;/span>&lt;/span>&lt;/li>
+	&lt;li>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;>Wind Power:&lt;/span>&lt;/strong>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;> 58.14 GW&lt;/span>&lt;/strong>&lt;/span>&lt;/span>&lt;/li>
+	&lt;li>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;>Hydro Power (Large &amp;amp; Small):&lt;/span>&lt;/strong>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;> 57.24 GW&lt;/span>&lt;/strong>&lt;/span>&lt;/span>&lt;/li>
+	&lt;li>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;>Bio-power:&lt;/span>&lt;/strong>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;> 11.75 GW&lt;/span>&lt;/strong>&lt;/span>&lt;/span>&lt;/li>
+	&lt;li>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;>Nuclear Power:&lt;/span>&lt;/strong>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;> 8.78 GW &lt;/span>&lt;/strong>&lt;/span>&lt;/span>&lt;/li>
+&lt;/ul>
+
+&lt;ul style=&quot;margin-left:40px&quot;>
+	&lt;li>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;>Total Non-Fossil Capacity:&lt;/span>&lt;/strong>&lt;strong>&lt;span style=&quot;color:#1f1f1f&quot;> 300.50 GW&lt;/span>&lt;/strong>&lt;/span>&lt;/span>&lt;/li>
+&lt;/ul>
+
+&lt;p>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>The share of non-fossil fuel electricity capacity in the country&amp;rsquo;s total electricity generation capacity (which is around 552 GW at present), has reached over 54%.&amp;nbsp; &lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>Backed through the key policy enablers provided by the Government for this transformation, this monumental achievement highlights India&amp;rsquo;s rapid progress towards building an &lt;em>Aatmanirbhar&lt;/em> energy ecosystem and securing the target of 500 GW non-fossil capacity by 2030. &amp;nbsp;&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>The growth in clean energy generation has been anchored by stellar contributions across sectors. Solar energy remains the key growth engine with around 165 GW at present from just 2.8 GW in 2014.&amp;nbsp; Concurrently, the wind energy sector has also seen strong momentum reaching to over 58 GW from 21 GW in 2014.&lt;/span> &lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>During 2025-26, a record capacity of 55.29 GW non-fossil fuel based electricity capacity was installed in the country with key contributions from 44.6 GW solar power and 6 GW wind power.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>The rapid progress in renewable energy capacity is also reflected in renewable energy generation in the country which has increased from 190.96 billion units in 2014-15 to 477.79 BU in 2025-26. &lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>To support this rapid expansion and ensure supply chain independence, India has transformed its domestic manufacturing capabilities. Driven by the Production Linked Incentive (PLI) scheme focusing on the nation&amp;#39;s solar installations with high-efficiency, indigenously produced modules, the enlisted capacity under the Approved List of Models and Manufacturers (ALMM) for Solar PV Modules has crossed the historic 200 GW milestone, rising from just 2.3 GW in 2014.&lt;/span> &lt;/span>&lt;/span>&lt;/p>
+
+&lt;p>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>Clean energy transition is no longer just a climate commitment&amp;mdash;it is central to shaping India&amp;#39;s industrial competitiveness, energy independence, and economic resilience. &lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>The Ministry of New and Renewable Energy is also driving deep industrial decarbonization, positioning India to become a global hub for the production, usage, and export of Green Hydrogen and its derivatives, through the implementation of the National Green Hydrogen Mission. &lt;/span>&amp;nbsp;&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>****&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p>&lt;br />
+&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:#1f1f1f&quot;>Nihi Sharma/ Laxya Lohan&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+" />
+            <script type="text/javascript">
+                  var mPlayer = document.getElementById("background_music");
+                  var mPlayAction = document.getElementById("playbutton");
+
+                  var isPlaying = false;
+
+                  function playAudio() {
+                        mPlayer.play();
+                        isPlaying = true;
+                        document.getElementById('stopA').style.display = "block";
+                        document.getElementById('playA').style.display = "none";
+                  }
+
+                  function pauseAudio() {
+                        mPlayer.pause();
+                        isPlaying = false;
+                        document.getElementById('playA').style.display = "block";
+                        document.getElementById('stopA').style.display = "none";
+                  }
+                  //function HandleAudio() {
+                  //    if (isPlaying == true) {
+                  //        //Playing already Pause it
+                  //        pauseAudio();
+                  //    } else {
+                  //        //Play the music
+                  //        playAudio();
+                  //    }
+                  //}
+            </script>
+            <script type="text/javascript">
+                  var synth = window.speechSynthesis;
+
+            
+                  function CleanHtml(html) {
+
+                        html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+
+                        return html;
+                  }
+                  function stripHtml(html) {
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = CleanHtml(html);
+                        return tmp.textContent || tmp.innerText || "";
+                  }
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        //for responsive tables
+                        $("table").each(function () {
+                              if (!$(this).closest(".table-responsive").length) {
+                                    $(this).wrap("<div class='table-responsive'></div>");
+                              }
+                        });
+
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            
+            <style type="text/css">
+                  @media print {
+                        .sticky-social, .sticky-social_mb, .pull-right, #printPDF {
+                              display: none !important;
+                        }
+                  }
+
+                  .f_vl {
+                        padding-right: 30px;
+                        font-size: 17px;
+                        cursor: pointer;
+                  }
+
+                  .log_oo {
+                        // width: 20%;
+                        display: flex;
+                        justify-content: space-between;
+                  }
+
+                        .log_oo img {
+                              width: 150px;
+                              /*width: 100%;
+                    height: auto;*/
+                        }
+
+                  .sticky-social_mb {
+                        position: fixed;
+                        bottom: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                        width: 100%;
+                  }
+
+                  .social_mb {
+                        list-style: none;
+                        display: flex;
+                        width: 100%;
+                        margin-bottom: -8px;
+                  }
+
+                        .social_mb a {
+                              padding: 8px 0px;
+                              font-size: 30px;
+                              transition: all 0.8s ease-in-out;
+                              width: 20% !important;
+                              text-align: center;
+                        }
+            </style>
+            <style type="text/css">
+                  .section1 {
+                        position: relative;
+                        padding: 10px 0px;
+                        width: 100%;
+                  }
+
+
+
+                  .sticky-social {
+                        position: fixed;
+                        top: 20px;
+                        left: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                  }
+
+                  .social {
+                        list-style: none;
+                  }
+
+                        .social a li {
+                              padding: 8px 12px;
+                              font-size: 25px;
+                              transition: all 0.8s ease-in-out;
+                        }
+
+                              .social a li:hover {
+                                    margin-right: -30px;
+                                    box-shadow: 2px 5px 10px grey;
+                              }
+
+                                    .social a li:hover .fa {
+                                          margin-left: 20px;
+                                    }
+
+                  .fb_b {
+                        /* background-color: rgb(59, 89, 152);*/
+                        background-color: rgba(65,103,178,255);
+                  }
+
+                  .twitter_r {
+                        /* background-color: rgb(29, 161, 242);*/
+                        background-color: #000000;
+                  }
+
+                  .whatsapp_r {
+                        /* background-color: rgb(77, 194, 71);*/
+                        background-color: rgba(13,191,67,255);
+                  }
+
+                  .fa-envelope_r {
+                        /* background-color: rgb(219, 68, 55);*/
+                        background-color: #e2123d;
+                  }
+
+                  .fa-linkedin_r {
+                        background-color: rgb(0, 119, 181);
+                  }
+            </style>
+            <style type="text/css">
+                  @media only screen and (max-device-width: 767px) {
+                        p span img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        p img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        h2 {
+                              font-size: 20px !important;
+                              font-weight: 600 !important;
+                        }
+
+                        h3 {
+                              font-size: 18px !important;
+                              font-weight: 600 !important;
+                        }
+                  }
+            </style>
+            <style type="text/css">
+                  /* === Film Roll Badge Styling(IFFI2025 countdown) === */
+                  .film-roll-badge {
+                        position: absolute;
+                        top:82%;
+                        right: 20px;
+                        width: 230px;
+                        height: 70px;
+                        background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 18px, #6e2b8b 18px, #6e2b8b 36px );
+                        border-top: 8px solid #9a2375;
+                        border-bottom: 8px solid #9a2375;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                        animation: moveFilm 8s linear infinite;
+                        z-index: 10;
+                  }
+
+                        /* film sprocket holes */
+                        .film-roll-badge::before,
+                        .film-roll-badge::after {
+                              content: "";
+                              position: absolute;
+                              width: 100%;
+                              height: 10px;
+                              background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 10px, #fff 10px, #fff 20px );
+                              left: 0;
+                              z-index: 2;
+                        }
+
+                        .film-roll-badge::before {
+                              top: -4px;
+                        }
+
+                        .film-roll-badge::after {
+                              bottom: -4px;
+                        }
+
+                  .film-roll-inner {
+                        position: relative;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: flicker 2s infinite ease-in-out;
+                  }
+
+                  .countdown-text {
+                        font-size: 1.3rem;
+                        font-weight: 700;
+                        color: #fff;
+                        text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px #000;
+                        white-space: nowrap;
+                  }
+
+                  /* === Animations === */
+                  @keyframes moveFilm {
+                        0% {
+                              background-position: 0 0;
+                        }
+
+                        100% {
+                              background-position: 120px 0;
+                        }
+                  }
+
+                  @keyframes flicker {
+                        0%, 100% {
+                              opacity: 1;
+                        }
+
+                        50% {
+                              opacity: 0.9;
+                        }
+
+                        25% {
+                              opacity: 0.95;
+                        }
+
+                        75% {
+                              opacity: 0.85;
+                        }
+                  }
+
+                  /* === Responsive Adjustments === */
+                  @media (max-width: 1500px) {
+                        .film-roll-badge {
+                              top: 68%;
+                              right: 18px;
+                              /* width: 220px; */
+                              height: 65px;
+                              font-size: 0.85rem;
+                        }
+
+                        .press-section {
+                              margin-top: 35px;
+                        }
+                  }
+
+                  @media (max-width: 992px) {
+                        .film-roll-badge {
+                              top: 52%;
+                              right: 10px;
+                               width: 200px; 
+                              height: 60px;
+                        }
+                  }
+
+                  @media (max-width: 768px) {
+                        .film-roll-badge {
+                              top: 56%;
+                              right: 10px;
+                               width: 124px; 
+                              height: 55px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.9rem;
+                        }
+                  }
+
+                  @media (max-width: 576px) {
+                        .film-roll-badge {
+                              top: 59%;
+                              right: 5px;
+                              /* width: 160px; */
+                              height: 50px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.85rem;
+                        }
+                  }
+            </style>
+          <script type="text/javascript">
+                const festivalStart = new Date("2025-11-20T00:00:00").getTime();
+                const festivalEnd = new Date("2025-11-28T23:59:59").getTime();
+
+                const countdownElement = document.getElementById("countdown");
+
+                const interval = setInterval(() => {
+                      const now = new Date().getTime();
+
+                      // BEFORE FESTIVAL — show days + hours left
+                      if (now < festivalStart) {
+                            const diff = festivalStart - now;
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                            countdownElement.innerHTML = `
+              ${days} Day${days !== 1 ? 's' : ''} 
+              ${hours} Hour${hours !== 1 ? 's' : ''} to go
+          `;
+
+                      }
+
+                      // DURING FESTIVAL — show 56th IFFI - Day X
+                      else if (now >= festivalStart && now <= festivalEnd) {
+                            const dayNumber = Math.floor((now - festivalStart) / (1000 * 60 * 60 * 24)) + 1;
+                            countdownElement.innerHTML = `56th IFFI - Day ${dayNumber}`;
+                      }
+
+                      // AFTER FESTIVAL — new message
+                      else {
+                            countdownElement.innerHTML = `✨ IFFI closes but never ends…`;
+
+                            // Width change logic
+                            const elements = document.querySelectorAll('.film-roll-badge');
+                            elements.forEach(el => el.style.width = "350px");
+
+                            clearInterval(interval);
+                      }
+
+                }, 1000);
+          </script>
+ <script type="text/javascript">
+
+               const miffStart = new Date("2026-06-15T00:00:00").getTime();
+               const miffEnd = new Date("2026-06-15T23:59:59").getTime();
+
+               const miffElement = document.getElementById("miff");
+
+               if (miffElement) {
+
+                   const miffInterval = setInterval(() => {
+
+                       const now = new Date().getTime();
+
+                       // Before MIFF
+                       if (now < miffStart) {
+
+                           const diff = miffStart - now;
+                           const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                           const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        
+
+                   /*  miffElement.innerHTML = `${days} Day${days !== 1 ? 's' : ''} ${hours} Hour${hours !== 1 ? 's' : ''} to MIFF`;*/
+                           miffElement.innerHTML = `${days} Day${days === 1 ? '' : 's'} to MIFF ...`;
+
+
+                     }
+
+                       // During MIFF
+                       else if (now >= miffStart && now <= miffEnd) {
+
+                           const dayNumber =
+                               Math.floor((now - miffStart) / (1000 * 60 * 60 * 24)) + 1;
+
+                           miffElement.innerHTML = `19th MIFF - Day ${dayNumber}`;
+                       }
+
+                       // After MIFF
+                       else {
+
+                           miffElement.innerHTML = `✨ MIFF concludes, cinema lives on...`;
+
+                           document.querySelectorAll('.film-roll-badge')
+                               .forEach(el => el.style.width = "350px");
+
+                           clearInterval(miffInterval);
+                       }
+
+                   }, 1000);
+               }
+
+</script>
+
+      
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {var fn = function() {$get("sc_HiddenField").value = '';Sys.Application.remove_init(fn);};Sys.Application.add_init(fn);})();Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","PopupControlID":"P_CategoryManagement","dynamicServicePath":"/PressReleasePage.aspx","id":"mpe"}, null, null, $get("Hidden"));
+});
+//]]>
+</script>
+<input type="hidden" name="__ncforminfo" value="MRVqAdo_EpFne6X87CowHhQT7hnsW-VIQ_fjHe3NYgTD9M_RsvZbJZoplZX-r0lY_UToTr3zlvWE1PRfjCLRDxWpLdHMWo-SgsB168N2VpGy5JL22Uc3Mw=="/></form>
+</body>
+</html>
+

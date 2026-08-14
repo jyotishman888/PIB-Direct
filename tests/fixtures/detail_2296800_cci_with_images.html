@@ -1,0 +1,1035 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>
+	Press Release Page | Press Information Bureau
+</title><link href="css/style.css" rel="stylesheet" type="text/css" /><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="alternate stylesheet" href="css/change.css" media="screen" title="change" /><link rel="alternate stylesheet" href="css/green.css" media="screen" title="green" /><link rel="alternate stylesheet" href="css/yellow.css" media="screen" title="yellow" /><link rel="stylesheet" type="text/css" href="css/prtint.css" media="print" /><link rel="stylesheet" href="css/style3.1.css" type="text/css" />
+
+
+      <script src="js/jquery.min.js" type="text/javascript"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" /><link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" />
+
+      <script type="text/javascript">
+            $(document).ready(function () {
+                  function getParameterByName(name) {
+                        var url = window.location.href;
+                        name = name.replace(/[\[\]]/g, '\\$&');
+                        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                              results = regex.exec(url);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                  }
+                  // Get the IDs from the current page's URL
+                  let prid = parseInt(getParameterByName('PRID'), 10);
+
+                  if (!isNaN(prid) && prid > 0) {
+                        $.ajax({
+                              type: "POST",
+                              url: "AjaxMethod.aspx/UpdatePRHitCount",
+                              async: false,
+                              data: JSON.stringify({ 'PermId': prid }),
+                              contentType: "application/json; charset=utf-8",
+                              dataType: "json",
+                              success: function (response) {
+                                    console.log(response);
+                              },
+                              error: function (error) {
+                                    console.log("Error in AJAX request", error);
+                              }
+                        });
+                  } else {
+                        console.log("Invalid parameters:", prid);
+                  }
+
+            });
+      </script>
+      <style type="text/css">
+            .table-responsive {
+                  width: 100%;
+                  overflow-x: auto;
+            }
+
+            .banner {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  background-color: #000;
+                  color: #fff;
+                  padding: 20px;
+            }
+
+            full-width {
+                  width: 100%;
+            }
+
+            .logo-left, .logo-center, .countdown {
+                  display: flex;
+                  align-items: center;
+            }
+
+                  .logo-left img, .logo-center img {
+                        height: 70px;
+                  }
+
+            .countdown {
+                  text-align: center;
+                  background-color: #444;
+                  border-radius: 10px;
+                  padding: 10px;
+                  border: 2px solid grey;
+            }
+
+            .firstnumber {
+                  color: #000000;
+                  position: absolute;
+                  top: 50px;
+                  right: 90px;
+                  font-size: 30px;
+            }
+
+            .secondnumber {
+                  position: absolute;
+                  color: #000000;
+                  right: 45px;
+                  top: 50px;
+                  font-size: 30px;
+            }
+
+            .countdown .days {
+                  font-size: 35px;
+                  color: gold;
+            }
+
+            .countdown p {
+                  margin: 0;
+            }
+
+            .countdown .text {
+                  font-size: 16px;
+            }
+
+            a {
+                  word-break: break-all;
+            }
+
+            iframe, img {
+                  max-width: 100%;
+            }
+
+            @media(max-width:1199px) {
+                  .firstnumber {
+                        top: 40px;
+                        right: 72px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 35px;
+                        top: 40px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:990px) {
+                  .firstnumber {
+                        top: 25px;
+                        right: 54px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 25px;
+                        top: 25px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:768px) {
+                  .countdown, .days {
+                        font-size: 12px !important;
+                  }
+
+
+                  .firstnumber {
+                        top: 25%;
+                        right: 8%;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 4.5%;
+                        top: 25%;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:475px) {
+                  .countdown, .days {
+                        font-size: 10px !important;
+                        top: 20%;
+                  }
+
+                  .bannerimgdiv {
+                        padding: 0 !important;
+                  }
+
+                  .bannerimg {
+                        width: 108% !important;
+                  }
+            }
+      </style>
+      <script type="text/javascript">
+            $(function () {
+                  $("[id*=printPDF]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+            $(function () {
+                  $("[id*=printPDFEvent]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+      </script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112591026-1"></script>
+      <script>
+
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() { dataLayer.push(arguments); }
+
+            gtag('js', new Date());
+
+
+
+            gtag('config', 'UA-112591026-1');
+
+      </script>
+
+<meta property="og:title" content="Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting" /><meta property="og:url" content="www.pib.gov.in/Pressreleaseshare.aspx?PRID=2296800" /><meta property="og:description" content="Under India&#39;s BRICS Chairship 2026, the Meeting of Heads of BRICS Competition Authorities was organi" /><meta property="og:image" content="https:/pib.gov.in/images/indian-emblem.png" />
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="C4E7H-KSCMC-422L4-W3EM5-U36MF",function(){function e(){if(!i){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.parentNode.appendChild(e),i=!0}}function t(e){i=!0;var n,t,a,r,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o.parentNode,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",r=(a.frameElement||a).style,r.width=0,r.height=0,r.border=0,r.display="none",o.parentNode.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void(0);",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=12,window.BOOMR.url=n+"C4E7H-KSCMC-422L4-W3EM5-U36MF";var o=document.currentScript||document.getElementsByTagName("script")[0],i=!1,r=document.createElement("link");if(r.relList&&"function"==typeof r.relList.supports&&r.relList.supports("preload")&&"as"in r)window.BOOMR.snippetMethod="p",r.href=window.BOOMR.url,r.rel="preload",r.as="script",r.addEventListener("load",e),r.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!i)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.parentNode.appendChild(r);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="eqcqeaniasmd6jafaiabmmatabvhrndw-f-f6a1c555e-clienttons-s.akamaihd.net",o="false"=="true"?2:1,i={"ak.v":"41","ak.cp":"1825201","ak.ai":parseInt("1215205",10),"ak.ol":"0","ak.cr":6,"ak.ipv":6,"ak.proto":"http/1.1","ak.rid":"2161e46c","ak.r":34469,"ak.a2":n,"ak.m":"dscb","ak.n":"ff","ak.cport":65167,"ak.gh":"184.84.221.86","ak.quicv":"","ak.tlsv":"tls1.2","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"bbr","ak.t":"1786295414","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==WX1g7h8PFy7d3xG/3Onh3HHnUett53/3ALDRKASDSbeqkjLLqypUjWTH+kYXS0g5PV95zctT6a3fCZviXROQknfhmuUQAdvxSKEyWCa2f1BCHfJA/Vvh1pmpmAn73i0iU6LFbOS0EYKn5I+bLe/C55Wk8kUii+0O/Mrvyyo2ydT0RTUu8/++kAhqyY1P2dTXRYKkxJW71AAxIJVFn2Z79tWk1O8NO7cpnNvFxX0owXzDriWaMBy/PWKwtk6NqDajvPZ1QBeIiM6flC4a8kE5nfu6IHyzLWqegmPkq9OH69afHu3ck0ZiQ57tiQkUNFWy+Gssgn7NDNJC8/X17KenwtevYCxgAuDf+/49+cNm1gSIGK7Rpqz1WIQ7I9vpQKrsxk9WTXiH+uHFu00gvU1f9oz9uQhm/dZS0pJyVVqXX4w=","ak.pv":"9","ak.dpoabenc":"","ak.tf":o};if(""!==t)i["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))i["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(i)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:i,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body>
+      <form method="post" action="./PressReleasePage.aspx?PRID=2296800&amp;reg=3&amp;lang=1" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="sc_HiddenField" id="sc_HiddenField" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=b94hX14NMWluUQ9a73g0LYFvtKhY52TK8cbDkYB_F2GuPre4tdh-ebiiI4xuhXnRu6Q5dQjaQA4oN3PEeL0GrtKEyEY1&amp;t=638942408819057530" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=YwOa_0w_u3oCLFqmIIOf-XEz4GWZ1DuyQIpxIA4LVkywj39sZSps12NbK5wNl5XN9JF3m7d-ey7BFDgj6i0380qRQ5IMWCL54sYNVU1IjMmiOWpp0&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=_shmykYI80CxCNR43Ii1nLy9PBGhuSe6SPp3CEYu0wDEuLqDAuIcsXVNhTIgQn0iyiwPorMflXuK31FftDX9GnB0m366MCEoOmY-eKQ3YAO9xRL0gIigzgRbtbVOgSQkJbJpFg2&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/PressReleasePage.aspx?_TSM_HiddenField_=sc_HiddenField&amp;_TSM_CombinedScripts_=%3b%3bAjaxControlToolkit%2c+Version%3d3.5.7.123%2c+Culture%3dneutral%2c+PublicKeyToken%3d28f01b0e84b6d53e%3aen-US%3a5a4df314-b4a2-4da2-a207-9284f1b1e96c%3ade1feab2%3af2c8e708%3a720a52bf%3af9cec9bc%3a589eaa30%3aa67c2700%3aab09e3fe%3a87104b7c%3a8613aea7%3a3202a5a2%3abe6fb298" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="59B53027" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="P4MEnJP29/fVgtRXeIbICZjlNf9HVLAb74p7CiP8DJ9F63mO/IzFrgcDF6vV5X+IdqqhssXc+H3C/vGSW/Z+iKU5WpFnhqEhMSL7Gj78N9c/0aGMaQfDoNkgU9mj0KBW0jPjo+JRNAe2Fv7Sxg4CQ4UrmNm45obsBGLpOJG0rfwuOUw0xoMIZvBTDWl8UDdi0Q10oeHe2Pv1ARoLc1aQ+udgq6BbY4ZV6Qyb342E1DV2Gf+iBISyEh7fu/W6jsrdn0rq+m5QojJARCLTxXOfjIps7FSO7Ml4bNLQN2bQ6P7/lGv/" />
+</div>
+                              
+            <div id="templateCss"></div>
+            <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('sc', 'form1', ['tupdate12','update12'], [], [], 90, '');
+//]]>
+</script>
+
+            <input type="hidden" name="hfGridHtml" id="hfGridHtml" />
+            <div class="container" style='margin-bottom: 50px;'>
+                  <div id="accessories">
+
+                        
+                        <div class="pull-right" style="display: flex">
+                              <div id="voll"></div>
+                              <div id="vollDT"></div>
+                              
+                              
+<div class="print-icons">
+<input type="image" name="Print1$print" id="Print1_print" aria-label="Print" src="images/printer_icon.png" alt="print page button" style="padding: 5px 10px 5px 10px;" />
+</div>
+                        </div>
+                  </div>
+                  <input type="hidden" name="hydpermid" id="hydpermid" value="2296800" />
+                  
+
+
+
+                  <div class="innner-page-main-about-us-content-right-part">
+
+                        <div id="MinistryName" class="MinistryNameSubhead text-center">
+                              Competition Commission of India
+                        </div>
+                        
+                        <div id="lg_g"><div class='log_oo'>  <img src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2021/aug/ph202183101.png' alt='azadi ka amrit mahotsav' /> </div></div>
+
+
+
+
+
+                        <div class="text-center event-heading-background">
+                              
+                              <h2 id="Titleh2">
+                                    Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting
+                              </h2>
+                              <h3 id="Subtitleh3">
+                                    <span id="ltrSubtitle"><br/>Heads of BRICS Competition Authorities adopt Joint Statement on ‘Strengthening Cooperation to Promote Fair Competition, including in Renewable Energy Markets’<br/><br/>BRICS Competition Authorities Heads reaffirm commitment for cooperation, dialogue, and knowledge-sharing to promote effective competition enforcement and address challenges in increasingly interconnected markets</span>
+                              </h3>
+                        </div>
+
+                        <div id="PrDateTime" class="ReleaseDateSubHeaddateTime text-center pt20">
+                              Posted On:
+                09 AUG 2026 3:21PM by PIB Delhi
+                        </div>
+                        
+                        <div class='pt20'>
+                        </div>
+                        <input type="hidden" name="hydphotoUrl" id="hydphotoUrl" />
+                        
+                        <p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">Under India&#39;s BRICS Chairship 2026, the Meeting of Heads of BRICS Competition Authorities was organi</span>s<span style="color:black">ed by the Competition Commission of India (CCI), on 8<sup>th</sup> August, 2026 in Udaipur, Rajasthan. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">The meeting brought together the Heads and senior representatives of competition authorities from BRICS member countries to strengthen cooperation in promoting fair competition and addressing emerging challenges in competition law and policy.</span></span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image001O44L.jpg" style="height:401px; width:602px" /></span></span></span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">&nbsp;In her inaugu</span><span style="font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">ral </span><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">address, </span><span style="font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">Smt. Ravneet Kaur, Chairperson, CCI</span><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px"> underscored the shared responsibility of BRICS competition authorities to preserve and promote competitive markets that foster efficiency, consumer welfare, innovation, and opportunities for businesses to compete on merit.</span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">Highlighting the increasingly cross-border nature of digital markets and emerging technologies, the Chairperson, CCI observed that sustained cooperation and knowledge-sharing among BRICS competition authorities would be essential for developing informed, effective, and future-ready approaches to competition enforcement. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">Referring to the global transition towards renewable energy and sustainability, she noted that continued collaboration among BRICS competition authorities would contribute to fostering fair and competitive renewable energy markets while advancing the shared objectives of sustainable growth and energy security. She also emphasised that, amidst evolving market dynamics and emerging enforcement challenges, competition law interventions must remain principled, evidence-based, and firmly anchored in the core objectives of competition law.</span></span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image002OEYF.jpg" style="height:401px; width:602px" /></span></span></span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">During the Meeting, the Heads of BRICS Competition Authorities exchanged views on recent developments in competition law and policy in their respective jurisdictions, including significant enforcement initiatives, institutional developments, and emerging challenges in their domestic markets.</span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">As part of India&#39;s BRICS Chairship, the CCI steered a collaborative BRICS study titled &quot;Emerging Competition Landscape in the Renewable Energy Sector in BRICS&quot;, to develop a better understanding of the evolving competition dynamics in renewable energy markets across BRICS jurisdictions and identifying areas for future cooperation. The key findings of the Study were presented during the Meeting. </span></span></span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">During the meeting, a Joint Statement of Heads of BRICS Competition Authorities titled &quot;Strengthening Cooperation to Promote Fair Competition, including in Renewable Energy Markets&quot;, was adopted. The Joint Statement reflects the shared commitment of BRICS competition authorities to promote competitive, innovative, resilient and sustainable renewable energy markets and to enhance knowledge sharing among BRICS Competition Authorities in addressing emerging competition issues associated with the global energy transition.</span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">The Administrative Council for Economic Defense (CADE), Brazil, briefed the participants on its preparations for the Xth BRICS International Competition Conference, scheduled to be held in Brazil in 2027.</span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">The Meeting concluded with closing remarks by the Heads of BRICS Competition Authorities, who reaffirmed their commitment for continued cooperation, dialogue, and knowledge-sharing to promote effective competition enforcement and address emerging challenges in increasingly interconnected markets.</span></span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *****</span></span></p>
+
+<p style="text-align:justify">&nbsp;</p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong>SR/ONP</strong></span></span></p>
+
+
+                        
+                        <div id="reel_pic">
+                        </div>
+
+
+
+                        
+                        <br />
+                        <span id="ReleaseId">(Release ID: 2296800)</span>
+                        <span id="lblViews">Visitor Counter : 617</span>
+                        <div>
+                              
+                        </div>
+                        
+
+                        <span id="lblRefPhoto"></span>
+
+                        <div class="BackgroundRelease">
+                              
+                        </div>
+                        <div>
+                              
+                        </div>
+                        <div class="ReleaseLang">Read this release in: 
+                        
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296908' target="_blank">
+                                          Urdu </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296855' target="_blank">
+                                          हिन्दी </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296889' target="_blank">
+                                          Marathi </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296825' target="_blank">
+                                          Gujarati </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2296890' target="_blank">
+                                          Tamil </a>
+                              
+                        </div>
+
+                        <div class="RelTag">
+                              <ul>
+                                    
+                              </ul>
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div id="RelLink" class="RelLink">
+                              <ul>
+                                    
+                                    
+                              </ul>
+                        </div>
+                        <center>
+                              
+                        </center>
+                  </div>
+
+                  <div id="update12">
+	
+                              
+                              <input type="hidden" name="Hidden" id="Hidden" />
+                              <div id="P_CategoryManagement" class="ModalWindow" style="border-width:0px;height:60%;width:60%;overflow:auto;display: none">
+		
+                                    <div>
+                                          <input type="image" name="btnClose" id="btnClose" src="images/close_flat_icon.png" />
+                                    </div>
+                                    <div id="description">
+                                    </div>
+                                    <div class="text-center">
+                                          <h2>
+                                                
+                                                <br>
+                                                
+                                          </h2>
+                                    </div>
+                                    <br />
+                                    <div class="clear">
+                                    </div>
+                                    
+                              
+	</div>
+                        
+</div>
+            </div>
+            
+            <div id="PdfDiv" style="display: none;">
+                  <table width="100%">
+                        <tr>
+                              <td style="font-weight: 200; text-align: center">
+                                    Competition Commission of India
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          <div style='height:30px;width:100%;'></div>Heads of BRICS Competition Authorities adopt Joint Statement on ‘Strengthening Cooperation to Promote Fair Competition, including in Renewable Energy Markets’<div style='height:30px;width:100%;'></div><div style='height:30px;width:100%;'></div>BRICS Competition Authorities Heads reaffirm commitment for cooperation, dialogue, and knowledge-sharing to promote effective competition enforcement and address challenges in increasingly interconnected markets
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="text-align: center; font-size: 14px;">
+                                          Posted On:
+                        09 AUG 2026 3:21PM by PIB Delhi
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: left; font-size: 16px;">
+                                          <p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">Under India&#39;s BRICS Chairship 2026, the Meeting of Heads of BRICS Competition Authorities was organi</span>s<span style="color:black">ed by the Competition Commission of India (CCI), on 8<sup>th</sup> August, 2026 in Udaipur, Rajasthan. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">The meeting brought together the Heads and senior representatives of competition authorities from BRICS member countries to strengthen cooperation in promoting fair competition and addressing emerging challenges in competition law and policy.</span></span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image001O44L.jpg" style="height:401px; width:602px" /></span></span></span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">&nbsp;In her inaugu</span><span style="font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">ral </span><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">address, </span><span style="font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">Smt. Ravneet Kaur, Chairperson, CCI</span><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px"> underscored the shared responsibility of BRICS competition authorities to preserve and promote competitive markets that foster efficiency, consumer welfare, innovation, and opportunities for businesses to compete on merit.</span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">Highlighting the increasingly cross-border nature of digital markets and emerging technologies, the Chairperson, CCI observed that sustained cooperation and knowledge-sharing among BRICS competition authorities would be essential for developing informed, effective, and future-ready approaches to competition enforcement. </span></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">Referring to the global transition towards renewable energy and sustainability, she noted that continued collaboration among BRICS competition authorities would contribute to fostering fair and competitive renewable energy markets while advancing the shared objectives of sustainable growth and energy security. She also emphasised that, amidst evolving market dynamics and emerging enforcement challenges, competition law interventions must remain principled, evidence-based, and firmly anchored in the core objectives of competition law.</span></span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image002OEYF.jpg" style="height:401px; width:602px" /></span></span></span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">During the Meeting, the Heads of BRICS Competition Authorities exchanged views on recent developments in competition law and policy in their respective jurisdictions, including significant enforcement initiatives, institutional developments, and emerging challenges in their domestic markets.</span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">As part of India&#39;s BRICS Chairship, the CCI steered a collaborative BRICS study titled &quot;Emerging Competition Landscape in the Renewable Energy Sector in BRICS&quot;, to develop a better understanding of the evolving competition dynamics in renewable energy markets across BRICS jurisdictions and identifying areas for future cooperation. The key findings of the Study were presented during the Meeting. </span></span></span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">During the meeting, a Joint Statement of Heads of BRICS Competition Authorities titled &quot;Strengthening Cooperation to Promote Fair Competition, including in Renewable Energy Markets&quot;, was adopted. The Joint Statement reflects the shared commitment of BRICS competition authorities to promote competitive, innovative, resilient and sustainable renewable energy markets and to enhance knowledge sharing among BRICS Competition Authorities in addressing emerging competition issues associated with the global energy transition.</span></p>
+
+<p style="text-align:justify"><span style="color:black; font-family:&quot;Times New Roman&quot;,Times,serif; font-size:16px">The Administrative Council for Economic Defense (CADE), Brazil, briefed the participants on its preparations for the Xth BRICS International Competition Conference, scheduled to be held in Brazil in 2027.</span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><span style="color:black">The Meeting concluded with closing remarks by the Heads of BRICS Competition Authorities, who reaffirmed their commitment for continued cooperation, dialogue, and knowledge-sharing to promote effective competition enforcement and address emerging challenges in increasingly interconnected markets.</span></span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *****</span></span></p>
+
+<p style="text-align:justify">&nbsp;</p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><strong>SR/ONP</strong></span></span></p>
+
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 100; text-align: left; font-size: 16px;">
+                                          (Release ID: 2296800)
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                              </td>
+                        </tr>
+                        <tr>
+                              <td style="font-weight: 200; text-align: center; font-size: 24px;"></td>
+                        </tr>
+                  </table>
+            </div>
+            <div class="clearfix">
+            </div>
+
+            
+
+            <div class="section1">
+                  <div id="frst_t">
+                        <div id="arr_rm"><div class='sticky-social_mb'><ul class='social_mb'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='40' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800&text=Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='40' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='40' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='40' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800&title=Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='40' /></li></a></ul></div></div>
+                  </div>
+                  <div id="second_t">
+                        <div id="sndr_rm"><div class='sticky-social'><ul class='social'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='35' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800&text=Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='35' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='35' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='35' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2296800&title=Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='35' /></li></a></ul></div></div>
+                  </div>
+            </div>
+            <input type="hidden" name="ltrTitlee" id="ltrTitlee" value="Competition Commission of India (CCI) hosts BRICS Heads of Competition Authorities 2026 meeting" />
+            <input type="hidden" name="ltrSubtitlee" id="ltrSubtitlee" value="&lt;br/>Heads of BRICS Competition Authorities adopt Joint Statement on ‘Strengthening Cooperation to Promote Fair Competition, including in Renewable Energy Markets’&lt;br/>&lt;br/>BRICS Competition Authorities Heads reaffirm commitment for cooperation, dialogue, and knowledge-sharing to promote effective competition enforcement and address challenges in increasingly interconnected markets" />
+            <input type="hidden" name="ltrDescriptionn" id="ltrDescriptionn" value="&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>Under India&amp;#39;s BRICS Chairship 2026, the Meeting of Heads of BRICS Competition Authorities was organi&lt;/span>s&lt;span style=&quot;color:black&quot;>ed by the Competition Commission of India (CCI), on 8th August, 2026 in Udaipur, Rajasthan. &lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>The meeting brought together the Heads and senior representatives of competition authorities from BRICS member countries to strengthen cooperation in promoting fair competition and addressing emerging challenges in competition law and policy.&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>&lt;img src=&quot;https://static.pib.gov.in/WriteReadData/userfiles/image/image001O44L.jpg&quot; style=&quot;height:401px; width:602px&quot; />&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;color:black; font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;>&amp;nbsp;In her inaugu&lt;/span>&lt;span style=&quot;font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;>ral &lt;/span>&lt;span style=&quot;color:black; font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;>address, &lt;/span>&lt;span style=&quot;font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;>Smt. Ravneet Kaur, Chairperson, CCI&lt;/span>&lt;span style=&quot;color:black; font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;> underscored the shared responsibility of BRICS competition authorities to preserve and promote competitive markets that foster efficiency, consumer welfare, innovation, and opportunities for businesses to compete on merit.&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>Highlighting the increasingly cross-border nature of digital markets and emerging technologies, the Chairperson, CCI observed that sustained cooperation and knowledge-sharing among BRICS competition authorities would be essential for developing informed, effective, and future-ready approaches to competition enforcement. &lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>Referring to the global transition towards renewable energy and sustainability, she noted that continued collaboration among BRICS competition authorities would contribute to fostering fair and competitive renewable energy markets while advancing the shared objectives of sustainable growth and energy security. She also emphasised that, amidst evolving market dynamics and emerging enforcement challenges, competition law interventions must remain principled, evidence-based, and firmly anchored in the core objectives of competition law.&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>&lt;img src=&quot;https://static.pib.gov.in/WriteReadData/userfiles/image/image002OEYF.jpg&quot; style=&quot;height:401px; width:602px&quot; />&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;color:black; font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;>During the Meeting, the Heads of BRICS Competition Authorities exchanged views on recent developments in competition law and policy in their respective jurisdictions, including significant enforcement initiatives, institutional developments, and emerging challenges in their domestic markets.&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>As part of India&amp;#39;s BRICS Chairship, the CCI steered a collaborative BRICS study titled &amp;quot;Emerging Competition Landscape in the Renewable Energy Sector in BRICS&amp;quot;, to develop a better understanding of the evolving competition dynamics in renewable energy markets across BRICS jurisdictions and identifying areas for future cooperation. The key findings of the Study were presented during the Meeting. &lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;color:black; font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;>During the meeting, a Joint Statement of Heads of BRICS Competition Authorities titled &amp;quot;Strengthening Cooperation to Promote Fair Competition, including in Renewable Energy Markets&amp;quot;, was adopted. The Joint Statement reflects the shared commitment of BRICS competition authorities to promote competitive, innovative, resilient and sustainable renewable energy markets and to enhance knowledge sharing among BRICS Competition Authorities in addressing emerging competition issues associated with the global energy transition.&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;color:black; font-family:&amp;quot;Times New Roman&amp;quot;,Times,serif; font-size:16px&quot;>The Administrative Council for Economic Defense (CADE), Brazil, briefed the participants on its preparations for the Xth BRICS International Competition Conference, scheduled to be held in Brazil in 2027.&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;span style=&quot;color:black&quot;>The Meeting concluded with closing remarks by the Heads of BRICS Competition Authorities, who reaffirmed their commitment for continued cooperation, dialogue, and knowledge-sharing to promote effective competition enforcement and address emerging challenges in increasingly interconnected markets.&lt;/span>&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; *****&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&amp;nbsp;&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;strong>SR/ONP&lt;/strong>&lt;/span>&lt;/span>&lt;/p>
+" />
+            <script type="text/javascript">
+                  var mPlayer = document.getElementById("background_music");
+                  var mPlayAction = document.getElementById("playbutton");
+
+                  var isPlaying = false;
+
+                  function playAudio() {
+                        mPlayer.play();
+                        isPlaying = true;
+                        document.getElementById('stopA').style.display = "block";
+                        document.getElementById('playA').style.display = "none";
+                  }
+
+                  function pauseAudio() {
+                        mPlayer.pause();
+                        isPlaying = false;
+                        document.getElementById('playA').style.display = "block";
+                        document.getElementById('stopA').style.display = "none";
+                  }
+                  //function HandleAudio() {
+                  //    if (isPlaying == true) {
+                  //        //Playing already Pause it
+                  //        pauseAudio();
+                  //    } else {
+                  //        //Play the music
+                  //        playAudio();
+                  //    }
+                  //}
+            </script>
+            <script type="text/javascript">
+                  var synth = window.speechSynthesis;
+
+            
+                  function CleanHtml(html) {
+
+                        html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+
+                        return html;
+                  }
+                  function stripHtml(html) {
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = CleanHtml(html);
+                        return tmp.textContent || tmp.innerText || "";
+                  }
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        //for responsive tables
+                        $("table").each(function () {
+                              if (!$(this).closest(".table-responsive").length) {
+                                    $(this).wrap("<div class='table-responsive'></div>");
+                              }
+                        });
+
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            
+            <style type="text/css">
+                  @media print {
+                        .sticky-social, .sticky-social_mb, .pull-right, #printPDF {
+                              display: none !important;
+                        }
+                  }
+
+                  .f_vl {
+                        padding-right: 30px;
+                        font-size: 17px;
+                        cursor: pointer;
+                  }
+
+                  .log_oo {
+                        // width: 20%;
+                        display: flex;
+                        justify-content: space-between;
+                  }
+
+                        .log_oo img {
+                              width: 150px;
+                              /*width: 100%;
+                    height: auto;*/
+                        }
+
+                  .sticky-social_mb {
+                        position: fixed;
+                        bottom: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                        width: 100%;
+                  }
+
+                  .social_mb {
+                        list-style: none;
+                        display: flex;
+                        width: 100%;
+                        margin-bottom: -8px;
+                  }
+
+                        .social_mb a {
+                              padding: 8px 0px;
+                              font-size: 30px;
+                              transition: all 0.8s ease-in-out;
+                              width: 20% !important;
+                              text-align: center;
+                        }
+            </style>
+            <style type="text/css">
+                  .section1 {
+                        position: relative;
+                        padding: 10px 0px;
+                        width: 100%;
+                  }
+
+
+
+                  .sticky-social {
+                        position: fixed;
+                        top: 20px;
+                        left: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                  }
+
+                  .social {
+                        list-style: none;
+                  }
+
+                        .social a li {
+                              padding: 8px 12px;
+                              font-size: 25px;
+                              transition: all 0.8s ease-in-out;
+                        }
+
+                              .social a li:hover {
+                                    margin-right: -30px;
+                                    box-shadow: 2px 5px 10px grey;
+                              }
+
+                                    .social a li:hover .fa {
+                                          margin-left: 20px;
+                                    }
+
+                  .fb_b {
+                        /* background-color: rgb(59, 89, 152);*/
+                        background-color: rgba(65,103,178,255);
+                  }
+
+                  .twitter_r {
+                        /* background-color: rgb(29, 161, 242);*/
+                        background-color: #000000;
+                  }
+
+                  .whatsapp_r {
+                        /* background-color: rgb(77, 194, 71);*/
+                        background-color: rgba(13,191,67,255);
+                  }
+
+                  .fa-envelope_r {
+                        /* background-color: rgb(219, 68, 55);*/
+                        background-color: #e2123d;
+                  }
+
+                  .fa-linkedin_r {
+                        background-color: rgb(0, 119, 181);
+                  }
+            </style>
+            <style type="text/css">
+                  @media only screen and (max-device-width: 767px) {
+                        p span img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        p img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        h2 {
+                              font-size: 20px !important;
+                              font-weight: 600 !important;
+                        }
+
+                        h3 {
+                              font-size: 18px !important;
+                              font-weight: 600 !important;
+                        }
+                  }
+            </style>
+            <style type="text/css">
+                  /* === Film Roll Badge Styling(IFFI2025 countdown) === */
+                  .film-roll-badge {
+                        position: absolute;
+                        top:82%;
+                        right: 20px;
+                        width: 230px;
+                        height: 70px;
+                        background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 18px, #6e2b8b 18px, #6e2b8b 36px );
+                        border-top: 8px solid #9a2375;
+                        border-bottom: 8px solid #9a2375;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                        animation: moveFilm 8s linear infinite;
+                        z-index: 10;
+                  }
+
+                        /* film sprocket holes */
+                        .film-roll-badge::before,
+                        .film-roll-badge::after {
+                              content: "";
+                              position: absolute;
+                              width: 100%;
+                              height: 10px;
+                              background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 10px, #fff 10px, #fff 20px );
+                              left: 0;
+                              z-index: 2;
+                        }
+
+                        .film-roll-badge::before {
+                              top: -4px;
+                        }
+
+                        .film-roll-badge::after {
+                              bottom: -4px;
+                        }
+
+                  .film-roll-inner {
+                        position: relative;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: flicker 2s infinite ease-in-out;
+                  }
+
+                  .countdown-text {
+                        font-size: 1.3rem;
+                        font-weight: 700;
+                        color: #fff;
+                        text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px #000;
+                        white-space: nowrap;
+                  }
+
+                  /* === Animations === */
+                  @keyframes moveFilm {
+                        0% {
+                              background-position: 0 0;
+                        }
+
+                        100% {
+                              background-position: 120px 0;
+                        }
+                  }
+
+                  @keyframes flicker {
+                        0%, 100% {
+                              opacity: 1;
+                        }
+
+                        50% {
+                              opacity: 0.9;
+                        }
+
+                        25% {
+                              opacity: 0.95;
+                        }
+
+                        75% {
+                              opacity: 0.85;
+                        }
+                  }
+
+                  /* === Responsive Adjustments === */
+                  @media (max-width: 1500px) {
+                        .film-roll-badge {
+                              top: 68%;
+                              right: 18px;
+                              /* width: 220px; */
+                              height: 65px;
+                              font-size: 0.85rem;
+                        }
+
+                        .press-section {
+                              margin-top: 35px;
+                        }
+                  }
+
+                  @media (max-width: 992px) {
+                        .film-roll-badge {
+                              top: 52%;
+                              right: 10px;
+                               width: 200px; 
+                              height: 60px;
+                        }
+                  }
+
+                  @media (max-width: 768px) {
+                        .film-roll-badge {
+                              top: 56%;
+                              right: 10px;
+                               width: 124px; 
+                              height: 55px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.9rem;
+                        }
+                  }
+
+                  @media (max-width: 576px) {
+                        .film-roll-badge {
+                              top: 59%;
+                              right: 5px;
+                              /* width: 160px; */
+                              height: 50px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.85rem;
+                        }
+                  }
+            </style>
+          <script type="text/javascript">
+                const festivalStart = new Date("2025-11-20T00:00:00").getTime();
+                const festivalEnd = new Date("2025-11-28T23:59:59").getTime();
+
+                const countdownElement = document.getElementById("countdown");
+
+                const interval = setInterval(() => {
+                      const now = new Date().getTime();
+
+                      // BEFORE FESTIVAL — show days + hours left
+                      if (now < festivalStart) {
+                            const diff = festivalStart - now;
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                            countdownElement.innerHTML = `
+              ${days} Day${days !== 1 ? 's' : ''} 
+              ${hours} Hour${hours !== 1 ? 's' : ''} to go
+          `;
+
+                      }
+
+                      // DURING FESTIVAL — show 56th IFFI - Day X
+                      else if (now >= festivalStart && now <= festivalEnd) {
+                            const dayNumber = Math.floor((now - festivalStart) / (1000 * 60 * 60 * 24)) + 1;
+                            countdownElement.innerHTML = `56th IFFI - Day ${dayNumber}`;
+                      }
+
+                      // AFTER FESTIVAL — new message
+                      else {
+                            countdownElement.innerHTML = `✨ IFFI closes but never ends…`;
+
+                            // Width change logic
+                            const elements = document.querySelectorAll('.film-roll-badge');
+                            elements.forEach(el => el.style.width = "350px");
+
+                            clearInterval(interval);
+                      }
+
+                }, 1000);
+          </script>
+ <script type="text/javascript">
+
+               const miffStart = new Date("2026-06-15T00:00:00").getTime();
+               const miffEnd = new Date("2026-06-15T23:59:59").getTime();
+
+               const miffElement = document.getElementById("miff");
+
+               if (miffElement) {
+
+                   const miffInterval = setInterval(() => {
+
+                       const now = new Date().getTime();
+
+                       // Before MIFF
+                       if (now < miffStart) {
+
+                           const diff = miffStart - now;
+                           const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                           const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        
+
+                   /*  miffElement.innerHTML = `${days} Day${days !== 1 ? 's' : ''} ${hours} Hour${hours !== 1 ? 's' : ''} to MIFF`;*/
+                           miffElement.innerHTML = `${days} Day${days === 1 ? '' : 's'} to MIFF ...`;
+
+
+                     }
+
+                       // During MIFF
+                       else if (now >= miffStart && now <= miffEnd) {
+
+                           const dayNumber =
+                               Math.floor((now - miffStart) / (1000 * 60 * 60 * 24)) + 1;
+
+                           miffElement.innerHTML = `19th MIFF - Day ${dayNumber}`;
+                       }
+
+                       // After MIFF
+                       else {
+
+                           miffElement.innerHTML = `✨ MIFF concludes, cinema lives on...`;
+
+                           document.querySelectorAll('.film-roll-badge')
+                               .forEach(el => el.style.width = "350px");
+
+                           clearInterval(miffInterval);
+                       }
+
+                   }, 1000);
+               }
+
+</script>
+
+      
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {var fn = function() {$get("sc_HiddenField").value = '';Sys.Application.remove_init(fn);};Sys.Application.add_init(fn);})();Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","PopupControlID":"P_CategoryManagement","dynamicServicePath":"/PressReleasePage.aspx","id":"mpe"}, null, null, $get("Hidden"));
+});
+//]]>
+</script>
+<input type="hidden" name="__ncforminfo" value="of-v-hS82HYMZ0G-xGbVIJIsv2EbRq-wGU4nh-rYtUU-BQMUkN3N0fzsveLP8MDHswXesnAammk3YgjDhdNRySJR9rU_H_f8EqZUyGYiepEgb6lwSd6DDw=="/></form>
+</body>
+</html>
+

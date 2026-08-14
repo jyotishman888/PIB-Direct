@@ -1,0 +1,205 @@
+import logging
+
+import typer
+
+from pib_agent import __version__
+from pib_agent.config import get_settings
+from pib_agent.db.backup import BackupError, backup_database
+from pib_agent.enrichment import run_enrich
+from pib_agent.logging_config import setup_logging
+from pib_agent.orchestration import (
+    PipelineAlreadyRunningError,
+    mark_interrupted_runs,
+    run_pipeline,
+)
+from pib_agent.scraper import run_scrape
+from pib_agent.scraper.http_client import PibFetchError, fetch_html
+from pib_agent.scraper.listing_parser import ListingParseError, parse_listing
+from pib_agent.similarity import run_similarity
+from pib_agent.telegram import TelegramConfigError, run_bot, run_notify
+from pib_agent.telegram.alerts import send_ops_alert
+
+app = typer.Typer(
+    name="pib-agent",
+    help="Scrape, enrich, and serve daily PIB (Press Information Bureau) releases.",
+    no_args_is_help=True,
+)
+
+logger = logging.getLogger(__name__)
+
+
+@app.callback()
+def _main() -> None:
+    setup_logging()
+    logger.debug("pib-agent CLI invoked (version=%s)", __version__)
+
+
+@app.command()
+def version() -> None:
+    """Print the installed pib-agent version."""
+    typer.echo(__version__)
+
+
+@app.command()
+def scrape() -> None:
+    """Fetch today's PIB releases and persist any not already in the DB."""
+    stats = run_scrape()
+    typer.echo(
+        f"Listed {stats.listed} releases: "
+        f"{stats.new_articles} new, {stats.already_known} already known, "
+        f"{stats.failed} failed."
+    )
+    if stats.failed:
+        typer.echo(f"Failed PRIDs: {stats.failed_prids}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def enrich() -> None:
+    """Summarize/contextualize/UPSC-annotate any articles not yet enriched."""
+    stats = run_enrich()
+    typer.echo(
+        f"Pending {stats.pending} articles: "
+        f"{stats.enriched} enriched, {stats.failed} failed."
+    )
+    if stats.failed:
+        typer.echo(f"Failed article IDs: {stats.failed_article_ids}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def link() -> None:
+    """Embed enriched articles and link them to genuinely related past releases."""
+    stats = run_similarity()
+    typer.echo(
+        f"Embedded {stats.embedded}/{stats.embed_pending} pending articles. "
+        f"Similarity-checked {stats.linked}/{stats.link_pending} articles, "
+        f"creating {stats.links_created} link(s)."
+    )
+    if stats.embed_failed or stats.link_failed:
+        typer.echo(
+            f"{stats.embed_failed} embedding failure(s); "
+            f"{stats.link_failed} similarity-check failure(s): {stats.link_failed_article_ids}"
+        )
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def serve(
+    host: str = typer.Option(None, help="Override API_HOST from settings."),
+    port: int = typer.Option(None, help="Override API_PORT from settings."),
+    reload: bool = typer.Option(False, help="Enable auto-reload for local development."),
+) -> None:
+    """Run the REST API server (FastAPI + Uvicorn).
+
+    If SCHEDULER_ENABLED=true, this also runs the scrape->enrich->link->notify
+    pipeline on a schedule for as long as the server is up.
+    """
+    import uvicorn
+
+    settings = get_settings()
+    mark_interrupted_runs()
+    uvicorn.run(
+        "pib_agent.api.app:app",
+        host=host or settings.api_host,
+        port=port or settings.api_port,
+        reload=reload,
+    )
+
+
+@app.command()
+def run() -> None:
+    """Run scrape -> enrich -> link -> notify once, end to end, and wait for it to finish."""
+    try:
+        result = run_pipeline("cli")
+    except PipelineAlreadyRunningError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+    for stage in result.stages:
+        detail = stage.summary if stage.status != "failed" else stage.error
+        typer.echo(f"{stage.name}: {stage.status} ({detail})")
+
+    typer.echo(f"Pipeline run {result.id}: {result.status}")
+    if result.status in ("failed", "partial_failure"):
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def bot() -> None:
+    """Run the Telegram bot (long polling) so users can manage subscriptions."""
+    try:
+        run_bot()
+    except TelegramConfigError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@app.command()
+def notify() -> None:
+    """Send Telegram notifications for enriched articles not yet dispatched."""
+    try:
+        stats = run_notify()
+    except TelegramConfigError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(
+        f"Pending {stats.pending} articles: notified {stats.notified_articles}, "
+        f"sent {stats.messages_sent} message(s), {stats.messages_failed} failed, "
+        f"{stats.dead_chats_removed} dead chat(s) unsubscribed."
+    )
+
+
+@app.command()
+def backup(
+    keep: int = typer.Option(7, help="How many timestamped backups to retain."),
+) -> None:
+    """Take a timestamped copy of the SQLite database and prune old ones.
+
+    Backups land in <db folder>/backups.
+    """
+    try:
+        destination = backup_database(keep=keep)
+    except BackupError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(f"Backed up to {destination}")
+
+
+@app.command()
+def doctor() -> None:
+    """Check the live PIB listing still parses. Exits non-zero when it doesn't.
+
+    Fixture-based tests can't catch PIB changing its markup — they passed
+    perfectly while the real site was returning something the parser couldn't
+    read. Run this on a schedule, or before trusting a quiet day.
+    """
+    settings = get_settings()
+    failures: list[str] = []
+    total = 0
+
+    for url in settings.pib_listing_urls:
+        try:
+            items = parse_listing(fetch_html(url))
+        except (PibFetchError, ListingParseError) as exc:
+            failures.append(f"{url}: {exc}")
+            typer.echo(f"FAIL  {url}\n      {exc}")
+            continue
+        total += len(items)
+        typer.echo(f"OK    {url} -> {len(items)} release(s)")
+
+    if failures:
+        send_ops_alert("PIB listing check failed", "\n".join(failures))
+        raise typer.Exit(code=1)
+
+    if total == 0:
+        typer.echo("No releases found on any source — could be an off-hours lull, or a break.")
+        raise typer.Exit(code=2)
+
+    typer.echo(f"All {len(settings.pib_listing_urls)} source(s) healthy, {total} release(s).")
+
+
+def main() -> None:
+    app()

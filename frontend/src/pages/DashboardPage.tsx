@@ -1,0 +1,117 @@
+import { useSearchParams } from 'react-router-dom'
+
+import { ArticleCard } from '@/components/articles/ArticleCard'
+import { FilterBar, type FilterBarValue } from '@/components/articles/FilterBar'
+import { Pagination } from '@/components/articles/Pagination'
+import { EmptyState } from '@/components/common/EmptyState'
+import { ErrorState } from '@/components/common/ErrorState'
+import { LoadingState } from '@/components/common/LoadingState'
+import { StatsStrip } from '@/components/dashboard/StatsStrip'
+import { useArticles } from '@/hooks/useArticles'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import { useMinistries } from '@/hooks/useMinistries'
+
+const PAGE_SIZE = 20
+
+export function DashboardPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const ministry = searchParams.get('ministry') ?? ''
+  const search = searchParams.get('search') ?? ''
+  const upscOnly = searchParams.get('upsc_relevant') === 'true'
+  const dateFrom = searchParams.get('date_from') ?? ''
+  const dateTo = searchParams.get('date_to') ?? ''
+  const offset = Number(searchParams.get('offset') ?? '0') || 0
+
+  const debouncedSearch = useDebouncedValue(search, 350)
+  const { data: ministries } = useMinistries()
+
+  function updateParams(patch: Record<string, string | null>, resetOffset = true) {
+    const next = new URLSearchParams(searchParams)
+    for (const [key, value] of Object.entries(patch)) {
+      if (value === null || value === '') {
+        next.delete(key)
+      } else {
+        next.set(key, value)
+      }
+    }
+    if (resetOffset) next.delete('offset')
+    setSearchParams(next, { replace: true })
+  }
+
+  function handleFilterChange(next: FilterBarValue) {
+    updateParams({
+      search: next.search || null,
+      upsc_relevant: next.upscOnly ? 'true' : null,
+      date_from: next.dateFrom || null,
+      date_to: next.dateTo || null,
+    })
+  }
+
+  function handleClearFilters() {
+    updateParams({ search: null, upsc_relevant: null, date_from: null, date_to: null })
+  }
+
+  const hasActiveFilters = Boolean(search || upscOnly || dateFrom || dateTo)
+
+  const { data, isLoading, isError, refetch, isPlaceholderData } = useArticles({
+    ministry: ministry || undefined,
+    search: debouncedSearch || undefined,
+    upsc_relevant: upscOnly || undefined,
+    date_from: dateFrom || undefined,
+    date_to: dateTo || undefined,
+    limit: PAGE_SIZE,
+    offset,
+  })
+
+  const activeMinistry = ministries?.find((m) => m.slug === ministry)
+  const heading = ministry ? (activeMinistry?.name ?? 'Ministry') : 'All ministries'
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <h1 className="font-serif text-2xl font-bold text-foreground">{heading}</h1>
+        <p className="text-sm text-muted">
+          Daily PIB releases, summarized and mapped to UPSC syllabus topics.
+        </p>
+      </div>
+
+      {!ministry && <StatsStrip />}
+
+      <FilterBar
+        value={{ search, upscOnly, dateFrom, dateTo }}
+        onChange={handleFilterChange}
+        onClear={handleClearFilters}
+        hasActiveFilters={hasActiveFilters}
+      />
+
+      {isLoading && <LoadingState label="Loading releases…" />}
+      {isError && <ErrorState onRetry={() => refetch()} />}
+
+      {data && (
+        <div className={isPlaceholderData ? 'opacity-60 transition-opacity' : undefined}>
+          {data.items.length === 0 ? (
+            <EmptyState
+              title="No releases match these filters"
+              description="Try widening the date range or clearing filters."
+            />
+          ) : (
+            <div className="flex flex-col gap-3">
+              {data.items.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          )}
+          <div className="mt-4">
+            <Pagination
+              total={data.total}
+              limit={data.limit}
+              offset={data.offset}
+              onOffsetChange={(next) => updateParams({ offset: String(next) }, false)}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
