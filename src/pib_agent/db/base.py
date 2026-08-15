@@ -31,6 +31,12 @@ def _make_engine():
         # reconnect instead. Modest pool: this runs a single web instance
         # plus a bot, not a fleet.
         kwargs.update(pool_pre_ping=True, pool_size=5, max_overflow=5, pool_recycle=1800)
+        # Without this, psycopg waits minutes on an unreachable host — long
+        # enough that a retry loop gets exactly one attempt before its own
+        # deadline expires, which is how a "wait for the network" helper ends
+        # up never actually retrying. Bounded so failures are fast and the
+        # retry is the thing doing the waiting.
+        connect_args["connect_timeout"] = 10
 
     return create_engine(settings.database_url, connect_args=connect_args, **kwargs)
 
