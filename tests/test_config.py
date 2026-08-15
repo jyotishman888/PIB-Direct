@@ -56,3 +56,21 @@ def test_quoted_database_url_is_tolerated():
     settings = Settings(_env_file=None, database_url='"postgresql://u@h/db"')
 
     assert settings.database_url == "postgresql+psycopg://u@h/db"
+
+
+def test_pasted_variable_name_is_rejected():
+    """Pasting `KEY=value` into a value field passes every shape check but is
+    not a connection string."""
+    with pytest.raises(ValidationError, match="includes the variable name"):
+        Settings(_env_file=None, database_url="DATABASE_URL=postgresql://u:p@h:5432/db")
+
+
+def test_redaction_keeps_the_password_out_of_errors():
+    """These messages land in deploy logs, which get pasted into chats."""
+    from pib_agent.config import _redact
+
+    redacted = _redact("postgresql://appuser:sup3r-s3cret@db.host:5432/railway")
+
+    assert "sup3r-s3cret" not in redacted
+    assert "appuser" in redacted
+    assert "db.host:5432/railway" in redacted

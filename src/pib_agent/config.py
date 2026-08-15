@@ -7,6 +7,22 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
+def _redact(url: str) -> str:
+    """A connection string safe to put in an error message.
+
+    These end up in deploy logs, which get pasted into chats and issue
+    trackers, so the password must not survive.
+    """
+    if "://" not in url:
+        return repr(url)
+    scheme, rest = url.split("://", 1)
+    if "@" in rest:
+        credentials, host = rest.rsplit("@", 1)
+        user = credentials.split(":", 1)[0]
+        return f"{scheme}://{user}:***@{host}"
+    return f"{scheme}://{rest}"
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=str(PROJECT_ROOT / ".env"),
@@ -150,17 +166,43 @@ class Settings(BaseSettings):
             )
         if value.startswith("${") or "://" not in value:
             raise ValueError(
-                f"DATABASE_URL doesn't look like a connection string: {value!r}. "
+                f"DATABASE_URL doesn't look like a connection string: {_redact(value)}. "
                 "An unresolved platform reference is stored verbatim rather than "
                 "substituted, so check the service and variable names."
             )
 
+        # Pasting a whole `KEY=value` line into a value field is easy to do and
+        # leaves a string that passes every shape check above.
+        if "=" in value.split("://", 1)[0]:
+            key = value.split("=", 1)[0]
+            raise ValueError(
+                f"DATABASE_URL looks like it includes the variable name ({key}=...). "
+                "Paste only the connection string itself, not the whole line."
+            )
+
         if value.startswith("postgresql+"):
-            return value  # already carries an explicit driver
-        for prefix in ("postgresql://", "postgres://"):
-            if value.startswith(prefix):
-                return "postgresql+psycopg://" + value[len(prefix) :]
-        return value
+            normalised = value
+        elif value.startswith(("postgresql://", "postgres://")):
+            _, rest = value.split("://", 1)
+            normalised = "postgresql+psycopg://" + rest
+        else:
+            normalised = value
+
+        # Validate with the parser that will actually be used, so a bad value
+        # fails here — naming the variable — rather than as an opaque
+        # ArgumentError raised while importing pib_agent.db.
+        from sqlalchemy.engine.url import make_url
+
+        try:
+            make_url(normalised)
+        except Exception as exc:
+            raise ValueError(
+                f"DATABASE_URL could not be parsed as a connection string "
+                f"({_redact(normalised)}): {exc}. Special characters in the password "
+                "(#, @, /, ?) must be percent-encoded."
+            ) from exc
+
+        return normalised
 
 
 @lru_cache
