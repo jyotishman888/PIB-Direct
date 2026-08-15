@@ -136,6 +136,25 @@ class Settings(BaseSettings):
         — which means the platform's own variable works untouched instead of
         failing at import with "Can't load plugin: sqlalchemy.dialects:postgres".
         """
+        value = value.strip().strip('"').strip("'")
+
+        # An unresolved platform reference arrives as the literal text, and an
+        # unset-but-present variable arrives empty. Both reach SQLAlchemy as
+        # "Could not parse SQLAlchemy URL from given URL string" thrown at
+        # import time, which says nothing about where the bad value came from.
+        if not value:
+            raise ValueError(
+                "DATABASE_URL is empty. If it's set to a platform reference like "
+                "${{Postgres.DATABASE_PUBLIC_URL}}, that variable doesn't exist on the "
+                "referenced service — check the name, or paste the connection string directly."
+            )
+        if value.startswith("${") or "://" not in value:
+            raise ValueError(
+                f"DATABASE_URL doesn't look like a connection string: {value!r}. "
+                "An unresolved platform reference is stored verbatim rather than "
+                "substituted, so check the service and variable names."
+            )
+
         if value.startswith("postgresql+"):
             return value  # already carries an explicit driver
         for prefix in ("postgresql://", "postgres://"):

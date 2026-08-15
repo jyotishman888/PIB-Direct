@@ -1,3 +1,6 @@
+import pytest
+from pydantic import ValidationError
+
 from pib_agent.config import Settings
 
 
@@ -33,3 +36,23 @@ def test_detail_url_template_formats_prid():
     settings = Settings(_env_file=None)
     url = settings.pib_detail_url_template.format(prid=2296855)
     assert url == "https://pib.gov.in/PressReleasePage.aspx?PRID=2296855"
+
+
+def test_empty_database_url_is_rejected_with_a_useful_message():
+    """An unset-but-present variable used to surface as an opaque SQLAlchemy
+    ArgumentError thrown at import time, naming neither the variable nor why."""
+    with pytest.raises(ValidationError, match="DATABASE_URL is empty"):
+        Settings(_env_file=None, database_url="")
+
+
+def test_unresolved_platform_reference_is_rejected():
+    """Railway stores an unresolvable ${{Service.VAR}} reference verbatim."""
+    with pytest.raises(ValidationError, match="doesn't look like a connection string"):
+        Settings(_env_file=None, database_url="${{Postgres.DATABASE_PUBLIC_URL}}")
+
+
+def test_quoted_database_url_is_tolerated():
+    """Pasting a value with surrounding quotes is an easy and silent mistake."""
+    settings = Settings(_env_file=None, database_url='"postgresql://u@h/db"')
+
+    assert settings.database_url == "postgresql+psycopg://u@h/db"
