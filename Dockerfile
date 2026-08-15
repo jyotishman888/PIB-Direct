@@ -72,4 +72,12 @@ EXPOSE 8000
 
 # Railway injects PORT; default keeps `docker run` working unchanged.
 ENV API_HOST=0.0.0.0
-CMD ["sh", "-c", "pib-agent serve --host 0.0.0.0 --port ${PORT:-8000}"]
+
+# Migrations run here, in the start command, rather than as a build or
+# pre-deploy step. Railway's private network is runtime-only, so a migration
+# run any earlier can't reach the database at all — its own docs say to do it
+# this way. `pib-agent migrate` waits for the network before applying.
+#
+# Only this service runs migrations: the bot overrides the start command, so
+# the two can't race each other on a fresh database.
+CMD ["sh", "-c", "pib-agent migrate && pib-agent serve --host 0.0.0.0 --port ${PORT:-8000}"]

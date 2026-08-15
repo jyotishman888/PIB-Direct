@@ -1,8 +1,9 @@
 """Startup checks that turn confusing database failures into obvious ones."""
 
 import logging
+import time
 
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 
 from pib_agent.config import get_settings
 
@@ -26,6 +27,44 @@ def describe_database() -> str:
         return f"{scheme} ({host_and_name})"
     except ValueError:  # pragma: no cover - defensive
         return "unrecognised database url"
+
+
+def wait_for_database(timeout_seconds: float = 60.0, interval_seconds: float = 2.0) -> None:
+    """Block until the database accepts a connection, or give up loudly.
+
+    Managed platforms bring the private network up *after* the container
+    starts — Railway's docs are explicit that private networking is
+    runtime-only — so the first connection attempt of a freshly started
+    container can time out purely because the mesh isn't attached yet.
+    Retrying briefly turns that race into a non-event; without it, the very
+    first deploy of the day fails on a cold network.
+    """
+    from pib_agent.db.base import engine
+
+    target = describe_database()
+    deadline = time.monotonic() + timeout_seconds
+    attempt = 0
+    last_error: Exception | None = None
+
+    while time.monotonic() < deadline:
+        attempt += 1
+        try:
+            with engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+            if attempt > 1:
+                logger.info("Database reachable after %s attempt(s): %s", attempt, target)
+            return
+        except Exception as exc:
+            last_error = exc
+            logger.info(
+                "Database not reachable yet (attempt %s) — %s. Retrying...", attempt, target
+            )
+            time.sleep(interval_seconds)
+
+    raise DatabaseNotReadyError(
+        f"Database unreachable after {timeout_seconds:.0f}s — {target}. "
+        f"Last error: {last_error}"
+    )
 
 
 def check_database_ready() -> None:

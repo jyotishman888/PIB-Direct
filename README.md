@@ -432,10 +432,16 @@ returns the token to the page and never redirects.
 
 ### Moving the existing data across
 
-Run migrations against the new database first, then copy rows:
+Migrations apply automatically — the container's start command runs
+`pib-agent migrate` before `pib-agent serve`. That placement is deliberate:
+Railway's private network is **runtime-only**, so a migration run during the
+build or as a pre-deploy step cannot reach the database at all, and one run the
+instant a container starts can lose a race with the network attaching.
+`pib-agent migrate` waits for the database first.
+
+To copy the existing rows across, with `DATABASE_URL` pointed at Postgres:
 
 ```bash
-alembic upgrade head                       # with DATABASE_URL pointed at Postgres
 uv run python scripts/migrate_sqlite_to_postgres.py \
   --source sqlite:///data/pib_agent.db \
   --target "$DATABASE_URL"

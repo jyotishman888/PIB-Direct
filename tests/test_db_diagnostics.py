@@ -2,7 +2,12 @@ import pytest
 
 from pib_agent.config import Settings
 from pib_agent.db import diagnostics as diag
-from pib_agent.db.diagnostics import DatabaseNotReadyError, check_database_ready, describe_database
+from pib_agent.db.diagnostics import (
+    DatabaseNotReadyError,
+    check_database_ready,
+    describe_database,
+    wait_for_database,
+)
 
 
 def _settings(url: str) -> Settings:
@@ -84,3 +89,31 @@ def test_unreachable_database_is_reported_clearly(monkeypatch):
 
     with pytest.raises(DatabaseNotReadyError, match="Could not connect"):
         check_database_ready()
+
+def test_wait_returns_once_the_database_is_reachable(monkeypatch, tmp_path):
+    from sqlalchemy import create_engine
+
+    import pib_agent.db.base as base_module
+
+    db = tmp_path / "reachable.db"
+    monkeypatch.setattr(diag, "get_settings", lambda: _settings(f"sqlite:///{db}"))
+    monkeypatch.setattr(base_module, "engine", create_engine(f"sqlite:///{db}"))
+
+    wait_for_database(timeout_seconds=5, interval_seconds=0.1)  # must not raise
+
+
+def test_wait_gives_up_with_a_clear_message(monkeypatch):
+    """Retrying covers the private network coming up late; it can't cover a
+    genuinely wrong host, so the give-up path has to say so plainly."""
+    from sqlalchemy import create_engine
+
+    import pib_agent.db.base as base_module
+
+    url = "postgresql+psycopg://u:p@127.0.0.1:1/none"
+    monkeypatch.setattr(diag, "get_settings", lambda: _settings(url))
+    monkeypatch.setattr(
+        base_module, "engine", create_engine(url, connect_args={"connect_timeout": 1})
+    )
+
+    with pytest.raises(DatabaseNotReadyError, match="unreachable after"):
+        wait_for_database(timeout_seconds=2, interval_seconds=0.1)

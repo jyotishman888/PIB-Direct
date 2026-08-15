@@ -1,11 +1,16 @@
 import logging
+from pathlib import Path
 
 import typer
 
 from pib_agent import __version__
 from pib_agent.config import get_settings
 from pib_agent.db.backup import BackupError, backup_database
-from pib_agent.db.diagnostics import DatabaseNotReadyError, check_database_ready
+from pib_agent.db.diagnostics import (
+    DatabaseNotReadyError,
+    check_database_ready,
+    wait_for_database,
+)
 from pib_agent.enrichment import run_enrich
 from pib_agent.logging_config import setup_logging
 from pib_agent.orchestration import (
@@ -100,6 +105,7 @@ def serve(
 
     settings = get_settings()
     try:
+        wait_for_database()
         check_database_ready()
     except DatabaseNotReadyError as exc:
         typer.echo(f"Cannot start: {exc}")
@@ -136,6 +142,7 @@ def run() -> None:
 def bot() -> None:
     """Run the Telegram bot (long polling) so users can manage subscriptions."""
     try:
+        wait_for_database()
         check_database_ready()
     except DatabaseNotReadyError as exc:
         typer.echo(f"Cannot start: {exc}")
@@ -179,6 +186,39 @@ def backup(
         raise typer.Exit(code=1) from exc
 
     typer.echo(f"Backed up to {destination}")
+
+
+@app.command()
+def migrate(
+    wait_seconds: float = typer.Option(
+        60.0, help="How long to wait for the database to become reachable first."
+    ),
+) -> None:
+    """Apply Alembic migrations, waiting for the database to come up first.
+
+    Meant for the container start command rather than a build or pre-deploy
+    step: managed platforms only attach the private network at runtime
+    (Railway documents this explicitly), so a migration run during the build
+    can't reach the database at all, and one run the instant a container
+    starts can lose a race with the network coming up.
+    """
+    from alembic.config import Config
+
+    from alembic import command as alembic_command
+
+    try:
+        wait_for_database(timeout_seconds=wait_seconds)
+    except DatabaseNotReadyError as exc:
+        typer.echo(f"Cannot migrate: {exc}")
+        raise typer.Exit(code=1) from exc
+
+    config_path = Path.cwd() / "alembic.ini"
+    if not config_path.exists():
+        typer.echo(f"alembic.ini not found at {config_path}. Run this from the project root.")
+        raise typer.Exit(code=1)
+
+    alembic_command.upgrade(Config(str(config_path)), "head")
+    typer.echo("Migrations applied.")
 
 
 @app.command()
