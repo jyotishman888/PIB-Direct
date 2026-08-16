@@ -1,8 +1,10 @@
 import { Tag, Typography } from 'antd'
+import { useEffect } from 'react'
 import type { ReactNode } from 'react'
 
 import { MainsQuestionCard } from '@/components/detail/MainsQuestionCard'
 import { PrelimsQuestionCard } from '@/components/detail/PrelimsQuestionCard'
+import { recordQuestionTotal } from '@/lib/prelimsAttempts'
 import { examTagStyle } from '@/lib/tagStyles'
 import type { Enrichment } from '@/api/types'
 
@@ -16,7 +18,19 @@ function SectionHeading({ children }: { children: ReactNode }) {
   )
 }
 
-export function EnrichmentSection({ enrichment }: { enrichment: Enrichment }) {
+export function EnrichmentSection({
+  articleId,
+  enrichment,
+}: {
+  articleId: number
+  enrichment: Enrichment
+}) {
+  const questionCount = enrichment.prelims_questions.length
+
+  useEffect(() => {
+    if (questionCount > 0) recordQuestionTotal(articleId, questionCount)
+  }, [articleId, questionCount])
+
   return (
     <div className="flex flex-col gap-6">
       <section>
@@ -49,7 +63,12 @@ export function EnrichmentSection({ enrichment }: { enrichment: Enrichment }) {
           <SectionHeading>Prelims practice</SectionHeading>
           <div className="mt-2 flex flex-col gap-3">
             {enrichment.prelims_questions.map((question, i) => (
-              <PrelimsQuestionCard key={question.question} question={question} index={i} />
+              <PrelimsQuestionCard
+                key={question.question}
+                articleId={articleId}
+                question={question}
+                index={i}
+              />
             ))}
           </div>
         </section>

@@ -69,7 +69,7 @@ export function ArticleDetailPage() {
       </div>
 
       {article.enrichment ? (
-        <EnrichmentSection enrichment={article.enrichment} />
+        <EnrichmentSection articleId={article.id} enrichment={article.enrichment} />
       ) : (
         <p className="rounded-lg border border-dashed border-border px-4 py-6 text-center text-sm text-muted">
           This release hasn't been summarized yet — check back shortly.

@@ -2,17 +2,27 @@ import { Card, Radio } from 'antd'
 import { useState } from 'react'
 import type { CSSProperties } from 'react'
 
+import { getAnswer, recordAnswer } from '@/lib/prelimsAttempts'
 import type { PrelimsQuestion } from '@/api/types'
 
 export function PrelimsQuestionCard({
+  articleId,
   question,
   index,
 }: {
+  articleId: number
   question: PrelimsQuestion
   index: number
 }) {
-  const [selected, setSelected] = useState<number | null>(null)
+  const [selected, setSelected] = useState<number | null>(
+    () => getAnswer(articleId, index)?.selected ?? null,
+  )
   const revealed = selected !== null
+
+  function handleChange(value: number) {
+    setSelected(value)
+    recordAnswer(articleId, index, value, value === question.correct_option_index)
+  }
 
   return (
     <Card size="small">
@@ -22,7 +32,7 @@ export function PrelimsQuestionCard({
       <Radio.Group
         value={selected}
         disabled={revealed}
-        onChange={(event) => setSelected(event.target.value)}
+        onChange={(event) => handleChange(event.target.value)}
         className="mt-3 flex flex-col gap-1.5"
       >
         {question.options.map((option, i) => {
