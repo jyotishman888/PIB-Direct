@@ -1,17 +1,28 @@
 import { StyleProvider } from '@ant-design/cssinjs'
 import { ConfigProvider, Drawer } from 'antd'
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { AuthProvider } from '@/auth/AuthProvider'
+import { LoadingState } from '@/components/common/LoadingState'
 import { Header } from '@/components/layout/Header'
 import { MinistrySidebar } from '@/components/layout/MinistrySidebar'
 import { useColorScheme } from '@/hooks/useColorScheme'
-import { AccountPage } from '@/pages/AccountPage'
-import { ArticleDetailPage } from '@/pages/ArticleDetailPage'
 import { DashboardPage } from '@/pages/DashboardPage'
-import { LoginPage } from '@/pages/LoginPage'
 import { antdThemes } from '@/theme/antdTheme'
+
+// Split out of the landing bundle: none of these are needed for first paint,
+// and together they pull in antd surface (DatePicker, Select, forms) a
+// signed-out reader on mobile data never touches on the digest.
+const ArticleDetailPage = lazy(() =>
+  import('@/pages/ArticleDetailPage').then((m) => ({ default: m.ArticleDetailPage })),
+)
+const LoginPage = lazy(() =>
+  import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })),
+)
+const AccountPage = lazy(() =>
+  import('@/pages/AccountPage').then((m) => ({ default: m.AccountPage })),
+)
 
 export function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -41,13 +52,15 @@ export function App() {
             </Drawer>
 
             <main className="min-w-0 flex-1">
-              <Routes>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/articles/:id" element={<ArticleDetailPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/account" element={<AccountPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense fallback={<LoadingState label="Loading…" />}>
+                <Routes>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/articles/:id" element={<ArticleDetailPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/account" element={<AccountPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
             </main>
           </div>
         </div>

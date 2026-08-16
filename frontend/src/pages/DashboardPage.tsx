@@ -6,6 +6,7 @@ import { Pagination } from '@/components/articles/Pagination'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
 import { LoadingState } from '@/components/common/LoadingState'
+import { DigestView } from '@/components/dashboard/DigestView'
 import { StatsStrip } from '@/components/dashboard/StatsStrip'
 import { useArticles } from '@/hooks/useArticles'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
@@ -53,16 +54,24 @@ export function DashboardPage() {
   }
 
   const hasActiveFilters = Boolean(search || upscOnly || dateFrom || dateTo)
+  // The landing state — nothing selected, nothing searched, first page —
+  // shows today's ranked digest instead of a flat, unranked list of
+  // everything. Any ministry click, search, filter, or page turn falls
+  // through to the browse view below.
+  const isBareLanding = !ministry && !hasActiveFilters && offset === 0
 
-  const { data, isLoading, isError, refetch, isPlaceholderData } = useArticles({
-    ministry: ministry || undefined,
-    search: debouncedSearch || undefined,
-    upsc_relevant: upscOnly || undefined,
-    date_from: dateFrom || undefined,
-    date_to: dateTo || undefined,
-    limit: PAGE_SIZE,
-    offset,
-  })
+  const { data, isLoading, isError, refetch, isPlaceholderData } = useArticles(
+    {
+      ministry: ministry || undefined,
+      search: debouncedSearch || undefined,
+      upsc_relevant: upscOnly || undefined,
+      date_from: dateFrom || undefined,
+      date_to: dateTo || undefined,
+      limit: PAGE_SIZE,
+      offset,
+    },
+    { enabled: !isBareLanding },
+  )
 
   const activeMinistry = ministries?.find((m) => m.slug === ministry)
   const heading = ministry ? (activeMinistry?.name ?? 'Ministry') : 'All ministries'
@@ -70,9 +79,13 @@ export function DashboardPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="font-serif text-2xl font-bold text-foreground">{heading}</h1>
+        <h1 className="font-serif text-2xl font-bold text-foreground">
+          {isBareLanding ? "Today's digest" : heading}
+        </h1>
         <p className="text-sm text-muted">
-          Daily PIB releases, summarized and mapped to UPSC syllabus topics.
+          {isBareLanding
+            ? "Today's releases, ranked by how much they're worth your study time."
+            : 'Daily PIB releases, summarized and mapped to UPSC syllabus topics.'}
         </p>
       </div>
 
@@ -85,10 +98,12 @@ export function DashboardPage() {
         hasActiveFilters={hasActiveFilters}
       />
 
-      {isLoading && <LoadingState label="Loading releases…" />}
-      {isError && <ErrorState onRetry={() => refetch()} />}
+      {isBareLanding && <DigestView />}
 
-      {data && (
+      {!isBareLanding && isLoading && <LoadingState label="Loading releases…" />}
+      {!isBareLanding && isError && <ErrorState onRetry={() => refetch()} />}
+
+      {!isBareLanding && data && (
         <div className={isPlaceholderData ? 'opacity-60 transition-opacity' : undefined}>
           {data.items.length === 0 ? (
             <EmptyState

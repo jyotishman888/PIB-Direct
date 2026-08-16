@@ -24,6 +24,7 @@ export interface Enrichment {
   summary: string
   context: string
   upsc_relevant: boolean
+  upsc_relevance: number | null
   syllabus_topics: string[]
   prelims_questions: PrelimsQuestion[]
   mains_questions: MainsQuestion[]
@@ -47,6 +48,7 @@ export interface ArticleListItem {
   source_url: string
   summary: string | null
   upsc_relevant: boolean | null
+  upsc_relevance: number | null
 }
 
 export interface PaginatedArticles {
@@ -77,6 +79,7 @@ export interface ArticleListParams {
   search?: string
   date_from?: string
   date_to?: string
+  sort?: 'newest' | 'relevance'
   limit?: number
   offset?: number
 }
