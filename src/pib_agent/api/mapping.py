@@ -21,6 +21,7 @@ def to_enrichment_out(enrichment: Enrichment) -> EnrichmentOut:
         summary=enrichment.summary,
         context=enrichment.context,
         upsc_relevant=enrichment.upsc_relevant,
+        upsc_relevance=enrichment.upsc_relevance,
         syllabus_topics=enrichment.syllabus_topics,
         prelims_questions=[PrelimsQuestionOut(**q) for q in enrichment.prelims_questions],
         mains_questions=[MainsQuestionOut(**q) for q in enrichment.mains_questions],
@@ -39,6 +40,7 @@ def to_article_list_item(article: Article) -> ArticleListItem:
         source_url=article.source_url,
         summary=enrichment.summary if enrichment else None,
         upsc_relevant=enrichment.upsc_relevant if enrichment else None,
+        upsc_relevance=enrichment.upsc_relevance if enrichment else None,
     )
 
 

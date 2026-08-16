@@ -1,4 +1,5 @@
 from datetime import date, datetime, time
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import nullslast
@@ -20,6 +21,9 @@ def list_articles(
     search: str | None = Query(None, min_length=2, description="Matches title or summary"),
     date_from: date | None = Query(None, description="Only releases on/after this date"),
     date_to: date | None = Query(None, description="Only releases on/before this date"),
+    sort: Literal["newest", "relevance"] = Query(
+        "newest", description="'relevance' ranks by UPSC study-worthiness score first"
+    ),
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
 ) -> PaginatedArticles:
@@ -38,12 +42,19 @@ def list_articles(
         query = query.filter(Article.release_datetime <= datetime.combine(date_to, time.max))
 
     total = query.count()
-    rows = (
-        query.order_by(nullslast(Article.release_datetime.desc()), Article.id.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
+    if sort == "relevance":
+        # The digest's whole premise: rank by study-worthiness first, so the
+        # handful of releases that matter surface even on a heavy day,
+        # regardless of where they'd fall in a pure date ordering.
+        order = (
+            nullslast(Enrichment.upsc_relevance.desc()),
+            nullslast(Article.release_datetime.desc()),
+            Article.id.desc(),
+        )
+    else:
+        order = (nullslast(Article.release_datetime.desc()), Article.id.desc())
+
+    rows = query.order_by(*order).offset(offset).limit(limit).all()
 
     return PaginatedArticles(
         items=[to_article_list_item(article) for article in rows],

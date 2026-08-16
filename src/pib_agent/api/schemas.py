@@ -31,6 +31,7 @@ class EnrichmentOut(BaseModel):
     summary: str
     context: str
     upsc_relevant: bool
+    upsc_relevance: int | None
     syllabus_topics: list[str]
     prelims_questions: list[PrelimsQuestionOut]
     mains_questions: list[MainsQuestionOut]
@@ -54,6 +55,7 @@ class ArticleListItem(BaseModel):
     source_url: str
     summary: str | None
     upsc_relevant: bool | None
+    upsc_relevance: int | None
 
 
 class PaginatedArticles(BaseModel):

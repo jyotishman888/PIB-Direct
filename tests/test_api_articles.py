@@ -26,6 +26,7 @@ def _make_enrichment(
     article: Article,
     summary: str = "Summary.",
     upsc_relevant: bool = True,
+    upsc_relevance: int | None = None,
     prelims_questions: list | None = None,
     mains_questions: list | None = None,
 ) -> Enrichment:
@@ -34,6 +35,7 @@ def _make_enrichment(
         summary=summary,
         context="Context.",
         upsc_relevant=upsc_relevant,
+        upsc_relevance=upsc_relevance,
         syllabus_topics=["GS Paper 3 - Economy"] if upsc_relevant else [],
         prelims_questions=prelims_questions or [],
         mains_questions=mains_questions or [],
@@ -248,3 +250,86 @@ def test_get_article_detail_404_for_missing_id(api_client):
     response = client.get("/api/articles/999999")
 
     assert response.status_code == 404
+
+
+# --- relevance sorting -------------------------------------------------
+
+
+def test_list_articles_exposes_the_relevance_score(api_client):
+    client, session_scope_factory = api_client
+
+    with session_scope_factory() as session:
+        ministry = Ministry(name="Ministry of Finance", slug="ministry-of-finance")
+        article = _make_article(1, ministry)
+        session.add(_make_enrichment(article, upsc_relevance=4))
+
+    body = client.get("/api/articles").json()
+
+    assert body["items"][0]["upsc_relevance"] == 4
+
+
+def test_default_sort_is_unchanged_by_relevance(api_client):
+    """The default ("newest") must order exactly as it always has."""
+    client, session_scope_factory = api_client
+
+    with session_scope_factory() as session:
+        ministry = Ministry(name="Ministry of Finance", slug="ministry-of-finance")
+        older = _make_article(1, ministry, title="Older", release_datetime=datetime(2026, 8, 1))
+        newer = _make_article(2, ministry, title="Newer", release_datetime=datetime(2026, 8, 9))
+        session.add(_make_enrichment(older, upsc_relevance=5))
+        session.add(_make_enrichment(newer, upsc_relevance=1))
+
+    body = client.get("/api/articles").json()
+
+    assert [item["title"] for item in body["items"]] == ["Newer", "Older"]
+
+
+def test_sort_relevance_ranks_the_high_score_first_regardless_of_date(api_client):
+    client, session_scope_factory = api_client
+
+    with session_scope_factory() as session:
+        ministry = Ministry(name="Ministry of Finance", slug="ministry-of-finance")
+        newer_low_score = _make_article(
+            1, ministry, title="Newer, routine", release_datetime=datetime(2026, 8, 9)
+        )
+        older_high_score = _make_article(
+            2, ministry, title="Older, landmark", release_datetime=datetime(2026, 8, 1)
+        )
+        session.add(_make_enrichment(newer_low_score, upsc_relevance=1))
+        session.add(_make_enrichment(older_high_score, upsc_relevance=5))
+
+    body = client.get("/api/articles", params={"sort": "relevance"}).json()
+
+    assert [item["title"] for item in body["items"]] == ["Older, landmark", "Newer, routine"]
+
+
+def test_sort_relevance_puts_unscored_articles_last(api_client):
+    """A NULL score must not sort as though it were the lowest possible score
+    but also not accidentally as the highest — nullslast pins it to the end."""
+    client, session_scope_factory = api_client
+
+    with session_scope_factory() as session:
+        ministry = Ministry(name="Ministry of Finance", slug="ministry-of-finance")
+        unenriched = _make_article(1, ministry, title="Not yet enriched")
+        low_score = _make_article(2, ministry, title="Scored low")
+        session.add(unenriched)
+        session.add(_make_enrichment(low_score, upsc_relevance=1))
+
+    body = client.get("/api/articles", params={"sort": "relevance"}).json()
+
+    assert [item["title"] for item in body["items"]] == ["Scored low", "Not yet enriched"]
+
+
+def test_sort_relevance_breaks_ties_by_newest_first(api_client):
+    client, session_scope_factory = api_client
+
+    with session_scope_factory() as session:
+        ministry = Ministry(name="Ministry of Finance", slug="ministry-of-finance")
+        older = _make_article(1, ministry, title="Older tie", release_datetime=datetime(2026, 8, 1))
+        newer = _make_article(2, ministry, title="Newer tie", release_datetime=datetime(2026, 8, 9))
+        session.add(_make_enrichment(older, upsc_relevance=4))
+        session.add(_make_enrichment(newer, upsc_relevance=4))
+
+    body = client.get("/api/articles", params={"sort": "relevance"}).json()
+
+    assert [item["title"] for item in body["items"]] == ["Newer tie", "Older tie"]
