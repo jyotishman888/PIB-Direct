@@ -1,3 +1,5 @@
+import { ApiError } from './errors'
+import * as staticApi from './staticClient'
 import type {
   ArticleDetail,
   ArticleListParams,
@@ -7,6 +9,13 @@ import type {
   MinistryRef,
   PaginatedArticles,
 } from './types'
+
+export { ApiError }
+
+// Set at build time for the GitHub Pages bundle, which has no backend behind
+// it. Resolved once here rather than branched per call, so the live path is
+// exactly what it was before static mode existed.
+const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
 
 // Defaults to the /api path on the page's own origin, which the Vite dev
 // server proxies to the backend (see vite.config.ts). Going through the page
@@ -19,16 +28,6 @@ const API_BASE_URL: string = new URL(
   import.meta.env.VITE_API_BASE_URL ?? '/api',
   window.location.origin,
 ).toString().replace(/\/$/, '')
-
-export class ApiError extends Error {
-  readonly status: number
-
-  constructor(message: string, status: number) {
-    super(message)
-    this.name = 'ApiError'
-    this.status = status
-  }
-}
 
 async function request<T>(
   path: string,
@@ -61,15 +60,15 @@ async function request<T>(
   return (await response.json()) as T
 }
 
-export function fetchMinistries(): Promise<MinistryListItem[]> {
+function liveFetchMinistries(): Promise<MinistryListItem[]> {
   return request<MinistryListItem[]>('/ministries')
 }
 
-export function fetchArticles(params: ArticleListParams): Promise<PaginatedArticles> {
+function liveFetchArticles(params: ArticleListParams): Promise<PaginatedArticles> {
   return request<PaginatedArticles>('/articles', { ...params })
 }
 
-export function fetchArticle(id: number): Promise<ArticleDetail> {
+function liveFetchArticle(id: number): Promise<ArticleDetail> {
   return request<ArticleDetail>(`/articles/${id}`)
 }
 
@@ -98,31 +97,58 @@ async function send<T>(path: string, method: string, body?: unknown): Promise<T>
   return (await response.json()) as T
 }
 
-export function fetchAuthProviders(): Promise<AuthProvider[]> {
+function liveFetchAuthProviders(): Promise<AuthProvider[]> {
   return request<AuthProvider[]>('/auth/providers')
 }
 
 /** Current user, or null when signed out. Never throws on 401. */
-export function fetchSession(): Promise<CurrentUser | null> {
+function liveFetchSession(): Promise<CurrentUser | null> {
   return request<CurrentUser | null>('/auth/session')
 }
 
-export function signIn(provider: string, idToken: string): Promise<CurrentUser> {
+function liveSignIn(provider: string, idToken: string): Promise<CurrentUser> {
   return send<CurrentUser>(`/auth/${provider}`, 'POST', { id_token: idToken })
 }
 
-export function linkProvider(provider: string, idToken: string): Promise<CurrentUser> {
+function liveLinkProvider(provider: string, idToken: string): Promise<CurrentUser> {
   return send<CurrentUser>(`/auth/${provider}/link`, 'POST', { id_token: idToken })
 }
 
-export function signOut(): Promise<void> {
+function liveSignOut(): Promise<void> {
   return send<void>('/auth/logout', 'POST')
 }
 
-export function fetchMySubscriptions(): Promise<MinistryRef[]> {
+function liveFetchMySubscriptions(): Promise<MinistryRef[]> {
   return request<MinistryRef[]>('/auth/subscriptions')
 }
 
-export function saveMySubscriptions(ministryIds: number[]): Promise<MinistryRef[]> {
+function liveSaveMySubscriptions(ministryIds: number[]): Promise<MinistryRef[]> {
   return send<MinistryRef[]>('/auth/subscriptions', 'PUT', { ministry_ids: ministryIds })
 }
+
+// --- the surface the app actually imports ---------------------------------
+
+export const fetchMinistries = STATIC_MODE ? staticApi.fetchMinistries : liveFetchMinistries
+export const fetchArticles = STATIC_MODE ? staticApi.fetchArticles : liveFetchArticles
+export const fetchArticle = STATIC_MODE ? staticApi.fetchArticle : liveFetchArticle
+
+export const fetchAuthProviders = STATIC_MODE
+  ? staticApi.fetchAuthProviders
+  : liveFetchAuthProviders
+export const fetchSession = STATIC_MODE ? staticApi.fetchSession : liveFetchSession
+export const signIn: (provider: string, idToken: string) => Promise<CurrentUser> = STATIC_MODE
+  ? staticApi.signIn
+  : liveSignIn
+export const linkProvider: (provider: string, idToken: string) => Promise<CurrentUser> = STATIC_MODE
+  ? staticApi.linkProvider
+  : liveLinkProvider
+export const signOut = STATIC_MODE ? staticApi.signOut : liveSignOut
+export const fetchMySubscriptions = STATIC_MODE
+  ? staticApi.fetchMySubscriptions
+  : liveFetchMySubscriptions
+export const saveMySubscriptions: (ministryIds: number[]) => Promise<MinistryRef[]> = STATIC_MODE
+  ? staticApi.saveMySubscriptions
+  : liveSaveMySubscriptions
+
+/** True when the app is running against a pre-built JSON bundle. */
+export const isStaticMode = STATIC_MODE

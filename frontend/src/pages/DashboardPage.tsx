@@ -10,7 +10,10 @@ import { DigestView } from '@/components/dashboard/DigestView'
 import { StatsStrip } from '@/components/dashboard/StatsStrip'
 import { useArticles } from '@/hooks/useArticles'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import { useDigestDate } from '@/hooks/useDigestDate'
 import { useMinistries } from '@/hooks/useMinistries'
+import { formatDate } from '@/lib/formatDate'
+import { getTodayIST } from '@/lib/today'
 
 const PAGE_SIZE = 20
 
@@ -76,15 +79,24 @@ export function DashboardPage() {
   const activeMinistry = ministries?.find((m) => m.slug === ministry)
   const heading = ministry ? (activeMinistry?.name ?? 'Ministry') : 'All ministries'
 
+  // The static build serves a snapshot, so the digest's day can be older than
+  // today — say which day it is rather than calling stale data "today's".
+  const { data: digestDate } = useDigestDate()
+  const digestIsToday = !digestDate || digestDate === getTodayIST()
+  const digestHeading = digestIsToday ? "Today's digest" : `Digest — ${formatDate(digestDate)}`
+  const digestSubtitle = digestIsToday
+    ? "Today's releases, ranked by how much they're worth your study time."
+    : 'The latest published releases, ranked by how much they’re worth your study time.'
+
   return (
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="font-serif text-2xl font-bold text-foreground">
-          {isBareLanding ? "Today's digest" : heading}
+          {isBareLanding ? digestHeading : heading}
         </h1>
         <p className="text-sm text-muted">
           {isBareLanding
-            ? "Today's releases, ranked by how much they're worth your study time."
+            ? digestSubtitle
             : 'Daily PIB releases, summarized and mapped to UPSC syllabus topics.'}
         </p>
       </div>

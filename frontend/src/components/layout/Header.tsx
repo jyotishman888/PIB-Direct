@@ -1,9 +1,13 @@
 import { LogoutOutlined, MenuOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, Skeleton } from 'antd'
 import type { MenuProps } from 'antd'
+import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
 
+import { isStaticMode } from '@/api/client'
+import { fetchMeta } from '@/api/staticClient'
 import { useAuth } from '@/auth/authContext'
+import { formatDate } from '@/lib/formatDate'
 
 const TODAY = new Date().toLocaleDateString('en-IN', {
   weekday: 'long',
@@ -31,10 +35,35 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
             Daily press releases, annotated for UPSC prep
           </span>
         </Link>
-        <span className="hidden shrink-0 text-xs text-muted sm:block">{TODAY}</span>
-        <AccountMenu />
+        <FreshnessLabel />
+        {!isStaticMode && <AccountMenu />}
       </div>
     </header>
+  )
+}
+
+/**
+ * Live, the header carries today's date. The static build serves a snapshot,
+ * where a live-looking date would imply the data is current — so it reports
+ * when the bundle was actually built instead.
+ */
+function FreshnessLabel() {
+  const { data: meta } = useQuery({
+    queryKey: ['static-meta'],
+    queryFn: fetchMeta,
+    staleTime: Infinity,
+    enabled: isStaticMode,
+  })
+
+  if (!isStaticMode) {
+    return <span className="hidden shrink-0 text-xs text-muted sm:block">{TODAY}</span>
+  }
+  if (!meta) return null
+
+  return (
+    <span className="hidden shrink-0 text-xs text-muted sm:block">
+      Updated {formatDate(meta.generated_at)}
+    </span>
   )
 }
 

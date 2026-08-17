@@ -6,6 +6,10 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // GitHub Pages serves a project site under /<repo>/, so the built asset URLs
+  // need that prefix. Set via VITE_BASE_PATH in the deploy workflow; local dev
+  // and the Docker image both stay at the root.
+  base: process.env.VITE_BASE_PATH ?? '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

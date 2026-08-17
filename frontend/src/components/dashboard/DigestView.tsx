@@ -7,6 +7,8 @@ import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
 import { LoadingState } from '@/components/common/LoadingState'
 import { useArticles } from '@/hooks/useArticles'
+import { useDigestDate } from '@/hooks/useDigestDate'
+import { formatDate } from '@/lib/formatDate'
 import { getTodayIST } from '@/lib/today'
 import type { ArticleListItem } from '@/api/types'
 
@@ -25,24 +27,34 @@ function scoreOf(article: ArticleListItem): number | null {
 }
 
 export function DigestView() {
-  const today = getTodayIST()
+  const { data: digestDate } = useDigestDate()
+  // On the static build this is the newest day in the bundle, which may not be
+  // today — the copy below says so rather than claiming stale data is current.
+  const isToday = digestDate === getTodayIST()
 
-  const { data, isLoading, isError, refetch } = useArticles({
-    date_from: today,
-    date_to: today,
-    sort: 'relevance',
-    limit: DIGEST_LIMIT,
-  })
+  const { data, isLoading, isError, refetch } = useArticles(
+    {
+      date_from: digestDate,
+      date_to: digestDate,
+      sort: 'relevance',
+      limit: DIGEST_LIMIT,
+    },
+    { enabled: Boolean(digestDate) },
+  )
 
-  if (isLoading) return <LoadingState label="Loading today's releases…" />
+  if (!digestDate || isLoading) return <LoadingState label="Loading releases…" />
   if (isError) return <ErrorState onRetry={() => refetch()} />
   if (!data) return null
 
   if (data.total === 0) {
     return (
       <EmptyState
-        title="Nothing published yet today"
-        description="PIB releases usually start appearing mid-morning IST. Check back shortly, or browse past releases from the sidebar."
+        title={isToday ? 'Nothing published yet today' : 'Nothing published on this day'}
+        description={
+          isToday
+            ? 'PIB releases usually start appearing mid-morning IST. Check back shortly, or browse past releases from the sidebar.'
+            : 'Browse past releases from the sidebar.'
+        }
       />
     )
   }
@@ -58,14 +70,15 @@ export function DigestView() {
   // relevance, so nothing a reader would want is hiding past the cutoff.
   const routineOrBeyondCap = data.total - shown
 
-  const browseAllHref = `/?date_from=${today}&date_to=${today}`
+  const browseAllHref = `/?date_from=${digestDate}&date_to=${digestDate}`
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2 text-sm text-muted">
         <CalendarOutlined />
         <span>
-          {data.total} release{data.total === 1 ? '' : 's'} so far today
+          {data.total} release{data.total === 1 ? '' : 's'}
+          {isToday ? ' so far today' : ` on ${formatDate(digestDate)}`}
         </span>
       </div>
 

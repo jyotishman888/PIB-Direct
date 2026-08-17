@@ -3,6 +3,7 @@ import { ConfigProvider, Drawer } from 'antd'
 import { Suspense, lazy, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
+import { isStaticMode } from '@/api/client'
 import { AuthProvider } from '@/auth/AuthProvider'
 import { LoadingState } from '@/components/common/LoadingState'
 import { Header } from '@/components/layout/Header'
@@ -56,8 +57,10 @@ export function App() {
                 <Routes>
                   <Route path="/" element={<DashboardPage />} />
                   <Route path="/articles/:id" element={<ArticleDetailPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/account" element={<AccountPage />} />
+                  {/* No backend on the static build, so there is nothing to
+                      sign into — these routes would only dead-end. */}
+                  {!isStaticMode && <Route path="/login" element={<LoginPage />} />}
+                  {!isStaticMode && <Route path="/account" element={<AccountPage />} />}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
