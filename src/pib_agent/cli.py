@@ -6,12 +6,14 @@ import typer
 from pib_agent import __version__
 from pib_agent.config import get_settings
 from pib_agent.db.backup import BackupError, backup_database
+from pib_agent.db.base import session_scope
 from pib_agent.db.diagnostics import (
     DatabaseNotReadyError,
     check_database_ready,
     wait_for_database,
 )
 from pib_agent.enrichment import run_enrich
+from pib_agent.export_static import DEFAULT_EXPORT_DIR, DEFAULT_WINDOW_DAYS, export_static
 from pib_agent.logging_config import setup_logging
 from pib_agent.orchestration import (
     PipelineAlreadyRunningError,
@@ -219,6 +221,39 @@ def migrate(
 
     alembic_command.upgrade(Config(str(config_path)), "head")
     typer.echo("Migrations applied.")
+
+
+@app.command("export-static")
+def export_static_command(
+    out: str = typer.Option(
+        str(DEFAULT_EXPORT_DIR),
+        help="Directory to write the JSON bundle into. Rebuilt from scratch each run.",
+    ),
+    days: int = typer.Option(
+        DEFAULT_WINDOW_DAYS,
+        help="How many days back from the newest release to include.",
+    ),
+) -> None:
+    """Export the corpus as static JSON for hosting without a backend.
+
+    Reads only the public corpus — never the user, auth or subscription
+    tables, since this bundle is committed to a public repository.
+    """
+    try:
+        with session_scope() as session:
+            result = export_static(out, session, days=days)
+    except ValueError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(
+        f"Exported {result.article_count} articles "
+        f"across {result.ministry_count} ministries to {result.out_dir}"
+    )
+    typer.echo(f"Latest release date: {result.latest_date or 'none'}")
+    if result.article_count == 0:
+        typer.echo("Nothing to publish — the database has no articles in range.")
+        raise typer.Exit(code=1)
 
 
 @app.command()
