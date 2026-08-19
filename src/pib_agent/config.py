@@ -76,6 +76,13 @@ class Settings(BaseSettings):
     # raise this to 4 to be notified only about substantive developments.
     upsc_relevance_threshold: int = 3
 
+    # The point-level study-notes pass costs a second Claude call per article,
+    # so the cheap article-level score above gates it: only releases scoring at
+    # least this much are worth the deep extraction. Most of what PIB publishes
+    # is operational communication that would yield nothing.
+    study_notes_enabled: bool = True
+    study_notes_min_relevance: int = 3
+
     # sentence-transformers model used to embed articles for similarity search.
     embedding_model: str = "all-MiniLM-L6-v2"
     similarity_top_k: int = 5

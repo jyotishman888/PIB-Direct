@@ -7,6 +7,7 @@ from pib_agent.enrichment.pipeline import EnrichStats
 from pib_agent.orchestration import PipelineAlreadyRunningError
 from pib_agent.scraper.pipeline import ScrapeStats
 from pib_agent.similarity.pipeline import SimilarityStats
+from pib_agent.study.pipeline import StudyStats
 from pib_agent.telegram.notify import NotifyStats
 
 
@@ -15,6 +16,7 @@ def _patch_stages_noop(monkeypatch):
     monkeypatch.setattr(pipeline_module, "run_enrich", lambda: EnrichStats())
     monkeypatch.setattr(pipeline_module, "run_similarity", lambda: SimilarityStats())
     monkeypatch.setattr(pipeline_module, "run_notify", lambda: NotifyStats())
+    monkeypatch.setattr(pipeline_module, "run_study", lambda: StudyStats())
 
 
 def test_run_now_returns_202_and_completes_in_background(api_client, monkeypatch):
@@ -33,7 +35,13 @@ def test_run_now_returns_202_and_completes_in_background(api_client, monkeypatch
     assert detail.status_code == 200
     detail_body = detail.json()
     assert detail_body["status"] == "success"
-    assert [s["name"] for s in detail_body["stages"]] == ["scrape", "enrich", "notify", "link"]
+    assert [s["name"] for s in detail_body["stages"]] == [
+        "scrape",
+        "enrich",
+        "notify",
+        "link",
+        "study",
+    ]
 
 
 def test_run_now_rate_limited_on_rapid_retrigger(api_client, monkeypatch):

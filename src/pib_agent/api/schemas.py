@@ -27,6 +27,42 @@ class MainsQuestionOut(BaseModel):
     gs_paper: str
 
 
+class PrelimsPointOut(BaseModel):
+    point: str
+    importance: int
+    syllabus: str
+    why_important: str
+
+
+class MainsPointOut(BaseModel):
+    point: str
+    importance: int
+    gs_paper: str
+    theme: str
+    analytical_use: str
+
+
+class BothPointOut(BaseModel):
+    concept: str
+    prelims_angle: str
+    mains_angle: str
+    importance: int
+
+
+class LowPriorityPointOut(BaseModel):
+    point: str
+    reason: str
+
+
+class StudyNotesOut(BaseModel):
+    classification: str
+    reason: str
+    prelims: list[PrelimsPointOut]
+    mains: list[MainsPointOut]
+    both: list[BothPointOut]
+    low_priority: list[LowPriorityPointOut]
+
+
 class EnrichmentOut(BaseModel):
     summary: str
     context: str
@@ -35,6 +71,9 @@ class EnrichmentOut(BaseModel):
     syllabus_topics: list[str]
     prelims_questions: list[PrelimsQuestionOut]
     mains_questions: list[MainsQuestionOut]
+    # Null for every release below the study gate, and for everything enriched
+    # before the pass existed.
+    study_notes: StudyNotesOut | None = None
     model: str
 
 
@@ -56,6 +95,9 @@ class ArticleListItem(BaseModel):
     summary: str | None
     upsc_relevant: bool | None
     upsc_relevance: int | None
+    # PRELIMS / MAINS / BOTH / LOW_PRIORITY, or null when the study pass
+    # hasn't run for this release.
+    study_classification: str | None = None
 
 
 class PaginatedArticles(BaseModel):

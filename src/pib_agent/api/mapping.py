@@ -8,6 +8,7 @@ from pib_agent.api.schemas import (
     PrelimsQuestionOut,
     RelatedArticleOut,
     StageResultOut,
+    StudyNotesOut,
 )
 from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry, PipelineRun
 
@@ -25,6 +26,9 @@ def to_enrichment_out(enrichment: Enrichment) -> EnrichmentOut:
         syllabus_topics=enrichment.syllabus_topics,
         prelims_questions=[PrelimsQuestionOut(**q) for q in enrichment.prelims_questions],
         mains_questions=[MainsQuestionOut(**q) for q in enrichment.mains_questions],
+        study_notes=(
+            StudyNotesOut(**enrichment.study_notes) if enrichment.study_notes else None
+        ),
         model=enrichment.model,
     )
 
@@ -41,6 +45,7 @@ def to_article_list_item(article: Article) -> ArticleListItem:
         summary=enrichment.summary if enrichment else None,
         upsc_relevant=enrichment.upsc_relevant if enrichment else None,
         upsc_relevance=enrichment.upsc_relevance if enrichment else None,
+        study_classification=enrichment.study_classification if enrichment else None,
     )
 
 

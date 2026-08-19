@@ -24,6 +24,7 @@ from pib_agent.scraper import run_scrape
 from pib_agent.scraper.http_client import PibFetchError, fetch_html
 from pib_agent.scraper.listing_parser import ListingParseError, parse_listing
 from pib_agent.similarity import run_similarity
+from pib_agent.study import run_study
 from pib_agent.telegram import TelegramConfigError, run_bot, run_notify
 from pib_agent.telegram.alerts import send_ops_alert
 
@@ -72,6 +73,22 @@ def enrich() -> None:
     )
     if stats.failed:
         typer.echo(f"Failed article IDs: {stats.failed_article_ids}")
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def study() -> None:
+    """Extract point-level UPSC study notes for enriched, relevant articles.
+
+    Runs only for releases scoring at least `study_notes_min_relevance`: the
+    cheap article-level score gates this more expensive second Claude call.
+    """
+    stats = run_study()
+    typer.echo(
+        f"Pending {stats.pending} articles: {stats.analysed} analysed, {stats.failed} failed."
+    )
+    if stats.failed:
+        typer.echo(f"Failed article ids: {stats.failed_article_ids}")
         raise typer.Exit(code=1)
 
 

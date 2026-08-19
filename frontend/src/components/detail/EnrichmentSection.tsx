@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 
 import { MainsQuestionCard } from '@/components/detail/MainsQuestionCard'
 import { PrelimsQuestionCard } from '@/components/detail/PrelimsQuestionCard'
+import { StudyNotesSection } from '@/components/detail/StudyNotesSection'
 import { recordQuestionTotal } from '@/lib/prelimsAttempts'
 import { examTagStyle } from '@/lib/tagStyles'
 import type { Enrichment } from '@/api/types'
@@ -45,12 +46,23 @@ export function EnrichmentSection({
         </p>
       </section>
 
+      {/* Above the questions: this is the "what should I take away" layer,
+          and the questions below are practice on it. */}
+      {enrichment.study_notes && <StudyNotesSection notes={enrichment.study_notes} />}
+
       {enrichment.upsc_relevant && enrichment.syllabus_topics.length > 0 && (
         <section>
           <SectionHeading>Syllabus topics</SectionHeading>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {enrichment.syllabus_topics.map((topic) => (
-              <Tag key={topic} className="m-0" style={examTagStyle}>
+              // Topics run long ("GS Paper 2 - Governance: Government Schemes
+              // for Export Promotion") and antd Tags don't wrap, so one can
+              // overflow a 375px viewport on its own.
+              <Tag
+                key={topic}
+                className="m-0"
+                style={{ ...examTagStyle, whiteSpace: 'normal', maxWidth: '100%', height: 'auto' }}
+              >
                 {topic}
               </Tag>
             ))}

@@ -15,6 +15,8 @@ from pib_agent.scraper import run_scrape
 from pib_agent.scraper.pipeline import ScrapeStats
 from pib_agent.similarity import run_similarity
 from pib_agent.similarity.pipeline import SimilarityStats
+from pib_agent.study import run_study
+from pib_agent.study.pipeline import StudyStats
 from pib_agent.telegram import run_notify
 from pib_agent.telegram.alerts import send_ops_alert
 from pib_agent.telegram.bot import TelegramConfigError
@@ -90,6 +92,8 @@ def _stage_summary(name: str, stats: object) -> str:
             f"sent {stats.messages_sent}, failed {stats.messages_failed}, "
             f"dead chats removed {stats.dead_chats_removed}"
         )
+    if isinstance(stats, StudyStats):
+        return f"pending {stats.pending}, analysed {stats.analysed}, failed {stats.failed}"
     return str(stats)  # pragma: no cover - defensive fallback for an unrecognized stats type
 
 
@@ -184,7 +188,7 @@ def start_pipeline_run(
 def execute_pipeline_run(
     run_id: int, *, session_scope: SessionScopeFn = default_session_scope
 ) -> PipelineRunResult:
-    """Run scrape -> enrich -> notify -> link for a run created by start_pipeline_run.
+    """Run scrape -> enrich -> notify -> link -> study for a run created by start_pipeline_run.
 
     Each stage is isolated: if one raises, it's recorded as failed and the
     next stage still runs against whatever earlier stages (this run or prior
@@ -204,6 +208,10 @@ def execute_pipeline_run(
             # know, you don't".
             _run_stage("notify", _run_notify_stage, run_id),
             _run_stage("link", run_similarity, run_id),
+            # study runs last: it's the most expensive stage per article and
+            # nothing downstream depends on it, so a slow or failing run here
+            # never delays delivery or leaves the corpus unlinked.
+            _run_stage("study", run_study, run_id),
         ]
         overall_status = _overall_status(stages)
 

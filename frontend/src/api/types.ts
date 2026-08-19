@@ -20,6 +20,44 @@ export interface MainsQuestion {
   gs_paper: string
 }
 
+export type StudyClassification = 'PRELIMS' | 'MAINS' | 'BOTH' | 'LOW_PRIORITY'
+
+export interface PrelimsPoint {
+  point: string
+  importance: number
+  syllabus: string
+  why_important: string
+}
+
+export interface MainsPoint {
+  point: string
+  importance: number
+  gs_paper: string
+  theme: string
+  analytical_use: string
+}
+
+export interface BothPoint {
+  concept: string
+  prelims_angle: string
+  mains_angle: string
+  importance: number
+}
+
+export interface LowPriorityPoint {
+  point: string
+  reason: string
+}
+
+export interface StudyNotes {
+  classification: StudyClassification
+  reason: string
+  prelims: PrelimsPoint[]
+  mains: MainsPoint[]
+  both: BothPoint[]
+  low_priority: LowPriorityPoint[]
+}
+
 export interface Enrichment {
   summary: string
   context: string
@@ -28,6 +66,8 @@ export interface Enrichment {
   syllabus_topics: string[]
   prelims_questions: PrelimsQuestion[]
   mains_questions: MainsQuestion[]
+  /** Null below the study gate, and for anything enriched before the pass existed. */
+  study_notes: StudyNotes | null
   model: string
 }
 

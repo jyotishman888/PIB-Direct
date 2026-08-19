@@ -11,6 +11,7 @@ from pib_agent.orchestration.pipeline import (
 )
 from pib_agent.scraper.pipeline import ScrapeStats
 from pib_agent.similarity.pipeline import SimilarityStats
+from pib_agent.study.pipeline import StudyStats
 from pib_agent.telegram.bot import TelegramConfigError
 from pib_agent.telegram.notify import NotifyStats
 
@@ -32,6 +33,9 @@ def _patch_all_success(monkeypatch):
         "run_notify",
         lambda: NotifyStats(pending=1, notified_articles=1, messages_sent=1),
     )
+    monkeypatch.setattr(
+        pipeline_module, "run_study", lambda: StudyStats(pending=1, analysed=1)
+    )
 
 
 def test_run_pipeline_all_success(monkeypatch, session_scope_factory):
@@ -40,7 +44,7 @@ def test_run_pipeline_all_success(monkeypatch, session_scope_factory):
     result = run_pipeline("manual", session_scope=session_scope_factory)
 
     assert result.status == "success"
-    assert [s.name for s in result.stages] == ["scrape", "enrich", "notify", "link"]
+    assert [s.name for s in result.stages] == ["scrape", "enrich", "notify", "link", "study"]
     assert all(s.status == "success" for s in result.stages)
 
     with session_scope_factory() as session:
@@ -48,7 +52,7 @@ def test_run_pipeline_all_success(monkeypatch, session_scope_factory):
         assert run.status == "success"
         assert run.trigger == "manual"
         assert run.finished_at is not None
-        assert len(run.stages) == 4
+        assert len(run.stages) == 5
 
 
 def test_run_pipeline_stage_failure_is_isolated(monkeypatch, session_scope_factory):
@@ -70,15 +74,20 @@ def test_run_pipeline_stage_failure_is_isolated(monkeypatch, session_scope_facto
         calls.append("notify")
         return NotifyStats()
 
+    def _study():
+        calls.append("study")
+        return StudyStats()
+
     monkeypatch.setattr(pipeline_module, "run_scrape", _boom)
     monkeypatch.setattr(pipeline_module, "run_enrich", _enrich)
     monkeypatch.setattr(pipeline_module, "run_similarity", _link)
     monkeypatch.setattr(pipeline_module, "run_notify", _notify)
+    monkeypatch.setattr(pipeline_module, "run_study", _study)
 
     result = run_pipeline("manual", session_scope=session_scope_factory)
 
     # every stage still ran despite scrape blowing up
-    assert calls == ["scrape", "enrich", "notify", "link"]
+    assert calls == ["scrape", "enrich", "notify", "link", "study"]
     assert result.status == "failed"
     scrape_stage = result.stages[0]
     assert scrape_stage.status == "failed"
@@ -91,6 +100,7 @@ def test_run_pipeline_partial_failure(monkeypatch, session_scope_factory):
     monkeypatch.setattr(pipeline_module, "run_enrich", lambda: EnrichStats())
     monkeypatch.setattr(pipeline_module, "run_similarity", lambda: SimilarityStats())
     monkeypatch.setattr(pipeline_module, "run_notify", lambda: NotifyStats())
+    monkeypatch.setattr(pipeline_module, "run_study", lambda: StudyStats())
 
     result = run_pipeline("manual", session_scope=session_scope_factory)
 
@@ -106,6 +116,7 @@ def test_run_pipeline_notify_skipped_without_token(monkeypatch, session_scope_fa
     monkeypatch.setattr(pipeline_module, "run_enrich", lambda: EnrichStats())
     monkeypatch.setattr(pipeline_module, "run_similarity", lambda: SimilarityStats())
     monkeypatch.setattr(pipeline_module, "run_notify", _no_token)
+    monkeypatch.setattr(pipeline_module, "run_study", lambda: StudyStats())
 
     result = run_pipeline("manual", session_scope=session_scope_factory)
 
@@ -171,6 +182,7 @@ def test_partial_failure_also_alerts(monkeypatch, session_scope_factory, ops_ale
     monkeypatch.setattr(pipeline_module, "run_enrich", lambda: EnrichStats())
     monkeypatch.setattr(pipeline_module, "run_similarity", lambda: SimilarityStats())
     monkeypatch.setattr(pipeline_module, "run_notify", lambda: NotifyStats())
+    monkeypatch.setattr(pipeline_module, "run_study", lambda: StudyStats())
 
     run_pipeline("manual", session_scope=session_scope_factory)
 
@@ -196,6 +208,7 @@ def test_skipped_stage_does_not_alert(monkeypatch, session_scope_factory, ops_al
     monkeypatch.setattr(pipeline_module, "run_enrich", lambda: EnrichStats())
     monkeypatch.setattr(pipeline_module, "run_similarity", lambda: SimilarityStats())
     monkeypatch.setattr(pipeline_module, "run_notify", _no_token)
+    monkeypatch.setattr(pipeline_module, "run_study", lambda: StudyStats())
 
     result = run_pipeline("manual", session_scope=session_scope_factory)
 

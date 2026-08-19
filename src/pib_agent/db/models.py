@@ -103,6 +103,15 @@ class Enrichment(Base):
         JSON, nullable=False, default=list
     )
 
+    # Point-level UPSC extraction, added by the separate `study` pass. Nullable
+    # because that pass only runs for articles clearing
+    # settings.study_notes_min_relevance — most releases never get one, and
+    # every row predating the feature has none.
+    study_notes: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    # Denormalised out of study_notes so the API can filter on it without
+    # unpacking JSON in SQL.
+    study_classification: Mapped[str | None] = mapped_column(String(16), nullable=True)
+
     model: Mapped[str] = mapped_column(String(64), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
