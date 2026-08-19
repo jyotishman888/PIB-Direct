@@ -73,6 +73,7 @@ def _article_kwargs(**overrides):
         context="This follows the India Semiconductor Mission announced earlier.",
         syllabus_topics=["GS Paper 3 - Science and Technology"],
         body_text="The Union Cabinet today approved incentives for semiconductor fabs.",
+        upsc_relevance=4,
     )
     base.update(overrides)
     return base
@@ -161,3 +162,16 @@ def test_prompt_carries_existing_enrichment_rather_than_redoing_it(monkeypatch):
     prompt = fake.messages.calls[0]["messages"][0]["content"]
     assert "The Cabinet cleared incentives" in prompt
     assert "GS Paper 3 - Science and Technology" in prompt
+
+
+def test_prompt_carries_the_relevance_score_as_calibration(monkeypatch):
+    """Without it every release looks equally worth extracting from, which is
+    how a merely-useful release ends up scored like a landmark one."""
+    fake = _fake_client(SimpleNamespace(stop_reason="end_turn", parsed_output=SAMPLE_NOTES))
+    monkeypatch.setattr("pib_agent.study.client._get_client", lambda: fake)
+
+    analyse_article(**_article_kwargs(upsc_relevance=3))
+
+    prompt = fake.messages.calls[0]["messages"][0]["content"]
+    assert "3/5" in prompt
+    assert "budget for an overall score of 3" in prompt

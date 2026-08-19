@@ -48,6 +48,28 @@ abuse: do not take a Prelims fact, attach a sentence of commentary, and call \
 it dual-use. If the analytical half would not survive on its own in the \
 `mains` list, it is not a `both`.
 
+CLASSIFICATION
+`classification` records where this release's value *predominantly* sits, and \
+it is a forced choice. You are only shown releases already judged worth an \
+aspirant's time, so almost all of them contain some fact and some analysis — \
+noting that is not informative. The question is which side a reader would \
+actually study this release for.
+
+  PRELIMS - the value is the facts. Data releases, index revisions, scheme \
+parameters, institutional details, appointments to bodies that matter.
+  MAINS - the value is the argument. Policy direction, structural challenges, \
+strategic positioning, releases whose specific numbers matter far less than \
+what they signify.
+  BOTH - genuinely balanced: a reader would return to it for the facts AND \
+build an answer from it, and you cannot honestly pick which dominates.
+  LOW_PRIORITY - neither half is really present.
+
+BOTH is the minority answer, not the default. If you find yourself choosing it \
+for most releases you are describing the corpus, not discriminating within it. \
+Ask: if a reader had ten minutes, would they memorise this or argue with it? \
+Answer that, and only fall back to BOTH when the honest answer is truly "equally \
+both".
+
 LOW PRIORITY
 Promotional and ceremonial content, political rhetoric without policy \
 substance, minor administrative detail, figures quoted without significance, \
@@ -55,11 +77,42 @@ and repetition. Name at most three such items, briefly. This exists so the \
 reader can see what you considered and rejected — not as a second summary.
 
 IMPORTANCE, 1-5
-5 - Critical: direct syllabus relevance and strong testability.
-4 - High: solidly on the syllabus and realistically testable.
-3 - Moderate: useful for understanding, lower probability of being asked.
-2 - Low: peripheral.
-1 - Very low: contextual, essentially non-examinable.
+3 is the normal score. A point earns a place in this output at all because it \
+has some value; 3 says exactly that and nothing more. Start every point at 3 \
+and move it only for a reason you could defend.
+
+5 - Critical: an aspirant who missed this would be materially worse off. \
+Landmark facts and central mechanisms only.
+4 - High: you would be surprised if a well-prepared candidate did not know it.
+3 - Moderate: genuinely useful. Most points belong here.
+2 - Low: peripheral, worth a glance.
+1 - Very low: contextual.
+
+Calibration, and this is the rule most often broken. Across the points you \
+emit for one release:
+
+  - Most releases deserve NO 5s at all. A 5 is for the single most important \
+thing in an unusually important release, and many releases contain nothing \
+that qualifies.
+  - At most two points may score 4.
+  - If more than about a third of your points are 4 or 5, you have over-rated \
+them. Go back and lower the weakest ones.
+
+A scale where everything lands at 4 conveys nothing: the reader cannot tell \
+what to open first, which is the only thing this score exists to tell them. \
+Spread is the product. Being generous here does not help anyone.
+
+HOW MUCH TO EXTRACT
+You are told the release's overall study-worthiness (1-5). Let it set your \
+budget, because a moderately useful release does not contain ten things worth \
+memorising:
+
+  overall 5 - up to about 12 points across all lists
+  overall 4 - up to about 8
+  overall 3 - up to about 5
+
+These are ceilings, not targets. Coming in well under is the right answer for \
+a thin release. Never pad to reach a number.
 
 Quality rules, in order of how often they are broken:
 
@@ -89,6 +142,7 @@ def build_user_prompt(
     context: str,
     syllabus_topics: list[str],
     body_text: str,
+    upsc_relevance: int,
 ) -> str:
     """Build the per-article prompt.
 
@@ -96,15 +150,24 @@ def build_user_prompt(
     pass runs after enrichment: repeating that work would waste tokens, and
     the tags keep the extraction anchored to the syllabus areas already
     assigned rather than drifting to new ones.
+
+    `upsc_relevance` is the article-level score that already decided this
+    release was worth analysing. It is passed through as calibration: without
+    it every release looks equally worth extracting from, which is how a
+    merely-useful release ends up with as many high-scored points as a
+    landmark one.
     """
     topics = ", ".join(syllabus_topics) if syllabus_topics else "(none assigned)"
     return (
         f"Ministry: {ministry_name}\n"
         f"Title: {title}\n"
+        f"Overall study-worthiness of this release: {upsc_relevance}/5\n"
         f"Syllabus areas already assigned: {topics}\n\n"
         f"Summary:\n{summary}\n\n"
         f"Context:\n{context}\n\n"
         f"Full release text:\n{body_text}\n\n"
         "Extract the UPSC-examinable material from this release, following the "
-        "classification framework and quality rules."
+        "classification framework and quality rules. Respect the extraction "
+        f"budget for an overall score of {upsc_relevance}, and remember that "
+        "most releases deserve no 5s."
     )

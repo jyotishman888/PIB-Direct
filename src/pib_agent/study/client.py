@@ -44,6 +44,7 @@ def analyse_article(
     context: str,
     syllabus_topics: list[str],
     body_text: str,
+    upsc_relevance: int,
 ) -> StudyNotes:
     """Extract UPSC-examinable points from one already-enriched release.
 
@@ -64,6 +65,7 @@ def analyse_article(
         context=context,
         syllabus_topics=syllabus_topics,
         body_text=body_text,
+        upsc_relevance=upsc_relevance,
     )
 
     try:

@@ -26,6 +26,7 @@ class _PendingArticle(TypedDict):
     context: str
     syllabus_topics: list[str]
     body_text: str
+    upsc_relevance: int
 
 
 @dataclass
@@ -62,6 +63,7 @@ def _load_pending(session: Session, min_relevance: int) -> list[_PendingArticle]
             "context": e.context,
             "syllabus_topics": e.syllabus_topics or [],
             "body_text": e.article.body_text,
+            "upsc_relevance": e.upsc_relevance,
         }
         for e in rows
     ]
@@ -78,6 +80,7 @@ def _analyse_one(
             context=pending["context"],
             syllabus_topics=pending["syllabus_topics"],
             body_text=pending["body_text"],
+            upsc_relevance=pending["upsc_relevance"],
         )
     except StudyError as exc:
         # Isolated per article: one bad release must not abort the batch.
