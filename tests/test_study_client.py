@@ -20,7 +20,7 @@ SAMPLE_NOTES = StudyNotes(
     prelims=[
         PrelimsPoint(
             point="India Semiconductor Mission sits under MeitY.",
-            importance=4,
+            importance="IMPORTANT",
             syllabus="Science and Technology",
             why_important="Implementing-agency pairings are a standard statement-matching target.",
         )
@@ -28,7 +28,7 @@ SAMPLE_NOTES = StudyNotes(
     mains=[
         MainsPoint(
             point="Capital intensity and fab talent shortages constrain domestic capacity.",
-            importance=4,
+            importance="IMPORTANT",
             gs_paper="GS3",
             theme="Technological self-reliance",
             analytical_use="Supports questions on barriers to semiconductor self-sufficiency.",
@@ -39,7 +39,7 @@ SAMPLE_NOTES = StudyNotes(
             concept="Semiconductor manufacturing ecosystem",
             prelims_angle="Terminology, incentives and the nodal agency.",
             mains_angle="Supply-chain resilience and strategic dependence.",
-            importance=5,
+            importance="IMPORTANT",
         )
     ],
     low_priority=[
@@ -86,7 +86,7 @@ def test_analyse_article_returns_parsed_output(monkeypatch):
     result = analyse_article(**_article_kwargs())
 
     assert result.classification == "BOTH"
-    assert result.prelims[0].importance == 4
+    assert result.prelims[0].importance == "IMPORTANT"
     assert result.both[0].concept == "Semiconductor manufacturing ecosystem"
 
 

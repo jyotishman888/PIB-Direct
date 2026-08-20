@@ -76,31 +76,26 @@ substance, minor administrative detail, figures quoted without significance, \
 and repetition. Name at most three such items, briefly. This exists so the \
 reader can see what you considered and rejected — not as a second summary.
 
-IMPORTANCE, 1-5
-3 is the normal score. A point earns a place in this output at all because it \
-has some value; 3 says exactly that and nothing more. Start every point at 3 \
-and move it only for a reason you could defend.
+IMPORTANCE
+Every point is either IMPORTANT or WORTH_A_LOOK. There is no middle value, \
+because the reader only makes one decision with this: what to study first.
 
-5 - Critical: an aspirant who missed this would be materially worse off. \
-Landmark facts and central mechanisms only.
-4 - High: you would be surprised if a well-prepared candidate did not know it.
-3 - Moderate: genuinely useful. Most points belong here.
-2 - Low: peripheral, worth a glance.
-1 - Very low: contextual.
+IMPORTANT - you would be surprised if a well-prepared candidate did not know \
+it. Central mechanisms, defining facts, the thing the release exists to \
+announce.
+WORTH_A_LOOK - genuinely useful and worth reading once, but not something to \
+memorise before the rest.
 
-Calibration, and this is the rule most often broken. Across the points you \
-emit for one release:
+WORTH_A_LOOK is the normal label. Reserve IMPORTANT for roughly the top third \
+of what you emit for a release, and often fewer. If you mark everything \
+IMPORTANT the label stops meaning anything and the reader is back to reading \
+the whole page in order, which is exactly what this output exists to spare \
+them.
 
-  - Most releases deserve NO 5s at all. A 5 is for the single most important \
-thing in an unusually important release, and many releases contain nothing \
-that qualifies.
-  - At most two points may score 4.
-  - If more than about a third of your points are 4 or 5, you have over-rated \
-them. Go back and lower the weakest ones.
-
-A scale where everything lands at 4 conveys nothing: the reader cannot tell \
-what to open first, which is the only thing this score exists to tell them. \
-Spread is the product. Being generous here does not help anyone.
+Anything weaker than WORTH_A_LOOK does not belong here at all. Peripheral \
+detail, background colour and figures without significance should simply not \
+be emitted as points - leave them out, or name them under low_priority if \
+they are worth showing as considered-and-rejected.
 
 HOW MUCH TO EXTRACT
 You are told the release's overall study-worthiness (1-5). Let it set your \

@@ -20,18 +20,20 @@ export interface MainsQuestion {
   gs_paper: string
 }
 
+export type Importance = 'IMPORTANT' | 'WORTH_A_LOOK'
+
 export type StudyClassification = 'PRELIMS' | 'MAINS' | 'BOTH' | 'LOW_PRIORITY'
 
 export interface PrelimsPoint {
   point: string
-  importance: number
+  importance: Importance
   syllabus: string
   why_important: string
 }
 
 export interface MainsPoint {
   point: string
-  importance: number
+  importance: Importance
   gs_paper: string
   theme: string
   analytical_use: string
@@ -41,7 +43,7 @@ export interface BothPoint {
   concept: string
   prelims_angle: string
   mains_angle: string
-  importance: number
+  importance: Importance
 }
 
 export interface LowPriorityPoint {

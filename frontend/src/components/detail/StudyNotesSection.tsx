@@ -2,7 +2,7 @@ import { Collapse, Tag, Tooltip, Typography } from 'antd'
 import type { CSSProperties, ReactNode } from 'react'
 
 import { accentTagStyle, examTagStyle, neutralTagStyle } from '@/lib/tagStyles'
-import type { StudyClassification, StudyNotes } from '@/api/types'
+import type { Importance, StudyClassification, StudyNotes } from '@/api/types'
 
 const { Title } = Typography
 
@@ -23,17 +23,18 @@ const CLASSIFICATION_LABEL: Record<StudyClassification, string> = {
   LOW_PRIORITY: 'Low priority',
 }
 
-/** Importance is the whole point of this layer, so it reads as a rating rather
- *  than a bare number — a reader scanning for what to study first shouldn't
- *  have to decode "4". */
-function Importance({ score }: { score: number }) {
-  const label = ['', 'Very low', 'Low', 'Moderate', 'High', 'Critical'][score] ?? String(score)
-  const style: CSSProperties = score >= 4 ? examTagStyle : neutralTagStyle
+/** Two buckets, not a rating. The reader makes one decision here — what to
+ *  study first — so the label says exactly that instead of asking them to
+ *  decode a number. */
+function ImportanceTag({ importance }: { importance: Importance }) {
+  const important = importance === 'IMPORTANT'
   return (
-    <Tooltip title={`Importance ${score}/5 — ${label}`}>
-      <Tag className="m-0 shrink-0" style={style}>
-        {'★'.repeat(score)}
-        <span className="sr-only">{` importance ${score} of 5`}</span>
+    <Tooltip title={important ? 'Know this one' : 'Worth reading once'}>
+      <Tag
+        className="m-0 shrink-0"
+        style={important ? examTagStyle : neutralTagStyle}
+      >
+        {important ? 'Important' : 'Worth a look'}
       </Tag>
     </Tooltip>
   )
@@ -45,7 +46,7 @@ function PointRow({
   tag,
   note,
 }: {
-  importance: number
+  importance: Importance
   children: ReactNode
   tag?: string
   note?: string
@@ -53,7 +54,7 @@ function PointRow({
   return (
     <li className="flex flex-col gap-1 border-t border-border py-2.5 first:border-t-0">
       <div className="flex items-start gap-2">
-        <Importance score={importance} />
+        <ImportanceTag importance={importance} />
         <span className="min-w-0 text-sm leading-relaxed text-foreground">{children}</span>
       </div>
       {(tag || note) && (
@@ -81,6 +82,13 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   )
 }
 
+/** Important first: the label is only useful if it also drives the order. */
+function byImportance<T extends { importance: Importance }>(points: T[]): T[] {
+  return [...points].sort((a, b) =>
+    a.importance === b.importance ? 0 : a.importance === 'IMPORTANT' ? -1 : 1,
+  )
+}
+
 export function StudyNotesSection({ notes }: { notes: StudyNotes }) {
   const hasContent =
     notes.prelims.length > 0 || notes.mains.length > 0 || notes.both.length > 0
@@ -100,7 +108,7 @@ export function StudyNotesSection({ notes }: { notes: StudyNotes }) {
 
       {notes.both.length > 0 && (
         <Section title="Prelims + Mains">
-          {notes.both.map((p) => (
+          {byImportance(notes.both).map((p) => (
             <PointRow
               key={p.concept}
               importance={p.importance}
@@ -114,7 +122,7 @@ export function StudyNotesSection({ notes }: { notes: StudyNotes }) {
 
       {notes.prelims.length > 0 && (
         <Section title="Prelims">
-          {notes.prelims.map((p) => (
+          {byImportance(notes.prelims).map((p) => (
             <PointRow
               key={p.point}
               importance={p.importance}
@@ -129,7 +137,7 @@ export function StudyNotesSection({ notes }: { notes: StudyNotes }) {
 
       {notes.mains.length > 0 && (
         <Section title="Mains">
-          {notes.mains.map((p) => (
+          {byImportance(notes.mains).map((p) => (
             <PointRow
               key={p.point}
               importance={p.importance}

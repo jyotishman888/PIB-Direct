@@ -9,6 +9,12 @@ MAX_LOW_PRIORITY = 3
 
 Classification = Literal["PRELIMS", "MAINS", "BOTH", "LOW_PRIORITY"]
 
+# Two buckets, not a 1-5 scale. Measured across 625 extracted points, the
+# model used 5 for 1.9% of them and 1 for none at all: 86% of the mass sat
+# on two adjacent values. A five-point scale it uses as two is false
+# precision, and the reader only ever makes one decision here anyway.
+Importance = Literal["IMPORTANT", "WORTH_A_LOOK"]
+
 
 class PrelimsPoint(BaseModel):
     point: str = Field(
@@ -18,14 +24,11 @@ class PrelimsPoint(BaseModel):
             "definition, or a distinction between two similar concepts."
         )
     )
-    importance: int = Field(
-        ge=1,
-        le=5,
+    importance: Importance = Field(
         description=(
-            "5 = direct syllabus relevance and strong testability. 4 = likely to be "
-            "tested. 3 = useful background, lower probability. 2 = peripheral. "
-            "1 = mostly contextual."
-        ),
+            "IMPORTANT when a well-prepared candidate would be expected to know it; "
+            "WORTH_A_LOOK otherwise. Anything weaker should not be emitted at all."
+        )
     )
     syllabus: str = Field(
         description="Prelims subject area, selected from the fixed list."
@@ -45,7 +48,7 @@ class MainsPoint(BaseModel):
             "policy gap, stakeholder perspective, or way forward."
         )
     )
-    importance: int = Field(ge=1, le=5, description="Same 1-5 scale as Prelims points.")
+    importance: Importance = Field(description="Same two buckets as Prelims points.")
     gs_paper: str = Field(description="Which paper this serves, e.g. 'GS3'.")
     theme: str = Field(
         description="Short theme label, e.g. 'Technological self-reliance'."
@@ -64,7 +67,7 @@ class BothPoint(BaseModel):
     )
     prelims_angle: str = Field(description="What could be asked objectively about it.")
     mains_angle: str = Field(description="What it lets an aspirant analyse.")
-    importance: int = Field(ge=1, le=5, description="Same 1-5 scale.")
+    importance: Importance = Field(description="Same two buckets.")
 
 
 class LowPriorityPoint(BaseModel):

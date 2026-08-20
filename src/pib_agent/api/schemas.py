@@ -29,14 +29,14 @@ class MainsQuestionOut(BaseModel):
 
 class PrelimsPointOut(BaseModel):
     point: str
-    importance: int
+    importance: str
     syllabus: str
     why_important: str
 
 
 class MainsPointOut(BaseModel):
     point: str
-    importance: int
+    importance: str
     gs_paper: str
     theme: str
     analytical_use: str
@@ -46,7 +46,7 @@ class BothPointOut(BaseModel):
     concept: str
     prelims_angle: str
     mains_angle: str
-    importance: int
+    importance: str
 
 
 class LowPriorityPointOut(BaseModel):

@@ -12,7 +12,13 @@ export function MainsQuestionCard({
 }) {
   return (
     <Card size="small">
-      <Tag className="m-0" style={accentTagStyle}>
+      {/* gs_paper is free text and runs long ("GS Paper 3 - Economy: Digital
+          Currency and Financial Technology"); antd Tags don't wrap, so one
+          overflows a 375px viewport on its own. */}
+      <Tag
+        className="m-0"
+        style={{ ...accentTagStyle, whiteSpace: 'normal', maxWidth: '100%', height: 'auto' }}
+      >
         {question.gs_paper}
       </Tag>
       <p className="mt-2 text-sm text-foreground">

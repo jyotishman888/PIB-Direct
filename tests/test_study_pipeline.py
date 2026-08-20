@@ -16,7 +16,7 @@ def _notes(classification: str = "PRELIMS") -> StudyNotes:
         prelims=[
             PrelimsPoint(
                 point="Scheme sits under the named ministry.",
-                importance=4,
+                importance="IMPORTANT",
                 syllabus="Government Schemes",
                 why_important="Agency pairings are standard statement-matching material.",
             )
@@ -24,7 +24,7 @@ def _notes(classification: str = "PRELIMS") -> StudyNotes:
         mains=[
             MainsPoint(
                 point="Implementation capacity is the binding constraint.",
-                importance=3,
+                importance="WORTH_A_LOOK",
                 gs_paper="GS2",
                 theme="Governance",
                 analytical_use="Supports questions on delivery gaps.",
@@ -95,7 +95,7 @@ def test_analyses_articles_above_the_gate(monkeypatch, db_session, scope_factory
     assert (stats.pending, stats.analysed, stats.failed) == (1, 1, 0)
     stored = db_session.query(Enrichment).one()
     assert stored.study_classification == "BOTH"
-    assert stored.study_notes["prelims"][0]["importance"] == 4
+    assert stored.study_notes["prelims"][0]["importance"] == "IMPORTANT"
 
 
 def test_skips_articles_below_the_gate(monkeypatch, db_session, scope_factory, ministry):
