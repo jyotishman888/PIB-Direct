@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { isStaticMode } from '@/api/client'
 import { fetchMeta } from '@/api/staticClient'
 import { useAuth } from '@/auth/authContext'
-import { formatDate } from '@/lib/formatDate'
+import { formatRelative } from '@/lib/formatDate'
 
 const TODAY = new Date().toLocaleDateString('en-IN', {
   weekday: 'long',
@@ -62,7 +62,7 @@ function FreshnessLabel() {
 
   return (
     <span className="hidden shrink-0 text-xs text-muted sm:block">
-      Updated {formatDate(meta.generated_at)}
+      Updated {formatRelative(meta.generated_at)}
     </span>
   )
 }

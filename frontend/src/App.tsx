@@ -1,9 +1,10 @@
 import { StyleProvider } from '@ant-design/cssinjs'
 import { ConfigProvider, Drawer } from 'antd'
-import { Suspense, lazy, useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
+import { Route, Routes, useLocation } from 'react-router-dom'
 
 import { isStaticMode } from '@/api/client'
+import { initAnalytics, trackPageView } from '@/lib/analytics'
 import { AuthProvider } from '@/auth/AuthProvider'
 import { LoadingState } from '@/components/common/LoadingState'
 import { Header } from '@/components/layout/Header'
@@ -25,8 +26,26 @@ const AccountPage = lazy(() =>
   import('@/pages/AccountPage').then((m) => ({ default: m.AccountPage })),
 )
 
+/** GA4 counts the initial load only; a SPA has to report its own route
+ *  changes or every page after the first is invisible. */
+function usePageViews() {
+  const { pathname, search } = useLocation()
+  const lastTracked = useRef<string | null>(null)
+  useEffect(() => {
+    const path = pathname + search
+    // StrictMode runs effects twice in development, which would double-count
+    // every landing. Guarding on the last path tracked is also just correct:
+    // re-rendering at the same URL is not a new page view.
+    if (lastTracked.current === path) return
+    lastTracked.current = path
+    initAnalytics()
+    trackPageView(path)
+  }, [pathname, search])
+}
+
 export function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  usePageViews()
   const colorScheme = useColorScheme()
 
   return (

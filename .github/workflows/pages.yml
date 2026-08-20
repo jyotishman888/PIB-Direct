@@ -57,6 +57,10 @@ jobs:
       - name: Build
         env:
           VITE_STATIC_MODE: 'true'
+          # Optional. A GA4 measurement ID is not a secret (it ships in the
+          # page source), but it lives in repo settings so a fork does not
+          # report into this property. Unset means analytics no-op.
+          VITE_GA_MEASUREMENT_ID: ${{ vars.GA_MEASUREMENT_ID }}
         run: |
           # Project sites are served from https://<user>.github.io/<repo>/, so
           # assets and router links need that prefix. Derived from the repo
