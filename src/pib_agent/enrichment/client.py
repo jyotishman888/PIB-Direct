@@ -6,10 +6,17 @@ import anthropic
 from pib_agent.config import get_settings
 from pib_agent.enrichment.prompts import SYSTEM_PROMPT, build_user_prompt
 from pib_agent.enrichment.schema import ArticleEnrichment
+from pib_agent.syllabus import normalise_area
 
 logger = logging.getLogger(__name__)
 
 _ENRICHMENT_MAX_TOKENS = 4096
+
+# The prompt asks for "one or two" areas, but the model sprays and repeats:
+# observed live, a farming scheme listed Agriculture twice and a defence
+# agreement returned eleven areas including Art and Culture. Enforced here
+# rather than left to the prompt.
+_MAX_SYLLABUS_AREAS = 2
 
 
 class EnrichmentError(RuntimeError):
@@ -86,4 +93,16 @@ def enrich_article(
             f"(stop_reason={response.stop_reason!r})."
         )
 
-    return response.parsed_output
+    result = response.parsed_output
+    # Coerced, not validated: typing this field as a Literal made a one-word
+    # casing slip ("Statutory And Regulatory Bodies") fail the whole
+    # enrichment, losing the summary and context too. Mapping onto the
+    # vocabulary and dropping what doesn't fit keeps a bad tag from costing a
+    # good article.
+    canonical: dict[str, None] = {}
+    for tag in result.syllabus_topics:
+        area = normalise_area(tag)
+        if area is not None:
+            canonical[area] = None
+    result.syllabus_topics = list(canonical)[:_MAX_SYLLABUS_AREAS]
+    return result

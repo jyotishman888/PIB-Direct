@@ -5,6 +5,7 @@ import anthropic
 from pib_agent.config import get_settings
 from pib_agent.study.prompts import SYSTEM_PROMPT, build_user_prompt
 from pib_agent.study.schema import MAX_LOW_PRIORITY, StudyNotes
+from pib_agent.syllabus import normalise_subject
 
 logger = logging.getLogger(__name__)
 
@@ -100,5 +101,12 @@ def analyse_article(
     # shouldn't grow the stored payload.
     if len(notes.low_priority) > MAX_LOW_PRIORITY:
         notes.low_priority = notes.low_priority[:MAX_LOW_PRIORITY]
+
+    # Pin point-level subjects to the fixed list so they stay a usable facet
+    # ("Science & Technology" and "Science and Technology" are one subject).
+    # Unmappable values keep their original text rather than being dropped —
+    # the point itself is still worth showing.
+    for point in notes.prelims:
+        point.syllabus = normalise_subject(point.syllabus) or point.syllabus
 
     return notes

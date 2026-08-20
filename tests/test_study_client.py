@@ -21,7 +21,7 @@ SAMPLE_NOTES = StudyNotes(
         PrelimsPoint(
             point="India Semiconductor Mission sits under MeitY.",
             importance=4,
-            syllabus="Science & Technology",
+            syllabus="Science and Technology",
             why_important="Implementing-agency pairings are a standard statement-matching target.",
         )
     ],

@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from pib_agent.syllabus import GS_AREAS
+
 SYSTEM_PROMPT = """\
 You help build a dashboard that tracks India's Press Information Bureau (PIB) \
 daily releases for UPSC Civil Services exam aspirants.
@@ -40,19 +42,12 @@ official-sounding, or mentions a well-known scheme. A release is a 4 or 5 \
 because of what it announces, not because of the topic it touches.
 
 4. syllabus_topics: when upsc_relevance is 3 or higher, tag the GS syllabus \
-areas this touches. Use the canonical paper and area names below, formatted \
-as "GS Paper N - Area" or "GS Paper N - Area: Sub-topic". Pick the one or two \
-areas the release genuinely belongs to rather than everything it brushes \
-against. Empty list below 3.
+areas this touches. Choose ONLY from the list below and reproduce the name \
+exactly — do not append a sub-topic, rephrase it, or invent an area. Pick the \
+one or two areas the release genuinely belongs to rather than everything it \
+brushes against. Empty list below 3.
 
-GS Paper 1 - Indian Heritage and Culture; Modern Indian History; Post-\
-independence Consolidation; World History; Indian Society; Social \
-Empowerment; Geography: Physical; Geography: Resources; Geography: Disasters
-GS Paper 2 - Polity and Constitution; Governance; Social Justice; Welfare \
-Schemes; Health; Education; Human Resources; International Relations
-GS Paper 3 - Economy; Agriculture; Infrastructure; Science and Technology; \
-Environment and Biodiversity; Disaster Management; Internal Security
-GS Paper 4 - Ethics and Integrity; Probity in Governance
+__SYLLABUS_AREAS__
 
 5. prelims_questions: when upsc_relevance is 3 or higher, 1-2 Prelims-style \
 MCQs (each with exactly four options, the correct option's index, and a short \
@@ -67,7 +62,7 @@ Ground everything only in the provided release text and well-established public 
 knowledge. Do not fabricate statistics, names, or dates not present in the release. \
 Write in plain, precise English suitable for a competitive-exam current-affairs \
 digest.\
-"""
+""".replace("__SYLLABUS_AREAS__", "\n".join(GS_AREAS))
 
 
 def build_user_prompt(

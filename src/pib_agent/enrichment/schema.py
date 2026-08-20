@@ -50,8 +50,8 @@ class ArticleEnrichment(BaseModel):
     )
     syllabus_topics: list[str] = Field(
         description=(
-            "GS syllabus tags this release relates to, e.g. 'GS Paper 3 - Economy: "
-            "Infrastructure'. Empty list when upsc_relevance is below 3."
+            "GS syllabus areas this release relates to, selected verbatim from the "
+            "canonical list. Empty list when upsc_relevance is below 3."
         )
     )
     prelims_questions: list[PrelimsQuestion] = Field(

@@ -12,7 +12,7 @@ SAMPLE_ENRICHMENT = ArticleEnrichment(
     summary="India crossed 300 GW of non-fossil power capacity.",
     context="This builds on the National Green Hydrogen Mission and prior renewable targets.",
     upsc_relevance=5,
-    syllabus_topics=["GS Paper 3 - Environment: Renewable Energy"],
+    syllabus_topics=["GS Paper 3 - Environment and Biodiversity"],
     prelims_questions=[
         PrelimsQuestion(
             question="India's non-fossil capacity milestone announced in Aug 2026 was:",
@@ -116,3 +116,33 @@ def test_get_client_raises_without_api_key(monkeypatch):
 
     with pytest.raises(EnrichmentError, match="ANTHROPIC_API_KEY"):
         client_module._get_client()
+
+
+def test_syllabus_tags_are_deduped_and_capped(monkeypatch):
+    """A closed vocabulary makes extra list items cheap to emit.
+
+    Observed live: a farming scheme came back tagged 'Agriculture' twice, and
+    a defence agreement listed five areas including 'Art and Culture'. Clamped
+    rather than rejected, so over-tagging never fails a good enrichment.
+    """
+    sprayed = SAMPLE_ENRICHMENT.model_copy(
+        update={
+            "syllabus_topics": [
+                "GS Paper 3 - Agriculture",
+                "GS Paper 3 - Agriculture",
+                "GS Paper 1 - Art and Culture",
+                "GS Paper 1 - Resource Distribution",
+            ]
+        }
+    )
+    fake_client = _fake_client(
+        response=SimpleNamespace(stop_reason="end_turn", parsed_output=sprayed)
+    )
+    monkeypatch.setattr("pib_agent.enrichment.client._get_client", lambda: fake_client)
+
+    result = enrich_article(**_article_kwargs())
+
+    assert result.syllabus_topics == [
+        "GS Paper 3 - Agriculture",
+        "GS Paper 1 - Art and Culture",
+    ]

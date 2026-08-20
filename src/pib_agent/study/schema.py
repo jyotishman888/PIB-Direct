@@ -28,10 +28,7 @@ class PrelimsPoint(BaseModel):
         ),
     )
     syllabus: str = Field(
-        description=(
-            "Prelims subject area, e.g. 'Polity', 'Environment', "
-            "'Science & Technology', 'Government Schemes'."
-        )
+        description="Prelims subject area, selected from the fixed list."
     )
     why_important: str = Field(
         description=(

@@ -25,6 +25,7 @@ from pib_agent.scraper.http_client import PibFetchError, fetch_html
 from pib_agent.scraper.listing_parser import ListingParseError, parse_listing
 from pib_agent.similarity import run_similarity
 from pib_agent.study import run_study
+from pib_agent.syllabus import normalise_area
 from pib_agent.telegram import TelegramConfigError, run_bot, run_notify
 from pib_agent.telegram.alerts import send_ops_alert
 
@@ -74,6 +75,48 @@ def enrich() -> None:
     if stats.failed:
         typer.echo(f"Failed article IDs: {stats.failed_article_ids}")
         raise typer.Exit(code=1)
+
+
+@app.command("normalise-syllabus")
+def normalise_syllabus(
+    dry_run: bool = typer.Option(False, help="Report what would change without writing."),
+) -> None:
+    """Map legacy free-text syllabus tags onto the canonical vocabulary.
+
+    The old prompt allowed a free-form "GS Paper N - Area: Sub-topic" suffix,
+    which produced ~1090 distinct tags across the corpus. New enrichments are
+    constrained by the schema; this cleans up what came before. Tags that
+    don't map confidently are left untouched rather than guessed at.
+    """
+    from pib_agent.db import Enrichment
+
+    changed = untouched = 0
+    with session_scope() as session:
+        for enrichment in session.query(Enrichment).all():
+            tags = enrichment.syllabus_topics or []
+            mapped, dirty = [], False
+            for tag in tags:
+                area = normalise_area(tag)
+                if area and area != tag:
+                    dirty = True
+                    mapped.append(area)
+                elif area:
+                    mapped.append(area)
+                else:
+                    untouched += 1
+                    mapped.append(tag)
+            # dedupe while preserving order - collapsing sub-topics routinely
+            # maps several legacy tags onto the same area.
+            deduped = list(dict.fromkeys(mapped))
+            if dirty or deduped != tags:
+                changed += 1
+                if not dry_run:
+                    enrichment.syllabus_topics = deduped
+        if dry_run:
+            session.rollback()
+
+    verb = "would change" if dry_run else "changed"
+    typer.echo(f"{verb} {changed} enrichments; {untouched} tags left as-is (no confident match).")
 
 
 @app.command()
@@ -253,7 +296,7 @@ def export_static_command(
 ) -> None:
     """Export the corpus as static JSON for hosting without a backend.
 
-    Reads only the public corpus — never the user, auth or subscription
+    Reads only the public corpus - never the user, auth or subscription
     tables, since this bundle is committed to a public repository.
     """
     try:
@@ -269,7 +312,7 @@ def export_static_command(
     )
     typer.echo(f"Latest release date: {result.latest_date or 'none'}")
     if result.article_count == 0:
-        typer.echo("Nothing to publish — the database has no articles in range.")
+        typer.echo("Nothing to publish - the database has no articles in range.")
         raise typer.Exit(code=1)
 
 
@@ -277,7 +320,7 @@ def export_static_command(
 def doctor() -> None:
     """Check the live PIB listing still parses. Exits non-zero when it doesn't.
 
-    Fixture-based tests can't catch PIB changing its markup — they passed
+    Fixture-based tests can't catch PIB changing its markup - they passed
     perfectly while the real site was returning something the parser couldn't
     read. Run this on a schedule, or before trusting a quiet day.
     """
@@ -300,7 +343,7 @@ def doctor() -> None:
         raise typer.Exit(code=1)
 
     if total == 0:
-        typer.echo("No releases found on any source — could be an off-hours lull, or a break.")
+        typer.echo("No releases found on any source - could be an off-hours lull, or a break.")
         raise typer.Exit(code=2)
 
     typer.echo(f"All {len(settings.pib_listing_urls)} source(s) healthy, {total} release(s).")
