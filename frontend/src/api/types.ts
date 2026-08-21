@@ -8,6 +8,12 @@ export interface MinistryListItem extends MinistrySummary {
   article_count: number
 }
 
+export interface TopicListItem {
+  name: string
+  slug: string
+  article_count: number
+}
+
 export interface PrelimsQuestion {
   question: string
   options: string[]
@@ -91,6 +97,10 @@ export interface ArticleListItem {
   summary: string | null
   upsc_relevant: boolean | null
   upsc_relevance: number | null
+  /** Carried on the list item so the static build can filter by topic
+   *  in the browser, with no server to ask. */
+  syllabus_topics: string[]
+  study_classification: StudyClassification | null
 }
 
 export interface PaginatedArticles {
@@ -117,6 +127,7 @@ export interface ArticleDetail {
 
 export interface ArticleListParams {
   ministry?: string
+  topic?: string
   upsc_relevant?: boolean
   search?: string
   date_from?: string

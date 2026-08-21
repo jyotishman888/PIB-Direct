@@ -25,8 +25,9 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 
 from pib_agent.api.mapping import to_article_detail, to_article_list_item
-from pib_agent.api.schemas import MinistryListItem
+from pib_agent.api.schemas import MinistryListItem, TopicListItem
 from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry
+from pib_agent.syllabus import GS_AREAS, area_slug
 
 logger = logging.getLogger(__name__)
 
@@ -131,6 +132,23 @@ def export_static(out_dir: Path, session: Session, days: int = DEFAULT_WINDOW_DA
         json.dumps([json.loads(m.model_dump_json()) for m in ministries], ensure_ascii=False),
     )
 
+    # topics.json is a separate file for the same reason ministries.json is:
+    # the sidebar renders on first paint, and deriving topics from index.json
+    # would force the whole index to load on the digest, which avoids it today.
+    topic_counts: dict[str, int] = {}
+    for article in articles:
+        for tag in (article.enrichment.syllabus_topics if article.enrichment else []) or []:
+            topic_counts[tag] = topic_counts.get(tag, 0) + 1
+    topics = [
+        TopicListItem(name=area, slug=area_slug(area), article_count=topic_counts[area])
+        for area in GS_AREAS
+        if topic_counts.get(area)
+    ]
+    _write_json(
+        out_dir / "topics.json",
+        json.dumps([json.loads(t.model_dump_json()) for t in topics], ensure_ascii=False),
+    )
+
     # The digest keys off latest_date rather than the visitor's clock: a
     # snapshot built days ago would otherwise land every visitor on the
     # "nothing published yet today" empty state.
@@ -145,6 +163,7 @@ def export_static(out_dir: Path, session: Session, days: int = DEFAULT_WINDOW_DA
                 "latest_date": latest_date,
                 "article_count": len(articles),
                 "ministry_count": len(ministries),
+                "topic_count": len(topics),
                 "window_days": days,
             },
             ensure_ascii=False,

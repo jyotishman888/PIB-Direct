@@ -24,6 +24,7 @@ import type {
   MinistryListItem,
   MinistryRef,
   PaginatedArticles,
+  TopicListItem,
 } from './types'
 
 // Vite's BASE_URL carries the deploy subpath ("/PIB-Direct/" on Pages, "/" in
@@ -36,6 +37,19 @@ export interface StaticMeta {
   article_count: number
   ministry_count: number
   window_days: number
+}
+
+/** Mirrors area_slug in src/pib_agent/syllabus.py — the two must agree or a
+ *  topic link built by one is unreadable by the other. */
+function areaSlug(area: string): string {
+  return area
+    .replace(/&/g, 'and')
+    .replace(/-/g, ' ')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .join('-')
 }
 
 async function loadJson<T>(path: string): Promise<T> {
@@ -86,9 +100,16 @@ function descNullsLast(a: string | number | null, b: string | number | null): nu
 }
 
 function matches(article: ArticleListItem, params: ArticleListParams): boolean {
-  const { ministry, upsc_relevant, search, date_from, date_to } = params
+  const { ministry, topic, upsc_relevant, search, date_from, date_to } = params
 
   if (ministry !== undefined && article.ministry.slug !== ministry) return false
+
+  // Slug comparison, matching the backend's area_from_slug lookup. An
+  // unrecognised slug matches nothing, so a stale bookmark lands on an
+  // empty list rather than an error.
+  if (topic !== undefined && !article.syllabus_topics.some((t) => areaSlug(t) === topic)) {
+    return false
+  }
 
   // `Enrichment.upsc_relevant == value` in SQL: an article with no enrichment
   // holds NULL and is excluded whichever way the filter points.
@@ -147,6 +168,10 @@ export function fetchArticle(id: number): Promise<ArticleDetail> {
 
 export function fetchMinistries(): Promise<MinistryListItem[]> {
   return loadJson<MinistryListItem[]>('/ministries.json')
+}
+
+export function fetchTopics(): Promise<TopicListItem[]> {
+  return loadJson<TopicListItem[]>('/topics.json')
 }
 
 // --- auth -----------------------------------------------------------------

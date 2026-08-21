@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from pib_agent.api.routers import admin, articles, auth, health, ministries
+from pib_agent.api.routers import admin, articles, auth, health, ministries, topics
 from pib_agent.config import get_settings
 from pib_agent.orchestration import start_scheduler, stop_scheduler
 
@@ -84,7 +84,14 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    for router in (health.router, auth.router, ministries.router, articles.router, admin.router):
+    for router in (
+        health.router,
+        auth.router,
+        ministries.router,
+        topics.router,
+        articles.router,
+        admin.router,
+    ):
         application.include_router(router, prefix=API_PREFIX)
 
     _mount_frontend(application)

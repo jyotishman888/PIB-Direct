@@ -45,6 +45,7 @@ def to_article_list_item(article: Article) -> ArticleListItem:
         summary=enrichment.summary if enrichment else None,
         upsc_relevant=enrichment.upsc_relevant if enrichment else None,
         upsc_relevance=enrichment.upsc_relevance if enrichment else None,
+        syllabus_topics=enrichment.syllabus_topics if enrichment else [],
         study_classification=enrichment.study_classification if enrichment else None,
     )
 

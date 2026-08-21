@@ -8,6 +8,7 @@ import type {
   MinistryListItem,
   MinistryRef,
   PaginatedArticles,
+  TopicListItem,
 } from './types'
 
 export { ApiError }
@@ -62,6 +63,10 @@ async function request<T>(
 
 function liveFetchMinistries(): Promise<MinistryListItem[]> {
   return request<MinistryListItem[]>('/ministries')
+}
+
+function liveFetchTopics(): Promise<TopicListItem[]> {
+  return request<TopicListItem[]>('/topics')
 }
 
 function liveFetchArticles(params: ArticleListParams): Promise<PaginatedArticles> {
@@ -129,6 +134,7 @@ function liveSaveMySubscriptions(ministryIds: number[]): Promise<MinistryRef[]> 
 // --- the surface the app actually imports ---------------------------------
 
 export const fetchMinistries = STATIC_MODE ? staticApi.fetchMinistries : liveFetchMinistries
+export const fetchTopics = STATIC_MODE ? staticApi.fetchTopics : liveFetchTopics
 export const fetchArticles = STATIC_MODE ? staticApi.fetchArticles : liveFetchArticles
 export const fetchArticle = STATIC_MODE ? staticApi.fetchArticle : liveFetchArticle
 

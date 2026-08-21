@@ -12,6 +12,7 @@ import { useArticles } from '@/hooks/useArticles'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { useDigestDate } from '@/hooks/useDigestDate'
 import { useMinistries } from '@/hooks/useMinistries'
+import { useTopics } from '@/hooks/useTopics'
 import { formatDate } from '@/lib/formatDate'
 import { getTodayIST } from '@/lib/today'
 
@@ -21,6 +22,7 @@ export function DashboardPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const ministry = searchParams.get('ministry') ?? ''
+  const topic = searchParams.get('topic') ?? ''
   const search = searchParams.get('search') ?? ''
   const upscOnly = searchParams.get('upsc_relevant') === 'true'
   const dateFrom = searchParams.get('date_from') ?? ''
@@ -29,6 +31,7 @@ export function DashboardPage() {
 
   const debouncedSearch = useDebouncedValue(search, 350)
   const { data: ministries } = useMinistries()
+  const { data: topics } = useTopics()
 
   function updateParams(patch: Record<string, string | null>, resetOffset = true) {
     const next = new URLSearchParams(searchParams)
@@ -56,7 +59,9 @@ export function DashboardPage() {
     updateParams({ search: null, upsc_relevant: null, date_from: null, date_to: null })
   }
 
-  const hasActiveFilters = Boolean(search || upscOnly || dateFrom || dateTo)
+  // topic joins the filter set: without it, picking a topic would leave the
+  // digest rendering instead of the filtered list.
+  const hasActiveFilters = Boolean(search || upscOnly || dateFrom || dateTo || topic)
   // The landing state — nothing selected, nothing searched, first page —
   // shows today's ranked digest instead of a flat, unranked list of
   // everything. Any ministry click, search, filter, or page turn falls
@@ -66,6 +71,7 @@ export function DashboardPage() {
   const { data, isLoading, isError, refetch, isPlaceholderData } = useArticles(
     {
       ministry: ministry || undefined,
+      topic: topic || undefined,
       search: debouncedSearch || undefined,
       upsc_relevant: upscOnly || undefined,
       date_from: dateFrom || undefined,
@@ -77,7 +83,12 @@ export function DashboardPage() {
   )
 
   const activeMinistry = ministries?.find((m) => m.slug === ministry)
-  const heading = ministry ? (activeMinistry?.name ?? 'Ministry') : 'All ministries'
+  const activeTopic = topics?.find((t) => t.slug === topic)
+  const heading = topic
+    ? (activeTopic?.name ?? 'Topic')
+    : ministry
+      ? (activeMinistry?.name ?? 'Ministry')
+      : 'All ministries'
 
   // The static build serves a snapshot, so the digest's day can be older than
   // today — say which day it is rather than calling stale data "today's".

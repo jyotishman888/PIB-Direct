@@ -153,3 +153,26 @@ def normalise_subject(value: str) -> str | None:
         if score > best_score:
             best, best_score = subject, score
     return best if best_score >= 0.7 else None
+
+
+def area_slug(area: str) -> str:
+    """URL-safe slug for a canonical area: 'GS Paper 3 - Economy' -> 'gs-paper-3-economy'.
+
+    Derived rather than stored: the vocabulary is a fixed tuple, so the mapping
+    is a pure function and needs no column or migration. Slugs exist so a
+    shared link reads as a topic instead of a percent-encoded sentence.
+    """
+    return "-".join(_words_ordered(area))
+
+
+def area_from_slug(slug: str) -> str | None:
+    """The canonical area a slug names, or None if it names nothing."""
+    return _SLUG_TO_AREA.get(slug.strip().lower())
+
+
+def _words_ordered(value: str) -> list[str]:
+    cleaned = value.replace("&", "and").replace("-", " ").lower()
+    return [w for w in "".join(c if c.isalnum() else " " for c in cleaned).split() if w]
+
+
+_SLUG_TO_AREA: dict[str, str] = {area_slug(a): a for a in GS_AREAS}

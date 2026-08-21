@@ -15,6 +15,12 @@ class MinistryListItem(MinistrySummary):
     article_count: int
 
 
+class TopicListItem(BaseModel):
+    name: str
+    slug: str
+    article_count: int
+
+
 class PrelimsQuestionOut(BaseModel):
     question: str
     options: list[str]
@@ -95,6 +101,9 @@ class ArticleListItem(BaseModel):
     summary: str | None
     upsc_relevant: bool | None
     upsc_relevance: int | None
+    # Carried on the list item because the static build filters by topic in
+    # the browser, with no server to ask.
+    syllabus_topics: list[str] = []
     # PRELIMS / MAINS / BOTH / LOW_PRIORITY, or null when the study pass
     # hasn't run for this release.
     study_classification: str | None = None

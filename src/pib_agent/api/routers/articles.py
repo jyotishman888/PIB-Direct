@@ -2,13 +2,14 @@ from datetime import date, datetime, time
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import nullslast
+from sqlalchemy import String, cast, nullslast
 from sqlalchemy.orm import Session
 
 from pib_agent.api.deps import get_db
 from pib_agent.api.mapping import to_article_detail, to_article_list_item
 from pib_agent.api.schemas import ArticleDetail, PaginatedArticles
 from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry
+from pib_agent.syllabus import area_from_slug
 
 router = APIRouter(prefix="/articles", tags=["articles"])
 
@@ -17,6 +18,7 @@ router = APIRouter(prefix="/articles", tags=["articles"])
 def list_articles(
     session: Session = Depends(get_db),
     ministry: str | None = Query(None, description="Filter by ministry slug"),
+    topic: str | None = Query(None, description="Filter by syllabus area slug"),
     upsc_relevant: bool | None = Query(None, description="Filter by UPSC relevance"),
     search: str | None = Query(None, min_length=2, description="Matches title or summary"),
     date_from: date | None = Query(None, description="Only releases on/after this date"),
@@ -31,6 +33,16 @@ def list_articles(
 
     if ministry is not None:
         query = query.filter(Ministry.slug == ministry)
+    if topic is not None:
+        area = area_from_slug(topic)
+        if area is None:
+            # An unrecognised slug matches nothing rather than 404ing: a stale
+            # bookmark should land on an empty list, not an error page.
+            return PaginatedArticles(items=[], total=0, limit=limit, offset=offset)
+        # Matched against the serialised JSON so this works on SQLite and
+        # Postgres alike. Exact despite being a LIKE: the quotes bound the
+        # match, and the vocabulary is plain ASCII with nothing JSON escapes.
+        query = query.filter(cast(Enrichment.syllabus_topics, String).like(f'%"{area}"%'))
     if upsc_relevant is not None:
         query = query.filter(Enrichment.upsc_relevant == upsc_relevant)
     if search is not None:
