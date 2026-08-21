@@ -2,6 +2,8 @@ import { CheckCircleOutlined } from '@ant-design/icons'
 import { Tag } from 'antd'
 import { Link } from 'react-router-dom'
 
+import { MinistryBadge } from '@/components/articles/MinistryBadge'
+import { UpscBadge } from '@/components/articles/UpscBadge'
 import { formatDate } from '@/lib/formatDate'
 import { getAttemptSummary } from '@/lib/prelimsAttempts'
 import { accentTagStyle, neutralTagStyle } from '@/lib/tagStyles'
@@ -27,67 +29,33 @@ function AttemptBadge({ articleId }: { articleId: number }) {
   )
 }
 
-export function ArticleCard({
-  article,
-  featured = false,
-}: {
-  article: ArticleListItem
-  /** Top picks carry more weight so the digest's ranking is legible without
-   *  reading the section headings. */
-  featured?: boolean
-}) {
+export function ArticleCard({ article }: { article: ArticleListItem }) {
   return (
     <Link
       to={`/articles/${article.id}`}
-      className={`group block rounded-xl border bg-surface transition duration-150 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-md ${
-        featured
-          ? 'border-accent/30 p-[var(--spacing-section)] shadow-sm'
-          : 'border-border p-[var(--spacing-snug)] sm:p-[var(--spacing-section)]'
-      }`}
+      className="group block rounded-lg border border-border bg-surface p-4 transition duration-150 hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-md sm:p-5"
     >
-      {/* Title first and dominant. Previously four chips of equal weight sat
-          above every headline, which is most of what read as clutter. */}
-      {/* Featured and regular titles share a size. The weight difference
-          comes from the card treatment — accent border, padding, a longer
-          summary — because a display-size headline ran six lines on a phone
-          and one card filled the screen, which is the problem this pass
-          exists to fix. */}
-      <h3 className="font-serif text-(length:--text-title)/(--text-title--line-height) font-semibold text-foreground group-hover:text-accent">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+          <MinistryBadge name={article.ministry.name} />
+          <span aria-hidden="true">·</span>
+          <time dateTime={article.release_datetime ?? undefined}>
+            {formatDate(article.release_datetime)}
+          </time>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <AttemptBadge articleId={article.id} />
+          {article.upsc_relevant && <UpscBadge />}
+        </div>
+      </div>
+      <h3 className="mt-2.5 text-base font-serif font-semibold leading-snug text-foreground group-hover:text-accent sm:text-lg">
         {article.title}
       </h3>
-
       {article.summary ? (
-        <p
-          className={`mt-[var(--spacing-tight)] text-(length:--text-body)/(--text-body--line-height) text-muted ${
-            featured ? 'line-clamp-3' : 'line-clamp-2'
-          }`}
-        >
-          {article.summary}
-        </p>
+        <p className="mt-1.5 line-clamp-2 text-sm text-muted">{article.summary}</p>
       ) : (
-        <p className="mt-[var(--spacing-tight)] text-(length:--text-body)/(--text-body--line-height) italic text-muted/70">
-          Summary pending…
-        </p>
+        <p className="mt-1.5 text-sm italic text-muted/70">Summary pending…</p>
       )}
-
-      {/* Metadata recedes to a single muted line beneath the content it
-          describes, rather than competing with the headline above it. */}
-      <div className="mt-[var(--spacing-snug)] flex flex-wrap items-center gap-x-2 gap-y-1 text-(length:--text-meta)/(--text-meta--line-height) text-muted">
-        <span className="truncate">{article.ministry.name}</span>
-        <span aria-hidden="true">·</span>
-        <time dateTime={article.release_datetime ?? undefined}>
-          {formatDate(article.release_datetime)}
-        </time>
-        {article.upsc_relevant && (
-          <>
-            <span aria-hidden="true">·</span>
-            {/* Recessed to text rather than a coloured chip: 77% of the corpus
-                carries this, so as a badge it was decoration, not signal. */}
-            <span className="text-exam">UPSC</span>
-          </>
-        )}
-        <AttemptBadge articleId={article.id} />
-      </div>
     </Link>
   )
 }

@@ -18,27 +18,6 @@
   --color-exam-soft: var(--color-exam-soft-value);
   --color-exam-foreground: var(--color-exam-foreground-value);
   --color-danger: var(--color-danger-value);
-
-  /* Type scale. The app previously used text-sm or text-xs for 43 of its 49
-     type usages, which is why nothing on a page said "read this first" — a
-     flat scale reads as clutter however tidy the layout is. Sized for phone
-     reading first; each step carries its own line-height because a headline
-     and a paragraph at the same leading is the other half of the problem. */
-  --text-display: 1.75rem;
-  --text-display--line-height: 1.15;
-  --text-title: 1.125rem;
-  --text-title--line-height: 1.35;
-  --text-body: 0.9375rem;
-  --text-body--line-height: 1.6;
-  --text-meta: 0.75rem;
-  --text-meta--line-height: 1.4;
-
-  /* Spacing rhythm. Replaces ad-hoc gap-2/gap-3/gap-6/p-4/p-5 choices so two
-     sections relate to each other predictably. */
-  --spacing-tight: 0.5rem;
-  --spacing-snug: 0.75rem;
-  --spacing-section: 1.5rem;
-  --spacing-block: 2.5rem;
 }
 
 :root {
@@ -102,11 +81,4 @@ body {
 
 #root {
   min-height: 100svh;
-}
-
-@media (min-width: 640px) {
-  :root {
-    --text-display: 2.125rem;
-    --text-title: 1.25rem;
-  }
 }

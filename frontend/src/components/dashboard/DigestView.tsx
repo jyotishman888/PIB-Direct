@@ -96,7 +96,7 @@ export function DigestView() {
           </Title>
           <div className="flex flex-col gap-3">
             {topPicks.map((article) => (
-              <ArticleCard key={article.id} article={article} featured />
+              <ArticleCard key={article.id} article={article} />
             ))}
           </div>
         </section>
