@@ -302,3 +302,46 @@ class Subscription(Base):
 
     def __repr__(self) -> str:
         return f"Subscription(user_id={self.user_id!r}, ministry_id={self.ministry_id!r})"
+
+
+class PastQuestion(Base):
+    """A real question from a previous UPSC paper.
+
+    Deliberately a separate table fed by import rather than anything the model
+    generates: a fabricated "this appeared in 2019" is the single fastest way
+    to destroy trust in an exam-prep product, so nothing writes here except
+    `pib-agent import-pyq` reading a file the operator supplied.
+
+    `syllabus_area` is drawn from the same closed vocabulary as
+    `Enrichment.syllabus_topics` (pib_agent.syllabus.GS_AREAS), which is what
+    makes matching a join on a shared taxonomy rather than fuzzy text overlap.
+    """
+
+    __tablename__ = "past_questions"
+    __table_args__ = (
+        # Re-importing the same file must not duplicate rows, and the same
+        # question can legitimately recur across years.
+        UniqueConstraint("year", "paper", "question", name="uq_past_questions_identity"),
+        Index("ix_past_questions_area_year", "syllabus_area", "year"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    year: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
+    # "prelims" or "mains". Kept as text rather than an enum so an import of
+    # optional/essay papers later doesn't need a migration.
+    paper: Mapped[str] = mapped_column(String(32), nullable=False)
+    question: Mapped[str] = mapped_column(Text, nullable=False)
+    # Canonical GS area, or NULL when the source didn't say and nothing
+    # confident could be derived. Never guessed at.
+    syllabus_area: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    # Free-text topic label from the source, kept verbatim for traceability.
+    source_topic: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    # Where this came from, so a bad batch can be identified and removed.
+    source: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+    def __repr__(self) -> str:
+        return f"PastQuestion(id={self.id!r}, year={self.year!r}, paper={self.paper!r})"

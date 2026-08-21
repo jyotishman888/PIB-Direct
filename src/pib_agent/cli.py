@@ -20,6 +20,7 @@ from pib_agent.orchestration import (
     mark_interrupted_runs,
     run_pipeline,
 )
+from pib_agent.pyq import PyqImportError, import_past_questions
 from pib_agent.scraper import run_scrape
 from pib_agent.scraper.http_client import PibFetchError, fetch_html
 from pib_agent.scraper.listing_parser import ListingParseError, parse_listing
@@ -74,6 +75,43 @@ def enrich() -> None:
     )
     if stats.failed:
         typer.echo(f"Failed article IDs: {stats.failed_article_ids}")
+        raise typer.Exit(code=1)
+
+
+@app.command("import-pyq")
+def import_pyq(
+    path: str = typer.Argument(..., help="A .json or .csv file of real past-year questions."),
+    source: str = typer.Option(
+        None, help="Label recorded against every row, so a bad batch can be found later."
+    ),
+) -> None:
+    """Import real UPSC past-year questions from a file you supply.
+
+    Nothing in this project generates these. A fabricated "asked in 2019" is
+    the fastest way to lose an aspirant's trust, so the corpus is fed only by
+    import, and each row records where it came from.
+
+    Idempotent: duplicates are detected on (year, paper, question), so
+    re-running the same file after a partial failure changes nothing.
+    """
+    try:
+        stats = import_past_questions(Path(path), source=source)
+    except PyqImportError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(
+        f"Read {stats.read}: {stats.imported} imported, {stats.duplicates} already present, "
+        f"{stats.rejected} rejected."
+    )
+    if stats.unmapped_area:
+        typer.echo(
+            f"{stats.unmapped_area} row(s) had a syllabus area that didn't map to the "
+            "canonical vocabulary; stored without one rather than guessed at."
+        )
+    for message in stats.errors[:10]:
+        typer.echo(f"  rejected: {message}")
+    if stats.rejected:
         raise typer.Exit(code=1)
 
 
