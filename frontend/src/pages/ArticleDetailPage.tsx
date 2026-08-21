@@ -29,7 +29,7 @@ export function ArticleDetailPage() {
   }
 
   return (
-    <article className="flex flex-col gap-6">
+    <article className="flex flex-col gap-[var(--spacing-block)]">
       <div>
         <Link
           to="/"
@@ -37,7 +37,7 @@ export function ArticleDetailPage() {
         >
           <ArrowLeftOutlined /> Back to releases
         </Link>
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted">
+        <div className="mt-[var(--spacing-snug)] flex flex-wrap items-center gap-2 text-(length:--text-meta)/(--text-meta--line-height) text-muted">
           <MinistryBadge name={article.ministry.name} />
           {article.enrichment?.upsc_relevant && <UpscBadge />}
           <span aria-hidden="true">·</span>
@@ -51,17 +51,19 @@ export function ArticleDetailPage() {
             </>
           )}
         </div>
-        <Title level={2} className="mt-2 font-serif leading-tight text-foreground">
+        <Title level={2} className="mt-[var(--spacing-tight)] mb-0 font-serif text-(length:--text-display)/(--text-display--line-height) text-balance text-foreground">
           {article.title}
         </Title>
         {article.subtitle && (
-          <p className="mt-2 whitespace-pre-line text-base text-muted">{article.subtitle}</p>
+          <p className="mt-[var(--spacing-tight)] whitespace-pre-line text-(length:--text-body)/(--text-body--line-height) text-muted">
+            {article.subtitle}
+          </p>
         )}
         <a
           href={article.source_url}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 inline-flex items-center gap-1 text-sm text-accent hover:underline"
+          className="mt-[var(--spacing-snug)] inline-flex items-center gap-1 text-(length:--text-meta)/(--text-meta--line-height) text-accent hover:underline"
         >
           View original PIB release
           <ExportOutlined className="text-xs" />

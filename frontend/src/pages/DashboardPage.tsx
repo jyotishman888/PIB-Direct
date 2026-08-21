@@ -100,19 +100,22 @@ export function DashboardPage() {
     : 'The latest published releases, ranked by how much they’re worth your study time.'
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--spacing-section)]">
       <div>
-        <h1 className="font-serif text-2xl font-bold text-foreground">
+        <h1 className="font-serif text-(length:--text-display)/(--text-display--line-height) font-bold text-balance text-foreground">
           {isBareLanding ? digestHeading : heading}
         </h1>
-        <p className="text-sm text-muted">
+        <p className="mt-1 text-(length:--text-body)/(--text-body--line-height) text-muted">
           {isBareLanding
             ? digestSubtitle
             : 'Daily PIB releases, summarized and mapped to UPSC syllabus topics.'}
         </p>
       </div>
 
-      {!ministry && <StatsStrip />}
+      {/* Corpus counts orient someone browsing the whole archive, but on
+          the digest they are operator telemetry occupying the first
+          screen. */}
+      {!isBareLanding && !ministry && <StatsStrip />}
 
       <FilterBar
         value={{ search, upscOnly, dateFrom, dateTo }}
