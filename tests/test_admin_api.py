@@ -5,6 +5,7 @@ import pib_agent.orchestration.pipeline as pipeline_module
 from pib_agent.db.models import PipelineRun
 from pib_agent.enrichment.pipeline import EnrichStats
 from pib_agent.orchestration import PipelineAlreadyRunningError
+from pib_agent.publish import PublishStats
 from pib_agent.scraper.pipeline import ScrapeStats
 from pib_agent.similarity.pipeline import SimilarityStats
 from pib_agent.study.pipeline import StudyStats
@@ -17,6 +18,13 @@ def _patch_stages_noop(monkeypatch):
     monkeypatch.setattr(pipeline_module, "run_similarity", lambda: SimilarityStats())
     monkeypatch.setattr(pipeline_module, "run_notify", lambda: NotifyStats())
     monkeypatch.setattr(pipeline_module, "run_study", lambda: StudyStats())
+    # stubbed explicitly: the real stage would git-push if the operator has
+    # PUBLISH_ENABLED set in their .env.
+    monkeypatch.setattr(
+        pipeline_module,
+        "run_publish",
+        lambda: PublishStats(articles=0, changed=False, pushed=False),
+    )
 
 
 def test_run_now_returns_202_and_completes_in_background(api_client, monkeypatch):
@@ -41,6 +49,7 @@ def test_run_now_returns_202_and_completes_in_background(api_client, monkeypatch
         "notify",
         "link",
         "study",
+        "publish",
     ]
 
 

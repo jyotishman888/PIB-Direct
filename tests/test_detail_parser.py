@@ -56,9 +56,23 @@ def test_raises_on_missing_title():
         parse_detail(html)
 
 
-def test_raises_on_missing_date_div():
+def test_raises_when_no_date_div_and_no_body():
     with pytest.raises(DetailParseError):
         parse_detail("<html><body><h2 id='Titleh2'>Some Title</h2></body></html>")
+
+
+def test_parses_regional_page_without_date_div():
+    """Regional PIB offices omit #PrDateTime; the release is still real."""
+    article = parse_detail(_load("detail_2302236_regional_no_datediv.html"))
+
+    assert article.ministry_name == "Ministry of Information & Broadcasting"
+    assert "57th IFFI" in article.title
+    # the date line is recovered from the unnamed div the regional template uses
+    assert article.release_datetime == datetime(2026, 8, 22, 9, 44)
+    assert article.pib_office == "PIB Delhi"
+    assert "International Film Festival of India" in article.body_text
+    # body starts after the title block, so the headline isn't repeated into it
+    assert not article.body_text.startswith(article.title)
 
 
 def test_unparseable_date_line_does_not_raise():

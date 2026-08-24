@@ -1,0 +1,1093 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>
+	Press Release Page | Press Information Bureau
+</title><link href="css/style.css" rel="stylesheet" type="text/css" /><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="alternate stylesheet" href="css/change.css" media="screen" title="change" /><link rel="alternate stylesheet" href="css/green.css" media="screen" title="green" /><link rel="alternate stylesheet" href="css/yellow.css" media="screen" title="yellow" /><link rel="stylesheet" type="text/css" href="css/prtint.css" media="print" /><link rel="stylesheet" href="css/style3.1.css" type="text/css" />
+
+
+      <script src="js/jquery.min.js" type="text/javascript"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" /><link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" />
+
+      <script type="text/javascript">
+            $(document).ready(function () {
+                  function getParameterByName(name) {
+                        var url = window.location.href;
+                        name = name.replace(/[\[\]]/g, '\\$&');
+                        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                              results = regex.exec(url);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                  }
+                  // Get the IDs from the current page's URL
+                  let prid = parseInt(getParameterByName('PRID'), 10);
+
+                  if (!isNaN(prid) && prid > 0) {
+                        $.ajax({
+                              type: "POST",
+                              url: "AjaxMethod.aspx/UpdatePRHitCount",
+                              async: false,
+                              data: JSON.stringify({ 'PermId': prid }),
+                              contentType: "application/json; charset=utf-8",
+                              dataType: "json",
+                              success: function (response) {
+                                    console.log(response);
+                              },
+                              error: function (error) {
+                                    console.log("Error in AJAX request", error);
+                              }
+                        });
+                  } else {
+                        console.log("Invalid parameters:", prid);
+                  }
+
+            });
+      </script>
+      <style type="text/css">
+            .table-responsive {
+                  width: 100%;
+                  overflow-x: auto;
+            }
+
+            .banner {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  background-color: #000;
+                  color: #fff;
+                  padding: 20px;
+            }
+
+            full-width {
+                  width: 100%;
+            }
+
+            .logo-left, .logo-center, .countdown {
+                  display: flex;
+                  align-items: center;
+            }
+
+                  .logo-left img, .logo-center img {
+                        height: 70px;
+                  }
+
+            .countdown {
+                  text-align: center;
+                  background-color: #444;
+                  border-radius: 10px;
+                  padding: 10px;
+                  border: 2px solid grey;
+            }
+
+            .firstnumber {
+                  color: #000000;
+                  position: absolute;
+                  top: 50px;
+                  right: 90px;
+                  font-size: 30px;
+            }
+
+            .secondnumber {
+                  position: absolute;
+                  color: #000000;
+                  right: 45px;
+                  top: 50px;
+                  font-size: 30px;
+            }
+
+            .countdown .days {
+                  font-size: 35px;
+                  color: gold;
+            }
+
+            .countdown p {
+                  margin: 0;
+            }
+
+            .countdown .text {
+                  font-size: 16px;
+            }
+
+            a {
+                  word-break: break-all;
+            }
+
+            iframe, img {
+                  max-width: 100%;
+            }
+
+            @media(max-width:1199px) {
+                  .firstnumber {
+                        top: 40px;
+                        right: 72px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 35px;
+                        top: 40px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:990px) {
+                  .firstnumber {
+                        top: 25px;
+                        right: 54px;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 25px;
+                        top: 25px;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:768px) {
+                  .countdown, .days {
+                        font-size: 12px !important;
+                  }
+
+
+                  .firstnumber {
+                        top: 25%;
+                        right: 8%;
+                        font-size: 30px;
+                  }
+
+                  .secondnumber {
+                        right: 4.5%;
+                        top: 25%;
+                        font-size: 30px;
+                  }
+            }
+
+            @media(max-width:475px) {
+                  .countdown, .days {
+                        font-size: 10px !important;
+                        top: 20%;
+                  }
+
+                  .bannerimgdiv {
+                        padding: 0 !important;
+                  }
+
+                  .bannerimg {
+                        width: 108% !important;
+                  }
+            }
+      </style>
+      <script type="text/javascript">
+            $(function () {
+                  $("[id*=printPDF]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+            $(function () {
+                  $("[id*=printPDFEvent]").click(function () {
+                        $("[id*=hfGridHtml]").val($("#PdfDiv").html());
+                  });
+            });
+      </script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112591026-1"></script>
+      <script>
+
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() { dataLayer.push(arguments); }
+
+            gtag('js', new Date());
+
+
+
+            gtag('config', 'UA-112591026-1');
+
+      </script>
+
+<meta property="og:title" content="First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations" /><meta property="og:url" content="www.pib.gov.in/Pressreleaseshare.aspx?PRID=2302236" /><meta property="og:description" content="The first Meeting of Steering Committee for the 57th International Film Festival of India (IFFI) was" /><meta property="og:image" content="https:/pib.gov.in/images/indian-emblem.png" />
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="C4E7H-KSCMC-422L4-W3EM5-U36MF",function(){function e(){if(!i){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.parentNode.appendChild(e),i=!0}}function t(e){i=!0;var n,t,a,r,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o.parentNode,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",r=(a.frameElement||a).style,r.width=0,r.height=0,r.border=0,r.display="none",o.parentNode.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void(0);",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=12,window.BOOMR.url=n+"C4E7H-KSCMC-422L4-W3EM5-U36MF";var o=document.currentScript||document.getElementsByTagName("script")[0],i=!1,r=document.createElement("link");if(r.relList&&"function"==typeof r.relList.supports&&r.relList.supports("preload")&&"as"in r)window.BOOMR.snippetMethod="p",r.href=window.BOOMR.url,r.rel="preload",r.as="script",r.addEventListener("load",e),r.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!i)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.parentNode.appendChild(r);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="geswj5nyktovu2ump6pa-f-d30ea9f4b-clientnsv4-s.akamaihd.net",o="false"=="true"?2:1,i={"ak.v":"41","ak.cp":"1825201","ak.ai":parseInt("1215205",10),"ak.ol":"0","ak.cr":4,"ak.ipv":4,"ak.proto":"http/1.1","ak.rid":"f5ea96f","ak.r":34469,"ak.a2":n,"ak.m":"dscb","ak.n":"ff","ak.cport":51364,"ak.gh":"184.84.221.69","ak.quicv":"","ak.tlsv":"tls1.2","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"bbr","ak.t":"1787592606","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==QzCs3Mf+DxNtgIu6jwDn0NpXC7SJq9Iwk0MdJ9hx7BOZRBzATOU5X85TheexLX0PhoipAZ+IYTf4KI4OLncCUegCC54w53g6LaZyLoe9GArY9RaUML0/qHbULaYAFXoQ7i5yBAHmdatjyvG2xegfyQ4vqRP4e8DFXPOeYAhKpj4S7E+xVveD5Giv96Z0KV3ssKZUXXD/KSqujJAgir6rk5T1vmnMWsmPz8ib5J6oqYdSnKkFXt/aFH2Yo1w3isnNutfX/6hhdS42mje+GhHXXVvNxL2fosQpQcc1bnnUMLQxE9hjPSWiWQXe1kvUfX20DLliK+GEcqRgv3tx0iYkcjONSxVyyOtr589xsxNRTsWIWQ9ovCd0PNK37kteTb2qDQFCGpIWxd8tWPV0AGdGqzZu6s78rpz5J+0tKd/51Ak=","ak.pv":"9","ak.dpoabenc":"","ak.tf":o};if(""!==t)i["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))i["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(i)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:i,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body>
+      <form method="post" action="./PressReleasePage.aspx?PRID=2302236&amp;reg=48&amp;lang=2" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="sc_HiddenField" id="sc_HiddenField" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=b94hX14NMWluUQ9a73g0LYFvtKhY52TK8cbDkYB_F2GuPre4tdh-ebiiI4xuhXnRu6Q5dQjaQA4oN3PEeL0GrtKEyEY1&amp;t=638942408819057530" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=YwOa_0w_u3oCLFqmIIOf-XEz4GWZ1DuyQIpxIA4LVkywj39sZSps12NbK5wNl5XN9JF3m7d-ey7BFDgj6i0380qRQ5IMWCL54sYNVU1IjMmiOWpp0&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=_shmykYI80CxCNR43Ii1nLy9PBGhuSe6SPp3CEYu0wDEuLqDAuIcsXVNhTIgQn0iyiwPorMflXuK31FftDX9GnB0m366MCEoOmY-eKQ3YAO9xRL0gIigzgRbtbVOgSQkJbJpFg2&amp;t=ffffffffecf8d3f2" type="text/javascript"></script>
+<script src="/PressReleasePage.aspx?_TSM_HiddenField_=sc_HiddenField&amp;_TSM_CombinedScripts_=%3b%3bAjaxControlToolkit%2c+Version%3d3.5.7.123%2c+Culture%3dneutral%2c+PublicKeyToken%3d28f01b0e84b6d53e%3aen-US%3a5a4df314-b4a2-4da2-a207-9284f1b1e96c%3ade1feab2%3af2c8e708%3a720a52bf%3af9cec9bc%3a589eaa30%3aa67c2700%3aab09e3fe%3a87104b7c%3a8613aea7%3a3202a5a2%3abe6fb298" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="59B53027" />
+	<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="8E/RMOLe4XiWjpAcF6dBkR3GNMrNeraXNTI8AW3mBTSXDyXZhDCL+rv82FOLukJySQXlInFyVVtVdkj/VEzXFISCSyIhfjOmTFrUhAkLCt+SUvAUjwtdOsqvWctmkoL4vQHhh2rYoX7ph4Ow7HV5ITRlIkyWjzPno4igMq6zmp3WeSprs2s3CTZXN5vMd8AF2CfAg0bc3qJfJxcXzDZdDiiAmSMFmIAsTlXujZyCusgfGvtLKDvtM237SxKpiwAFZGGNsBlf2lVzXV8BeM/egZHJbjaF9U2QPQ3ZP6h7ZLKnmDur" />
+</div>
+                              <div id="IffiBannerDiv" class="full-width" style="max-height: 145px; position: relative;">
+                        <div id="IffiBannerHtml" class="col-md-12" style="padding: 0!important">
+                        </div>
+                        
+                        <span id="firstNumber" class="days firstnumber"></span>
+                        <span id="secondNumber" class="days secondnumber"></span>
+
+                  </div>
+            <div id="templateCss"></div>
+            <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('sc', 'form1', ['tupdate12','update12'], [], [], 90, '');
+//]]>
+</script>
+
+            <input type="hidden" name="hfGridHtml" id="hfGridHtml" />
+            <div class="container" style='margin-bottom: 50px;'>
+                  <div id="accessories">
+
+                        
+                        <div class="pull-right" style="display: flex">
+                              <div id="voll"></div>
+                              <div id="vollDT"></div>
+                              
+                              
+<div class="print-icons">
+<input type="image" name="Print1$print" id="Print1_print" aria-label="Print" src="images/printer_icon.png" alt="print page button" style="padding: 5px 10px 5px 10px;" />
+</div>
+                        </div>
+                  </div>
+                  <input type="hidden" name="hydpermid" id="hydpermid" value="2302236" />
+                  
+
+
+
+                  <div class="innner-page-main-about-us-content-right-part">
+
+                        <div id="MinistryName" class="MinistryNameSubhead text-center">
+                              Ministry of Information & Broadcasting
+                        </div>
+                        
+                        <div id="lg_g"><div class='log_oo'>  <img src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2021/aug/ph202183101.png' alt='azadi ka amrit mahotsav' /> </div></div>
+
+
+
+
+
+                        <div class="text-center event-heading-background">
+                              
+                              <h2 id="Titleh2" style="font-family:&#39;Raleway&#39;, sans-serif;">
+                                    First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations
+                              </h2>
+                              <h3 id="Subtitleh3" style="font-family:&#39;Raleway&#39;, sans-serif;">
+                                    <span id="ltrSubtitle"><br/>Dr. Murugan Calls for Greater Opportunities for Young and Emerging Filmmakers and Stronger International Outreach<br/><br/>IFFI To Showcase the Best of Indian and Global Cinema and Strengthen Creative Exchange and India’s Growing Creative Economy</span>
+                              </h3>
+                        </div>
+
+                        
+                        
+                        <div class='pt20'>
+                        </div>
+                        <input type="hidden" name="hydphotoUrl" id="hydphotoUrl" />
+                        
+                        <p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The first Meeting of Steering Committee for the 57th International Film Festival of India (IFFI) was held on 21<sup>st</sup> August 2026 at Kartavya Bhawan-2, New Delhi, under the chairmanship of Dr. L. Murugan, Hon&#39;ble Minister of State for Information &amp; Broadcasting, to review preparations for the forthcoming edition of the festival and deliberate on measures to further strengthen its standing as a world-class international film festival.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The 57th International Film Festival of India (IFFI) is scheduled to be held in Goa from 20 to 28 November 2026.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image001TQ25.jpg" style="height:383px; width:624px" /></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Addressing the meeting, Dr. L. Murugan outlined his vision for the 57th edition of IFFI, emphasising greater opportunities for young students, emerging filmmakers and unsung heroes of the Indian film industry. He said that IFFI should provide a platform for young talent to showcase their creativity, learn from established filmmakers and connect with the global film community, while strengthening its international outreach by bringing outstanding films and leading creative talent from across the world to India.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Dr. Murugan emphasised that the ministry under the leadership of Shri Ashwini Vaishnaw, is taking new initiatives to boost India&rsquo;s Orange Economy and strengthen the country&#39;s creative industries, creating opportunities for talent, innovation and global collaboration.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Dr. Murugan further emphasised the need to expand masterclasses, structured interactions with established filmmakers and meaningful mentorship opportunities for young and emerging talent. He also highlighted the importance of showcasing the diversity and strength of Indian cinema while strengthening avenues for international collaboration and professional exchange.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Acknowledging the pivotal role of the Government of Goa in IFFI&rsquo;s growth and continued success, the Minister paid tribute to the legacy of late Shri Manohar Parrikar, former Chief Minister of Goa, whose vision was instrumental in transforming Goa into a globally recognised destination for international cinema. He also appreciated Hon&rsquo;ble Chief Minister of Goa Shri Pramod Sawant for his continued support and efforts towards making IFFI a truly world-class cultural event.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">During the event, Shri Chanchal Kumar, Secretary, Ministry of Information &amp; Broadcasting, underscored that IFFI must be leveraged as a flagship platform for promoting India&#39;s growing creative economy and deepening collaboration between Indian and international creative communities. He also stressed the importance of ensuring a high-quality, seamless experience for filmmakers, cinephiles, delegates and guests attending the festival.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Shri Prakash Magdum, MD, NFDC, made a presentation on the preparations and various initiatives being undertaken for the 57th IFFI. Shri Ashutosh Gowariker, Festival Director, IFFI, welcomed the recommendations of the Steering Committee and emphasised the importance of strengthening masterclasses, opportunities for young filmmakers, the selection of outstanding films from India and abroad, and the participation of leading filmmakers and creative personalities from India and across the world.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The Secretary, IPR, Government of Goa, apprised the Committee of the preparations being undertaken by the State Government and assured that all necessary efforts would be made to ensure timely completion of all required activities and smooth arrangements for the 57th IFFI.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image0024Y71.jpg" style="height:385px; width:624px" /></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The Steering Committee Members placed significant emphasis on wider international outreach for IFFI, with focused efforts to curate outstanding films from across the world and invite leading filmmakers, artists and creative professionals from different countries. The festival is envisaged not merely as a celebration of cinema, but also as an important platform for creative exchange, collaboration and the promotion of India&#39;s growing creative economy.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The Steering Committee reiterated the importance of close and sustained coordination among the Ministry of Information &amp; Broadcasting, NFDC, the Government of Goa and all associated stakeholders for the successful organisation of the festival. The Committee expressed its collective confidence that the 57th IFFI will further consolidate its position as a leading international platform for cinema, creativity, cultural exchange and global collaboration, while creating greater opportunities for Indian filmmakers and creative professionals to engage meaningfully with the world.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The meeting was attended by Shri Chanchal Kumar, Secretary, Ministry of Information &amp; Broadcasting; Shri Ashutosh Gowariker, noted filmmaker and Festival Director, IFFI; Shri Prakash Magdum, Managing Director, National Film Development Corporation (NFDC); the Secretary, IPR, Government of Goa; and noted steering committee Members Ms. Bhavna Kher, Ram Sampath, Aparna Purohit, Prerna Singh, Namitha, Suhasini Maniratnam, Abhishek Jain. Santosh Sivan, Gaurav Banerjee, Aditya Bhat, Prashant Chothani and Dharam Gulati.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">***</span></span></p>
+
+<p><strong><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Mahesh Kumar/ Vivek Vishwash/ Riya Rani</span></span></strong></p>
+
+
+                        
+                        <div id="reel_pic">
+                        </div>
+
+
+
+                        
+                        <br />
+                        <span id="ReleaseId">(रिलीज़ आईडी: 2302236)</span>
+                        <span id="lblViews">	आगंतुक पटल  : 1026</span>
+                        <div>
+                              
+                        </div>
+                        
+
+                        <span id="lblRefPhoto"></span>
+
+                        <div class="BackgroundRelease">
+                              
+                        </div>
+                        <div>
+                              
+                        </div>
+                        <div class="ReleaseLang">इस विज्ञप्ति को इन भाषाओं में पढ़ें: 
+                        
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302244' target="_blank">
+                                          Gujarati </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302321' target="_blank">
+                                          Malayalam </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302310' target="_blank">
+                                          Assamese </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302265' target="_blank">
+                                          Urdu </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302252' target="_blank">
+                                          Marathi </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302344' target="_blank">
+                                          हिन्दी </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302291' target="_blank">
+                                          Bengali </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302756' target="_blank">
+                                          Bengali-TR </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302833' target="_blank">
+                                          Manipuri </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302617' target="_blank">
+                                          Punjabi </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302277' target="_blank">
+                                          Tamil </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302453' target="_blank">
+                                          Telugu </a>
+                              
+                                    ,
+                              
+                                    
+                                    <a href='https://pib.gov.in/PressReleasePage.aspx?PRID=2302280' target="_blank">
+                                          Kannada </a>
+                              
+                        </div>
+
+                        <div class="RelTag">
+                              <ul>
+                                    
+                              </ul>
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div id="RelLink" class="RelLink">
+                              <ul>
+                                    
+                                    
+                              </ul>
+                        </div>
+                        <center>
+                              
+                        </center>
+                  </div>
+
+                  <div id="update12">
+	
+                              
+                              <input type="hidden" name="Hidden" id="Hidden" />
+                              <div id="P_CategoryManagement" class="ModalWindow" style="border-width:0px;height:60%;width:60%;overflow:auto;display: none">
+		
+                                    <div>
+                                          <input type="image" name="btnClose" id="btnClose" src="images/close_flat_icon.png" />
+                                    </div>
+                                    <div id="description">
+                                    </div>
+                                    <div class="text-center">
+                                          <h2>
+                                                
+                                                <br>
+                                                
+                                          </h2>
+                                    </div>
+                                    <br />
+                                    <div class="clear">
+                                    </div>
+                                    
+                              
+	</div>
+                        
+</div>
+            </div>
+            
+            <div id="PdfDiv" style="display: none;">
+                  <table width="100%">
+                        <tr>
+                              <td style="font-weight: 200; text-align: center">
+                                    Ministry of Information & Broadcasting
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: center; font-size: 30px;">
+                                          <div style='height:30px;width:100%;'></div>Dr. Murugan Calls for Greater Opportunities for Young and Emerging Filmmakers and Stronger International Outreach<div style='height:30px;width:100%;'></div><div style='height:30px;width:100%;'></div>IFFI To Showcase the Best of Indian and Global Cinema and Strengthen Creative Exchange and India’s Growing Creative Economy
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="text-align: center; font-size: 14px;">
+                                          प्रविष्टि तिथि:
+                        22 AUG 2026 9:44AM by PIB Delhi
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 200; text-align: left; font-size: 16px;">
+                                          <p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The first Meeting of Steering Committee for the 57th International Film Festival of India (IFFI) was held on 21<sup>st</sup> August 2026 at Kartavya Bhawan-2, New Delhi, under the chairmanship of Dr. L. Murugan, Hon&#39;ble Minister of State for Information &amp; Broadcasting, to review preparations for the forthcoming edition of the festival and deliberate on measures to further strengthen its standing as a world-class international film festival.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The 57th International Film Festival of India (IFFI) is scheduled to be held in Goa from 20 to 28 November 2026.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image001TQ25.jpg" style="height:383px; width:624px" /></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Addressing the meeting, Dr. L. Murugan outlined his vision for the 57th edition of IFFI, emphasising greater opportunities for young students, emerging filmmakers and unsung heroes of the Indian film industry. He said that IFFI should provide a platform for young talent to showcase their creativity, learn from established filmmakers and connect with the global film community, while strengthening its international outreach by bringing outstanding films and leading creative talent from across the world to India.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Dr. Murugan emphasised that the ministry under the leadership of Shri Ashwini Vaishnaw, is taking new initiatives to boost India&rsquo;s Orange Economy and strengthen the country&#39;s creative industries, creating opportunities for talent, innovation and global collaboration.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Dr. Murugan further emphasised the need to expand masterclasses, structured interactions with established filmmakers and meaningful mentorship opportunities for young and emerging talent. He also highlighted the importance of showcasing the diversity and strength of Indian cinema while strengthening avenues for international collaboration and professional exchange.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Acknowledging the pivotal role of the Government of Goa in IFFI&rsquo;s growth and continued success, the Minister paid tribute to the legacy of late Shri Manohar Parrikar, former Chief Minister of Goa, whose vision was instrumental in transforming Goa into a globally recognised destination for international cinema. He also appreciated Hon&rsquo;ble Chief Minister of Goa Shri Pramod Sawant for his continued support and efforts towards making IFFI a truly world-class cultural event.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">During the event, Shri Chanchal Kumar, Secretary, Ministry of Information &amp; Broadcasting, underscored that IFFI must be leveraged as a flagship platform for promoting India&#39;s growing creative economy and deepening collaboration between Indian and international creative communities. He also stressed the importance of ensuring a high-quality, seamless experience for filmmakers, cinephiles, delegates and guests attending the festival.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Shri Prakash Magdum, MD, NFDC, made a presentation on the preparations and various initiatives being undertaken for the 57th IFFI. Shri Ashutosh Gowariker, Festival Director, IFFI, welcomed the recommendations of the Steering Committee and emphasised the importance of strengthening masterclasses, opportunities for young filmmakers, the selection of outstanding films from India and abroad, and the participation of leading filmmakers and creative personalities from India and across the world.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The Secretary, IPR, Government of Goa, apprised the Committee of the preparations being undertaken by the State Government and assured that all necessary efforts would be made to ensure timely completion of all required activities and smooth arrangements for the 57th IFFI.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px"><img src="https://static.pib.gov.in/WriteReadData/userfiles/image/image0024Y71.jpg" style="height:385px; width:624px" /></span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The Steering Committee Members placed significant emphasis on wider international outreach for IFFI, with focused efforts to curate outstanding films from across the world and invite leading filmmakers, artists and creative professionals from different countries. The festival is envisaged not merely as a celebration of cinema, but also as an important platform for creative exchange, collaboration and the promotion of India&#39;s growing creative economy.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The Steering Committee reiterated the importance of close and sustained coordination among the Ministry of Information &amp; Broadcasting, NFDC, the Government of Goa and all associated stakeholders for the successful organisation of the festival. The Committee expressed its collective confidence that the 57th IFFI will further consolidate its position as a leading international platform for cinema, creativity, cultural exchange and global collaboration, while creating greater opportunities for Indian filmmakers and creative professionals to engage meaningfully with the world.</span></span></p>
+
+<p style="text-align:justify"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">The meeting was attended by Shri Chanchal Kumar, Secretary, Ministry of Information &amp; Broadcasting; Shri Ashutosh Gowariker, noted filmmaker and Festival Director, IFFI; Shri Prakash Magdum, Managing Director, National Film Development Corporation (NFDC); the Secretary, IPR, Government of Goa; and noted steering committee Members Ms. Bhavna Kher, Ram Sampath, Aparna Purohit, Prerna Singh, Namitha, Suhasini Maniratnam, Abhishek Jain. Santosh Sivan, Gaurav Banerjee, Aditya Bhat, Prashant Chothani and Dharam Gulati.</span></span></p>
+
+<p style="text-align:center"><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">***</span></span></p>
+
+<p><strong><span style="font-family:Times New Roman,Times,serif"><span style="font-size:16px">Mahesh Kumar/ Vivek Vishwash/ Riya Rani</span></span></strong></p>
+
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                                    <div style="font-weight: 100; text-align: left; font-size: 16px;">
+                                          (रिलीज़ आईडी: 2302236)
+                                    </div>
+                                    <div style="height: 30px; width: 100%;">
+                                    </div>
+                              </td>
+                        </tr>
+                        <tr>
+                              <td style="font-weight: 200; text-align: center; font-size: 24px;"></td>
+                        </tr>
+                  </table>
+            </div>
+            <div class="clearfix">
+            </div>
+
+            
+
+            <div class="section1">
+                  <div id="frst_t">
+                        <div id="arr_rm"><div class='sticky-social_mb'><ul class='social_mb'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='40' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236&text=First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='40' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='40' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='40' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236&title=First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='40' /></li></a></ul></div></div>
+                  </div>
+                  <div id="second_t">
+                        <div id="sndr_rm"><div class='sticky-social'><ul class='social'><a href='http://www.facebook.com/share.php?u=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236' target='_blank'><li class='fb_b'   ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/facebook.jpg' alt='Share on facebook'  width='35' /></li></a><a href='https://twitter.com/intent/tweet?url=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236&text=First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations' target='_blank'><li class='twitter_r'  ><img  src='https://static.pib.gov.in/WriteReadData/specificdocs/photo/2023/aug/ph2023818240601.jpg' alt='Share on twitter' width='35' /> </li></a><a href='https://api.whatsapp.com/send?text=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236' target='_blank'><li class='whatsapp_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/whatsapp1.png' alt='Share on whatsapp' width='35' /></li></a><a href='https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations&body=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236&ui=2&tf=1&pli=1' title='Share by Email' target='_blank'><li class='fa-envelope_r' ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/email1.png' alt='Share on email'  width='35' /></li></a><a href='https://www.linkedin.com/shareArticle?mini=true&url=https://pib.gov.in/PressReleasePage.aspx?PRID=2302236&title=First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations&summary=My%20favorite%20developer%20program&source=LinkedIn' target='_blank'><li class='fa-linkedin_r'  ><img  src='https://static.pib.gov.in/WriteReadData/userfiles/socialmedianew/linkedin.png' alt='Share on linkedin' width='35' /></li></a></ul></div></div>
+                  </div>
+            </div>
+            <input type="hidden" name="ltrTitlee" id="ltrTitlee" value="First Steering Committee Meeting For 57th IFFI Held Under Chairmanship of MoS Dr. L. Murugan to Review Festival Preparations" />
+            <input type="hidden" name="ltrSubtitlee" id="ltrSubtitlee" value="&lt;br/>Dr. Murugan Calls for Greater Opportunities for Young and Emerging Filmmakers and Stronger International Outreach&lt;br/>&lt;br/>IFFI To Showcase the Best of Indian and Global Cinema and Strengthen Creative Exchange and India’s Growing Creative Economy" />
+            <input type="hidden" name="ltrDescriptionn" id="ltrDescriptionn" value="&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>The first Meeting of Steering Committee for the 57th International Film Festival of India (IFFI) was held on 21st August 2026 at Kartavya Bhawan-2, New Delhi, under the chairmanship of Dr. L. Murugan, Hon&amp;#39;ble Minister of State for Information &amp;amp; Broadcasting, to review preparations for the forthcoming edition of the festival and deliberate on measures to further strengthen its standing as a world-class international film festival.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>The 57th International Film Festival of India (IFFI) is scheduled to be held in Goa from 20 to 28 November 2026.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;img src=&quot;https://static.pib.gov.in/WriteReadData/userfiles/image/image001TQ25.jpg&quot; style=&quot;height:383px; width:624px&quot; />&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Addressing the meeting, Dr. L. Murugan outlined his vision for the 57th edition of IFFI, emphasising greater opportunities for young students, emerging filmmakers and unsung heroes of the Indian film industry. He said that IFFI should provide a platform for young talent to showcase their creativity, learn from established filmmakers and connect with the global film community, while strengthening its international outreach by bringing outstanding films and leading creative talent from across the world to India.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Dr. Murugan emphasised that the ministry under the leadership of Shri Ashwini Vaishnaw, is taking new initiatives to boost India&amp;rsquo;s Orange Economy and strengthen the country&amp;#39;s creative industries, creating opportunities for talent, innovation and global collaboration.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Dr. Murugan further emphasised the need to expand masterclasses, structured interactions with established filmmakers and meaningful mentorship opportunities for young and emerging talent. He also highlighted the importance of showcasing the diversity and strength of Indian cinema while strengthening avenues for international collaboration and professional exchange.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Acknowledging the pivotal role of the Government of Goa in IFFI&amp;rsquo;s growth and continued success, the Minister paid tribute to the legacy of late Shri Manohar Parrikar, former Chief Minister of Goa, whose vision was instrumental in transforming Goa into a globally recognised destination for international cinema. He also appreciated Hon&amp;rsquo;ble Chief Minister of Goa Shri Pramod Sawant for his continued support and efforts towards making IFFI a truly world-class cultural event.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>During the event, Shri Chanchal Kumar, Secretary, Ministry of Information &amp;amp; Broadcasting, underscored that IFFI must be leveraged as a flagship platform for promoting India&amp;#39;s growing creative economy and deepening collaboration between Indian and international creative communities. He also stressed the importance of ensuring a high-quality, seamless experience for filmmakers, cinephiles, delegates and guests attending the festival.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Shri Prakash Magdum, MD, NFDC, made a presentation on the preparations and various initiatives being undertaken for the 57th IFFI. Shri Ashutosh Gowariker, Festival Director, IFFI, welcomed the recommendations of the Steering Committee and emphasised the importance of strengthening masterclasses, opportunities for young filmmakers, the selection of outstanding films from India and abroad, and the participation of leading filmmakers and creative personalities from India and across the world.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>The Secretary, IPR, Government of Goa, apprised the Committee of the preparations being undertaken by the State Government and assured that all necessary efforts would be made to ensure timely completion of all required activities and smooth arrangements for the 57th IFFI.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>&lt;img src=&quot;https://static.pib.gov.in/WriteReadData/userfiles/image/image0024Y71.jpg&quot; style=&quot;height:385px; width:624px&quot; />&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>The Steering Committee Members placed significant emphasis on wider international outreach for IFFI, with focused efforts to curate outstanding films from across the world and invite leading filmmakers, artists and creative professionals from different countries. The festival is envisaged not merely as a celebration of cinema, but also as an important platform for creative exchange, collaboration and the promotion of India&amp;#39;s growing creative economy.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>The Steering Committee reiterated the importance of close and sustained coordination among the Ministry of Information &amp;amp; Broadcasting, NFDC, the Government of Goa and all associated stakeholders for the successful organisation of the festival. The Committee expressed its collective confidence that the 57th IFFI will further consolidate its position as a leading international platform for cinema, creativity, cultural exchange and global collaboration, while creating greater opportunities for Indian filmmakers and creative professionals to engage meaningfully with the world.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:justify&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>The meeting was attended by Shri Chanchal Kumar, Secretary, Ministry of Information &amp;amp; Broadcasting; Shri Ashutosh Gowariker, noted filmmaker and Festival Director, IFFI; Shri Prakash Magdum, Managing Director, National Film Development Corporation (NFDC); the Secretary, IPR, Government of Goa; and noted steering committee Members Ms. Bhavna Kher, Ram Sampath, Aparna Purohit, Prerna Singh, Namitha, Suhasini Maniratnam, Abhishek Jain. Santosh Sivan, Gaurav Banerjee, Aditya Bhat, Prashant Chothani and Dharam Gulati.&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p style=&quot;text-align:center&quot;>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>***&lt;/span>&lt;/span>&lt;/p>
+
+&lt;p>&lt;strong>&lt;span style=&quot;font-family:Times New Roman,Times,serif&quot;>&lt;span style=&quot;font-size:16px&quot;>Mahesh Kumar/ Vivek Vishwash/ Riya Rani&lt;/span>&lt;/span>&lt;/strong>&lt;/p>
+" />
+            <script type="text/javascript">
+                  var mPlayer = document.getElementById("background_music");
+                  var mPlayAction = document.getElementById("playbutton");
+
+                  var isPlaying = false;
+
+                  function playAudio() {
+                        mPlayer.play();
+                        isPlaying = true;
+                        document.getElementById('stopA').style.display = "block";
+                        document.getElementById('playA').style.display = "none";
+                  }
+
+                  function pauseAudio() {
+                        mPlayer.pause();
+                        isPlaying = false;
+                        document.getElementById('playA').style.display = "block";
+                        document.getElementById('stopA').style.display = "none";
+                  }
+                  //function HandleAudio() {
+                  //    if (isPlaying == true) {
+                  //        //Playing already Pause it
+                  //        pauseAudio();
+                  //    } else {
+                  //        //Play the music
+                  //        playAudio();
+                  //    }
+                  //}
+            </script>
+            <script type="text/javascript">
+                  var synth = window.speechSynthesis;
+
+            
+                  function CleanHtml(html) {
+
+                        html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+
+                        return html;
+                  }
+                  function stripHtml(html) {
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = CleanHtml(html);
+                        return tmp.textContent || tmp.innerText || "";
+                  }
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        //for responsive tables
+                        $("table").each(function () {
+                              if (!$(this).closest(".table-responsive").length) {
+                                    $(this).wrap("<div class='table-responsive'></div>");
+                              }
+                        });
+
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            <script type="text/javascript">
+                  $(document).ready(function () {
+                        var width = $(window).width();
+                        if (width < 768) {
+
+                              // Extra Small Device
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+
+                        } else if (width < 991) {
+                              document.getElementById('frst_t').style.display = "block";
+                              document.getElementById('second_t').style.display = "none";
+                              // Small Device
+
+                        } else if (width < 1199) {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Medium Device
+
+                        } else {
+                              document.getElementById('frst_t').style.display = "none";
+                              document.getElementById('second_t').style.display = "block";
+                              // Large Device
+
+                        }
+                  });
+            </script>
+            
+            <style type="text/css">
+                  @media print {
+                        .sticky-social, .sticky-social_mb, .pull-right, #printPDF {
+                              display: none !important;
+                        }
+                  }
+
+                  .f_vl {
+                        padding-right: 30px;
+                        font-size: 17px;
+                        cursor: pointer;
+                  }
+
+                  .log_oo {
+                        // width: 20%;
+                        display: flex;
+                        justify-content: space-between;
+                  }
+
+                        .log_oo img {
+                              width: 150px;
+                              /*width: 100%;
+                    height: auto;*/
+                        }
+
+                  .sticky-social_mb {
+                        position: fixed;
+                        bottom: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                        width: 100%;
+                  }
+
+                  .social_mb {
+                        list-style: none;
+                        display: flex;
+                        width: 100%;
+                        margin-bottom: -8px;
+                  }
+
+                        .social_mb a {
+                              padding: 8px 0px;
+                              font-size: 30px;
+                              transition: all 0.8s ease-in-out;
+                              width: 20% !important;
+                              text-align: center;
+                        }
+            </style>
+            <style type="text/css">
+                  .section1 {
+                        position: relative;
+                        padding: 10px 0px;
+                        width: 100%;
+                  }
+
+
+
+                  .sticky-social {
+                        position: fixed;
+                        top: 20px;
+                        left: 0px;
+                        padding: 0px;
+                        margin: 0px;
+                  }
+
+                  .social {
+                        list-style: none;
+                  }
+
+                        .social a li {
+                              padding: 8px 12px;
+                              font-size: 25px;
+                              transition: all 0.8s ease-in-out;
+                        }
+
+                              .social a li:hover {
+                                    margin-right: -30px;
+                                    box-shadow: 2px 5px 10px grey;
+                              }
+
+                                    .social a li:hover .fa {
+                                          margin-left: 20px;
+                                    }
+
+                  .fb_b {
+                        /* background-color: rgb(59, 89, 152);*/
+                        background-color: rgba(65,103,178,255);
+                  }
+
+                  .twitter_r {
+                        /* background-color: rgb(29, 161, 242);*/
+                        background-color: #000000;
+                  }
+
+                  .whatsapp_r {
+                        /* background-color: rgb(77, 194, 71);*/
+                        background-color: rgba(13,191,67,255);
+                  }
+
+                  .fa-envelope_r {
+                        /* background-color: rgb(219, 68, 55);*/
+                        background-color: #e2123d;
+                  }
+
+                  .fa-linkedin_r {
+                        background-color: rgb(0, 119, 181);
+                  }
+            </style>
+            <style type="text/css">
+                  @media only screen and (max-device-width: 767px) {
+                        p span img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        p img {
+                              max-width: 90% !important;
+                              height: auto !important;
+                        }
+
+                        h2 {
+                              font-size: 20px !important;
+                              font-weight: 600 !important;
+                        }
+
+                        h3 {
+                              font-size: 18px !important;
+                              font-weight: 600 !important;
+                        }
+                  }
+            </style>
+            <style type="text/css">
+                  /* === Film Roll Badge Styling(IFFI2025 countdown) === */
+                  .film-roll-badge {
+                        position: absolute;
+                        top:82%;
+                        right: 20px;
+                        width: 230px;
+                        height: 70px;
+                        background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 18px, #6e2b8b 18px, #6e2b8b 36px );
+                        border-top: 8px solid #9a2375;
+                        border-bottom: 8px solid #9a2375;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                        animation: moveFilm 8s linear infinite;
+                        z-index: 10;
+                  }
+
+                        /* film sprocket holes */
+                        .film-roll-badge::before,
+                        .film-roll-badge::after {
+                              content: "";
+                              position: absolute;
+                              width: 100%;
+                              height: 10px;
+                              background: repeating-linear-gradient( to right, #9a2375 0px, #9a2375 10px, #fff 10px, #fff 20px );
+                              left: 0;
+                              z-index: 2;
+                        }
+
+                        .film-roll-badge::before {
+                              top: -4px;
+                        }
+
+                        .film-roll-badge::after {
+                              bottom: -4px;
+                        }
+
+                  .film-roll-inner {
+                        position: relative;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: flicker 2s infinite ease-in-out;
+                  }
+
+                  .countdown-text {
+                        font-size: 1.3rem;
+                        font-weight: 700;
+                        color: #fff;
+                        text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 0 0 10px #000;
+                        white-space: nowrap;
+                  }
+
+                  /* === Animations === */
+                  @keyframes moveFilm {
+                        0% {
+                              background-position: 0 0;
+                        }
+
+                        100% {
+                              background-position: 120px 0;
+                        }
+                  }
+
+                  @keyframes flicker {
+                        0%, 100% {
+                              opacity: 1;
+                        }
+
+                        50% {
+                              opacity: 0.9;
+                        }
+
+                        25% {
+                              opacity: 0.95;
+                        }
+
+                        75% {
+                              opacity: 0.85;
+                        }
+                  }
+
+                  /* === Responsive Adjustments === */
+                  @media (max-width: 1500px) {
+                        .film-roll-badge {
+                              top: 68%;
+                              right: 18px;
+                              /* width: 220px; */
+                              height: 65px;
+                              font-size: 0.85rem;
+                        }
+
+                        .press-section {
+                              margin-top: 35px;
+                        }
+                  }
+
+                  @media (max-width: 992px) {
+                        .film-roll-badge {
+                              top: 52%;
+                              right: 10px;
+                               width: 200px; 
+                              height: 60px;
+                        }
+                  }
+
+                  @media (max-width: 768px) {
+                        .film-roll-badge {
+                              top: 56%;
+                              right: 10px;
+                               width: 124px; 
+                              height: 55px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.9rem;
+                        }
+                  }
+
+                  @media (max-width: 576px) {
+                        .film-roll-badge {
+                              top: 59%;
+                              right: 5px;
+                              /* width: 160px; */
+                              height: 50px;
+                        }
+
+                        .countdown-text {
+                              font-size: 0.85rem;
+                        }
+                  }
+            </style>
+          <script type="text/javascript">
+                const festivalStart = new Date("2025-11-20T00:00:00").getTime();
+                const festivalEnd = new Date("2025-11-28T23:59:59").getTime();
+
+                const countdownElement = document.getElementById("countdown");
+
+                const interval = setInterval(() => {
+                      const now = new Date().getTime();
+
+                      // BEFORE FESTIVAL — show days + hours left
+                      if (now < festivalStart) {
+                            const diff = festivalStart - now;
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                            countdownElement.innerHTML = `
+              ${days} Day${days !== 1 ? 's' : ''} 
+              ${hours} Hour${hours !== 1 ? 's' : ''} to go
+          `;
+
+                      }
+
+                      // DURING FESTIVAL — show 56th IFFI - Day X
+                      else if (now >= festivalStart && now <= festivalEnd) {
+                            const dayNumber = Math.floor((now - festivalStart) / (1000 * 60 * 60 * 24)) + 1;
+                            countdownElement.innerHTML = `56th IFFI - Day ${dayNumber}`;
+                      }
+
+                      // AFTER FESTIVAL — new message
+                      else {
+                            countdownElement.innerHTML = `✨ IFFI closes but never ends…`;
+
+                            // Width change logic
+                            const elements = document.querySelectorAll('.film-roll-badge');
+                            elements.forEach(el => el.style.width = "350px");
+
+                            clearInterval(interval);
+                      }
+
+                }, 1000);
+          </script>
+ <script type="text/javascript">
+
+               const miffStart = new Date("2026-06-15T00:00:00").getTime();
+               const miffEnd = new Date("2026-06-15T23:59:59").getTime();
+
+               const miffElement = document.getElementById("miff");
+
+               if (miffElement) {
+
+                   const miffInterval = setInterval(() => {
+
+                       const now = new Date().getTime();
+
+                       // Before MIFF
+                       if (now < miffStart) {
+
+                           const diff = miffStart - now;
+                           const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                           const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        
+
+                   /*  miffElement.innerHTML = `${days} Day${days !== 1 ? 's' : ''} ${hours} Hour${hours !== 1 ? 's' : ''} to MIFF`;*/
+                           miffElement.innerHTML = `${days} Day${days === 1 ? '' : 's'} to MIFF ...`;
+
+
+                     }
+
+                       // During MIFF
+                       else if (now >= miffStart && now <= miffEnd) {
+
+                           const dayNumber =
+                               Math.floor((now - miffStart) / (1000 * 60 * 60 * 24)) + 1;
+
+                           miffElement.innerHTML = `19th MIFF - Day ${dayNumber}`;
+                       }
+
+                       // After MIFF
+                       else {
+
+                           miffElement.innerHTML = `✨ MIFF concludes, cinema lives on...`;
+
+                           document.querySelectorAll('.film-roll-badge')
+                               .forEach(el => el.style.width = "350px");
+
+                           clearInterval(miffInterval);
+                       }
+
+                   }, 1000);
+               }
+
+</script>
+
+      
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {var fn = function() {$get("sc_HiddenField").value = '';Sys.Application.remove_init(fn);};Sys.Application.add_init(fn);})();Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","PopupControlID":"P_CategoryManagement","dynamicServicePath":"/PressReleasePage.aspx","id":"mpe"}, null, null, $get("Hidden"));
+});
+//]]>
+</script>
+<input type="hidden" name="__ncforminfo" value="RBDGK01zMY5T0rpQuR6rY5ivYGuo-KoY4zqqukNpoMUV7qPKf1Dlam-Tu6YOXdIZQFroZHVCBj5-J7AnDVfHKccPjMqxjhni7bAQw-YRHS7pd8Pspyl5yQ=="/></form>
+</body>
+</html>
+

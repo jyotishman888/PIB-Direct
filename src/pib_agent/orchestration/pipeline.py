@@ -11,6 +11,7 @@ from pib_agent.db import session_scope as default_session_scope
 from pib_agent.enrichment import run_enrich
 from pib_agent.enrichment.pipeline import EnrichStats
 from pib_agent.orchestration.run_lock import RunLock
+from pib_agent.publish import PublishDisabledError, PublishStats, run_publish
 from pib_agent.scraper import run_scrape
 from pib_agent.scraper.pipeline import ScrapeStats
 from pib_agent.similarity import run_similarity
@@ -94,6 +95,10 @@ def _stage_summary(name: str, stats: object) -> str:
         )
     if isinstance(stats, StudyStats):
         return f"pending {stats.pending}, analysed {stats.analysed}, failed {stats.failed}"
+    if isinstance(stats, PublishStats):
+        if not stats.changed:
+            return f"bundle unchanged ({stats.articles} articles)"
+        return f"pushed {stats.articles} articles"
     return str(stats)  # pragma: no cover - defensive fallback for an unrecognized stats type
 
 
@@ -101,6 +106,13 @@ def _run_notify_stage() -> NotifyStats:
     try:
         return run_notify()
     except TelegramConfigError as exc:
+        raise _StageSkipped(str(exc)) from exc
+
+
+def _run_publish_stage() -> PublishStats:
+    try:
+        return run_publish()
+    except PublishDisabledError as exc:
         raise _StageSkipped(str(exc)) from exc
 
 
@@ -188,7 +200,7 @@ def start_pipeline_run(
 def execute_pipeline_run(
     run_id: int, *, session_scope: SessionScopeFn = default_session_scope
 ) -> PipelineRunResult:
-    """Run scrape -> enrich -> notify -> link -> study for a run created by start_pipeline_run.
+    """Run scrape -> enrich -> notify -> link -> study -> publish for a created run.
 
     Each stage is isolated: if one raises, it's recorded as failed and the
     next stage still runs against whatever earlier stages (this run or prior
@@ -212,6 +224,10 @@ def execute_pipeline_run(
             # nothing downstream depends on it, so a slow or failing run here
             # never delays delivery or leaves the corpus unlinked.
             _run_stage("study", run_study, run_id),
+            # publish last: it turns whatever the run produced into the bundle
+            # the deployed site reads, so it must see every earlier stage's
+            # output. A failure here costs freshness, never data.
+            _run_stage("publish", _run_publish_stage, run_id),
         ]
         overall_status = _overall_status(stages)
 

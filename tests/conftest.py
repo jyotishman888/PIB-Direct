@@ -27,6 +27,8 @@ def _isolate_environment_sensitive_settings(monkeypatch):
     monkeypatch.setenv("SESSION_COOKIE_SECURE", "false")
     monkeypatch.setenv("SCHEDULER_ENABLED", "false")
     monkeypatch.setenv("OPS_ALERTS_ENABLED", "false")
+    # never let a test git-push the operator's repo, whatever their .env says
+    monkeypatch.setenv("PUBLISH_ENABLED", "false")
 
     get_settings.cache_clear()
     yield

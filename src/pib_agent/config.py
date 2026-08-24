@@ -124,6 +124,13 @@ class Settings(BaseSettings):
     # repeated clicks can't fire off duplicate full pipeline runs.
     admin_run_now_min_interval_seconds: float = 60.0
 
+    # Re-export the static bundle after each run and push it, so the deployed
+    # site tracks the database instead of drifting a day further behind for
+    # every day nobody runs `export-static` by hand. Off by default for the
+    # same reason as the scheduler: a local dev run must never push to a
+    # public repo on its own — the operator opts in for unattended operation.
+    publish_enabled: bool = False
+
     # --- Sign-in -----------------------------------------------------------
     # OAuth client ids. Google: Cloud Console -> OAuth 2.0 Client ID (Web).
     # Telegram: BotFather -> your bot -> Login Widget (Telegram moved the

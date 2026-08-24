@@ -46,12 +46,26 @@ def _parse_date_line(text: str) -> tuple[datetime | None, str | None]:
         return None, office
 
 
-def _extract_body(date_div: Tag) -> tuple[str, str]:
-    end_marker = date_div.find_next(id="reel_pic") or date_div.find_next(id="ReleaseId")
+def _find_date_line(soup: BeautifulSoup) -> tuple[datetime | None, str | None]:
+    """Recover the date line when it isn't wrapped in #PrDateTime.
+
+    Regional PIB offices serve a template that carries the same
+    "<date> by <office>" line in an unnamed div instead.
+    """
+    for node in soup.find_all(string=_DATE_LINE_RE):
+        parent = node.parent
+        if parent is None or parent.name in {"script", "style"}:
+            continue
+        return _parse_date_line(parent.get_text(" ", strip=True))
+    return None, None
+
+
+def _extract_body(anchor: Tag) -> tuple[str, str]:
+    end_marker = anchor.find_next(id="reel_pic") or anchor.find_next(id="ReleaseId")
 
     html_parts: list[str] = []
     text_parts: list[str] = []
-    for sibling in date_div.find_next_siblings():
+    for sibling in anchor.find_next_siblings():
         if end_marker is not None and sibling is end_marker:
             break
         if not isinstance(sibling, Tag) or sibling.name in _BODY_NOISE_TAGS:
@@ -84,11 +98,19 @@ def parse_detail(html: str) -> ParsedArticle:
     ministry_name = ministry_el.get_text(strip=True) if ministry_el else ""
 
     date_div = soup.find(id="PrDateTime")
-    if date_div is None:
-        raise DetailParseError("No #PrDateTime element found — PIB page structure may have changed")
-    release_datetime, pib_office = _parse_date_line(date_div.get_text(" ", strip=True))
+    if date_div is not None:
+        release_datetime, pib_office = _parse_date_line(date_div.get_text(" ", strip=True))
+        body_anchor = date_div
+    else:
+        # Regional offices (the ?reg=NN&lang=1 variants) serve a page with no
+        # #PrDateTime. Everything else matches, and the real date line is still
+        # in the markup, so recover it and anchor the body on the title block it
+        # would have followed. These used to raise, which silently dropped a
+        # genuine release on every run until it rolled off the listing.
+        release_datetime, pib_office = _find_date_line(soup)
+        body_anchor = title_el.parent
 
-    body_text, body_html = _extract_body(date_div)
+    body_text, body_html = _extract_body(body_anchor)
     if not body_text:
         raise DetailParseError("Parsed article body is empty — PIB page structure may have changed")
 

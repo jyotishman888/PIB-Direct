@@ -9,6 +9,7 @@ from pib_agent.orchestration.pipeline import (
     run_pipeline,
     start_pipeline_run,
 )
+from pib_agent.publish import PublishStats
 from pib_agent.scraper.pipeline import ScrapeStats
 from pib_agent.similarity.pipeline import SimilarityStats
 from pib_agent.study.pipeline import StudyStats
@@ -36,6 +37,11 @@ def _patch_all_success(monkeypatch):
     monkeypatch.setattr(
         pipeline_module, "run_study", lambda: StudyStats(pending=1, analysed=1)
     )
+    monkeypatch.setattr(
+        pipeline_module,
+        "run_publish",
+        lambda: PublishStats(articles=1, changed=True, pushed=True),
+    )
 
 
 def test_run_pipeline_all_success(monkeypatch, session_scope_factory):
@@ -44,7 +50,14 @@ def test_run_pipeline_all_success(monkeypatch, session_scope_factory):
     result = run_pipeline("manual", session_scope=session_scope_factory)
 
     assert result.status == "success"
-    assert [s.name for s in result.stages] == ["scrape", "enrich", "notify", "link", "study"]
+    assert [s.name for s in result.stages] == [
+        "scrape",
+        "enrich",
+        "notify",
+        "link",
+        "study",
+        "publish",
+    ]
     assert all(s.status == "success" for s in result.stages)
 
     with session_scope_factory() as session:
@@ -52,7 +65,7 @@ def test_run_pipeline_all_success(monkeypatch, session_scope_factory):
         assert run.status == "success"
         assert run.trigger == "manual"
         assert run.finished_at is not None
-        assert len(run.stages) == 5
+        assert len(run.stages) == 6
 
 
 def test_run_pipeline_stage_failure_is_isolated(monkeypatch, session_scope_factory):
@@ -78,16 +91,21 @@ def test_run_pipeline_stage_failure_is_isolated(monkeypatch, session_scope_facto
         calls.append("study")
         return StudyStats()
 
+    def _publish():
+        calls.append("publish")
+        return PublishStats(articles=0, changed=False, pushed=False)
+
     monkeypatch.setattr(pipeline_module, "run_scrape", _boom)
     monkeypatch.setattr(pipeline_module, "run_enrich", _enrich)
     monkeypatch.setattr(pipeline_module, "run_similarity", _link)
     monkeypatch.setattr(pipeline_module, "run_notify", _notify)
     monkeypatch.setattr(pipeline_module, "run_study", _study)
+    monkeypatch.setattr(pipeline_module, "run_publish", _publish)
 
     result = run_pipeline("manual", session_scope=session_scope_factory)
 
     # every stage still ran despite scrape blowing up
-    assert calls == ["scrape", "enrich", "notify", "link", "study"]
+    assert calls == ["scrape", "enrich", "notify", "link", "study", "publish"]
     assert result.status == "failed"
     scrape_stage = result.stages[0]
     assert scrape_stage.status == "failed"
