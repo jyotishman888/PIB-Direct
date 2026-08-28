@@ -122,3 +122,20 @@ def test_site_is_not_checked_when_unset(monkeypatch, _enabled):
     monkeypatch.setattr(publish_module, "_check_site", _boom)
 
     assert run_publish().site_ok is None
+
+
+def test_site_check_waits_out_the_deploy_window(monkeypatch):
+    """A push triggers a deploy that takes minutes; a 404 during it isn't a failure."""
+    monkeypatch.setattr(publish_module.time, "sleep", lambda _: None)
+    statuses = iter([404, 404, 200])
+    monkeypatch.setattr(publish_module, "_fetch_status", lambda url: next(statuses))
+
+    publish_module._check_site("https://example.invalid/")  # must not raise
+
+
+def test_site_check_gives_up_after_the_window(monkeypatch):
+    monkeypatch.setattr(publish_module.time, "sleep", lambda _: None)
+    monkeypatch.setattr(publish_module, "_fetch_status", lambda url: 404)
+
+    with pytest.raises(publish_module.PublishUnreachableError):
+        publish_module._check_site("https://example.invalid/")

@@ -7,6 +7,7 @@ day for every day nobody remembers to run `export-static` by hand.
 
 import logging
 import subprocess
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -46,6 +47,24 @@ def _git(*args: str) -> str:
     return result.stdout.strip()
 
 
+# The deploy that a push triggers takes a couple of minutes, so the check has
+# to outlast it or every publish would report a false failure while the site
+# was simply still building.
+_SITE_CHECK_ATTEMPTS = 10
+_SITE_CHECK_INTERVAL_SECONDS = 20
+
+
+def _fetch_status(url: str) -> int:
+    request = urllib.request.Request(url, headers={"User-Agent": "pib-agent"})
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            return response.status
+    except urllib.error.HTTPError as exc:
+        return exc.code
+    except OSError as exc:  # DNS failure, TLS error, timeout
+        raise PublishUnreachableError(f"{url} could not be reached: {exc}") from exc
+
+
 def _check_site(url: str) -> None:
     """Confirm the published site actually serves.
 
@@ -54,17 +73,22 @@ def _check_site(url: str) -> None:
     "publish success", and the site was dead for four days before anyone
     looked at it.
     """
-    request = urllib.request.Request(url, headers={"User-Agent": "pib-agent"})
-    try:
-        with urllib.request.urlopen(request, timeout=20) as response:
-            status = response.status
-    except urllib.error.HTTPError as exc:
-        raise PublishUnreachableError(f"{url} returned HTTP {exc.code}") from exc
-    except OSError as exc:  # DNS failure, TLS error, timeout
-        raise PublishUnreachableError(f"{url} could not be reached: {exc}") from exc
+    status = 0
+    for attempt in range(_SITE_CHECK_ATTEMPTS):
+        if attempt:
+            time.sleep(_SITE_CHECK_INTERVAL_SECONDS)
+        status = _fetch_status(url)
+        if status == 200:
+            return
+        logger.info(
+            "Publish: %s returned HTTP %s, waiting for the deploy (%s/%s)",
+            url,
+            status,
+            attempt + 1,
+            _SITE_CHECK_ATTEMPTS,
+        )
 
-    if status != 200:
-        raise PublishUnreachableError(f"{url} returned HTTP {status}")
+    raise PublishUnreachableError(f"{url} still returning HTTP {status} after the deploy window")
 
 
 def run_publish(
