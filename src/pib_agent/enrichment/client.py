@@ -3,6 +3,7 @@ from datetime import datetime
 
 import anthropic
 
+from pib_agent.claude_errors import is_account_level
 from pib_agent.config import get_settings
 from pib_agent.enrichment.prompts import SYSTEM_PROMPT, build_user_prompt
 from pib_agent.enrichment.schema import ArticleEnrichment
@@ -24,19 +25,7 @@ class EnrichmentError(RuntimeError):
 
 
 class EnrichmentBlockedError(EnrichmentError):
-    """Raised when the failure is account-level, so retrying other articles is futile.
-
-    Exhausted credits or a bad key fail identically for every article. Left as
-    an ordinary per-article error, a 147-article backlog spent 147 doomed API
-    calls an hour for five days and reported "failed 147" each time, which
-    buries the one fact that matters in the noise of the backlog size.
-    """
-
-
-# Substring of the 400 the API returns when the account is out of credit. It
-# arrives as a plain invalid_request_error, so there is no status code or
-# exception class that separates it from a genuinely malformed request.
-_OUT_OF_CREDIT = "credit balance is too low"
+    """Raised when the failure is account-level, so retrying other articles is futile."""
 
 
 _client: anthropic.Anthropic | None = None
@@ -97,10 +86,8 @@ def enrich_article(
             messages=[{"role": "user", "content": user_prompt}],
             output_format=ArticleEnrichment,
         )
-    except (anthropic.AuthenticationError, anthropic.PermissionDeniedError) as exc:
-        raise EnrichmentBlockedError(f"Claude API rejected the credentials: {exc}") from exc
     except anthropic.APIError as exc:
-        if _OUT_OF_CREDIT in str(exc):
+        if is_account_level(exc):
             raise EnrichmentBlockedError(f"Claude API call failed: {exc}") from exc
         raise EnrichmentError(f"Claude API call failed: {exc}") from exc
 

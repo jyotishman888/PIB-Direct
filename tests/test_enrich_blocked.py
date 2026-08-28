@@ -67,3 +67,27 @@ def test_ordinary_failures_still_run_the_whole_backlog(monkeypatch, session_scop
 
 def test_blocked_is_a_subclass_so_existing_handlers_still_catch_it():
     assert issubclass(EnrichmentBlockedError, EnrichmentError)
+
+
+def test_study_pass_also_stops_when_the_account_is_blocked(monkeypatch, session_scope_factory):
+    """The study stage burned 30 doomed calls on the same exhausted account."""
+    import pib_agent.study.pipeline as study_module
+    from pib_agent.study.client import StudyBlockedError
+
+    items = [{"article_id": i, "enrichment_id": i} for i in range(1, 6)]
+    monkeypatch.setattr(study_module, "_load_pending", lambda session, minimum: items)
+    monkeypatch.setattr(study_module.time, "sleep", lambda _: None)
+
+    calls: list[int] = []
+
+    def _analyse_one(item, session_scope, stats):
+        calls.append(item["article_id"])
+        raise StudyBlockedError("Your credit balance is too low")
+
+    monkeypatch.setattr(study_module, "_analyse_one", _analyse_one)
+
+    stats = study_module.run_study(session_scope=session_scope_factory)
+
+    assert calls == [1]
+    assert stats.pending == 5 and stats.failed == 1
+    assert "credit balance" in stats.blocked

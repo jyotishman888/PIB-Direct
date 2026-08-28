@@ -99,7 +99,10 @@ def _stage_summary(name: str, stats: object) -> str:
             f"dead chats removed {stats.dead_chats_removed}"
         )
     if isinstance(stats, StudyStats):
-        return f"pending {stats.pending}, analysed {stats.analysed}, failed {stats.failed}"
+        summary = f"pending {stats.pending}, analysed {stats.analysed}, failed {stats.failed}"
+        if stats.blocked:
+            summary += f" - stopped early: {stats.blocked}"
+        return summary
     if isinstance(stats, PublishStats):
         if not stats.changed:
             return f"bundle unchanged ({stats.articles} articles)"

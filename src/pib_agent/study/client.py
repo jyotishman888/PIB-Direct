@@ -2,6 +2,7 @@ import logging
 
 import anthropic
 
+from pib_agent.claude_errors import is_account_level
 from pib_agent.config import get_settings
 from pib_agent.study.prompts import SYSTEM_PROMPT, build_user_prompt
 from pib_agent.study.schema import MAX_LOW_PRIORITY, StudyNotes
@@ -13,6 +14,10 @@ logger = logging.getLogger(__name__)
 # with per-point justifications, where enrichment emits prose plus a couple of
 # questions.
 _STUDY_MAX_TOKENS = 6144
+
+
+class StudyBlockedError(RuntimeError):
+    """Raised when the failure is account-level, so retrying other articles is futile."""
 
 
 class StudyError(RuntimeError):
@@ -84,6 +89,8 @@ def analyse_article(
             output_format=StudyNotes,
         )
     except anthropic.APIError as exc:
+        if is_account_level(exc):
+            raise StudyBlockedError(f"Claude API call failed: {exc}") from exc
         raise StudyError(f"Claude API call failed: {exc}") from exc
 
     if response.stop_reason == "refusal":

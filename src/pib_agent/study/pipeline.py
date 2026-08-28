@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from pib_agent.config import get_settings
 from pib_agent.db import Article, Enrichment
 from pib_agent.db import session_scope as default_session_scope
-from pib_agent.study.client import StudyError, analyse_article
+from pib_agent.study.client import StudyBlockedError, StudyError, analyse_article
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +35,9 @@ class StudyStats:
     analysed: int = 0
     failed: int = 0
     failed_article_ids: list[int] = field(default_factory=list)
+    # Set when the pass stopped early because the account, not the article,
+    # was the problem. Carries the reason so the ops alert names it.
+    blocked: str | None = None
 
 
 def _load_pending(session: Session, min_relevance: int) -> list[_PendingArticle]:
@@ -82,6 +85,8 @@ def _analyse_one(
             body_text=pending["body_text"],
             upsc_relevance=pending["upsc_relevance"],
         )
+    except StudyBlockedError:
+        raise
     except StudyError as exc:
         # Isolated per article: one bad release must not abort the batch.
         logger.error("Failed to analyse article id=%s: %s", pending["article_id"], exc)
@@ -130,12 +135,27 @@ def run_study(*, session_scope: SessionScopeFn = default_session_scope) -> Study
     for index, item in enumerate(pending):
         if index > 0:
             time.sleep(settings.anthropic_request_delay_seconds)
-        _analyse_one(item, session_scope, stats)
+        try:
+            _analyse_one(item, session_scope, stats)
+        except StudyBlockedError as exc:
+            # Every remaining article would fail the same way, so stop instead
+            # of spending the rest of the backlog on calls that cannot succeed.
+            stats.blocked = str(exc)
+            stats.failed += 1
+            stats.failed_article_ids.append(item["article_id"])
+            logger.error(
+                "Study pass blocked after %s of %s articles: %s",
+                index + 1,
+                stats.pending,
+                exc,
+            )
+            break
 
     logger.info(
-        "Study pass complete: pending=%s analysed=%s failed=%s",
+        "Study pass complete: pending=%s analysed=%s failed=%s%s",
         stats.pending,
         stats.analysed,
         stats.failed,
+        f" blocked={stats.blocked}" if stats.blocked else "",
     )
     return stats
