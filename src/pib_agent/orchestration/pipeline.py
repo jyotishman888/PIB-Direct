@@ -79,7 +79,12 @@ def _stage_summary(name: str, stats: object) -> str:
             f"listing sources failed {stats.listing_sources_failed}"
         )
     if isinstance(stats, EnrichStats):
-        return f"pending {stats.pending}, enriched {stats.enriched}, failed {stats.failed}"
+        summary = f"pending {stats.pending}, enriched {stats.enriched}, failed {stats.failed}"
+        if stats.blocked:
+            # The reason belongs in the alert; the backlog size alone reads as
+            # "lots of articles are broken" when the account is the problem.
+            summary += f" - stopped early: {stats.blocked}"
+        return summary
     if isinstance(stats, SimilarityStats):
         return (
             f"embedded {stats.embedded}/{stats.embed_pending}, "
@@ -98,7 +103,8 @@ def _stage_summary(name: str, stats: object) -> str:
     if isinstance(stats, PublishStats):
         if not stats.changed:
             return f"bundle unchanged ({stats.articles} articles)"
-        return f"pushed {stats.articles} articles"
+        served = ", site serving" if stats.site_ok else ""
+        return f"pushed {stats.articles} articles{served}"
     return str(stats)  # pragma: no cover - defensive fallback for an unrecognized stats type
 
 

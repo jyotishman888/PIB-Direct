@@ -130,6 +130,12 @@ class Settings(BaseSettings):
     # same reason as the scheduler: a local dev run must never push to a
     # public repo on its own — the operator opts in for unattended operation.
     publish_enabled: bool = False
+    # Public URL the bundle is served from. When set, a publish verifies the
+    # site actually responds after pushing. Without that check the repo going
+    # private took the site offline for four days while every run still
+    # reported 'publish success' - a push succeeding says nothing about
+    # whether anything is being served.
+    site_url: str | None = None
 
     # --- Sign-in -----------------------------------------------------------
     # OAuth client ids. Google: Cloud Console -> OAuth 2.0 Client ID (Web).

@@ -11,7 +11,11 @@ from sqlalchemy.orm import Session
 from pib_agent.config import get_settings
 from pib_agent.db import Article, Enrichment
 from pib_agent.db import session_scope as default_session_scope
-from pib_agent.enrichment.client import EnrichmentError, enrich_article
+from pib_agent.enrichment.client import (
+    EnrichmentBlockedError,
+    EnrichmentError,
+    enrich_article,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +38,9 @@ class EnrichStats:
     enriched: int = 0
     failed: int = 0
     failed_article_ids: list[int] = field(default_factory=list)
+    # Set when the pass stopped early because the account, not the article,
+    # was the problem. Carries the reason so the ops alert names it.
+    blocked: str | None = None
 
 
 def _load_pending_articles(session: Session) -> list[_PendingArticle]:
@@ -69,6 +76,8 @@ def _enrich_one(
             release_datetime=article["release_datetime"],
             pib_office=article["pib_office"],
         )
+    except EnrichmentBlockedError:
+        raise
     except EnrichmentError as exc:
         logger.error("Failed to enrich article id=%s: %s", article["id"], exc)
         stats.failed += 1
@@ -127,12 +136,27 @@ def run_enrich(*, session_scope: SessionScopeFn = default_session_scope) -> Enri
     for index, article in enumerate(pending):
         if index > 0:
             time.sleep(settings.anthropic_request_delay_seconds)
-        _enrich_one(article, session_scope, stats)
+        try:
+            _enrich_one(article, session_scope, stats)
+        except EnrichmentBlockedError as exc:
+            # Every remaining article would fail the same way, so stop instead
+            # of spending the rest of the backlog on calls that cannot succeed.
+            stats.blocked = str(exc)
+            stats.failed += 1
+            stats.failed_article_ids.append(article["id"])
+            logger.error(
+                "Enrichment blocked after %s of %s articles: %s",
+                index + 1,
+                stats.pending,
+                exc,
+            )
+            break
 
     logger.info(
-        "Enrichment complete: pending=%s enriched=%s failed=%s",
+        "Enrichment complete: pending=%s enriched=%s failed=%s%s",
         stats.pending,
         stats.enriched,
         stats.failed,
+        f" blocked={stats.blocked}" if stats.blocked else "",
     )
     return stats

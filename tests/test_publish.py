@@ -84,3 +84,41 @@ def test_git_writes_are_limited_to_the_export_directory(monkeypatch, _enabled):
         if call[0] in {"add", "commit", "status"}:
             assert "--" in call, call
             assert call[call.index("--") + 1] == "frontend/public/data"
+
+
+def test_site_check_failure_fails_the_publish(monkeypatch, _enabled):
+    """A push landing says nothing about whether the site is actually served."""
+    monkeypatch.setenv("SITE_URL", "https://example.invalid/")
+    get_settings.cache_clear()
+    _fake_export(monkeypatch)
+    _record_git(monkeypatch, status_output=" M frontend/public/data/index.json")
+
+    def _dead(url):
+        raise publish_module.PublishUnreachableError(f"{url} returned HTTP 404")
+
+    monkeypatch.setattr(publish_module, "_check_site", _dead)
+
+    with pytest.raises(publish_module.PublishUnreachableError):
+        run_publish()
+
+
+def test_site_check_success_is_recorded(monkeypatch, _enabled):
+    monkeypatch.setenv("SITE_URL", "https://example.invalid/")
+    get_settings.cache_clear()
+    _fake_export(monkeypatch)
+    _record_git(monkeypatch, status_output=" M frontend/public/data/index.json")
+    monkeypatch.setattr(publish_module, "_check_site", lambda url: None)
+
+    assert run_publish().site_ok is True
+
+
+def test_site_is_not_checked_when_unset(monkeypatch, _enabled):
+    _fake_export(monkeypatch)
+    _record_git(monkeypatch, status_output=" M frontend/public/data/index.json")
+
+    def _boom(url):  # pragma: no cover - must never run
+        raise AssertionError("site check ran without SITE_URL set")
+
+    monkeypatch.setattr(publish_module, "_check_site", _boom)
+
+    assert run_publish().site_ok is None

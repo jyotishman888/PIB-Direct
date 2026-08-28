@@ -23,6 +23,22 @@ class EnrichmentError(RuntimeError):
     """Raised when Claude enrichment fails, is refused, or returns no parsed output."""
 
 
+class EnrichmentBlockedError(EnrichmentError):
+    """Raised when the failure is account-level, so retrying other articles is futile.
+
+    Exhausted credits or a bad key fail identically for every article. Left as
+    an ordinary per-article error, a 147-article backlog spent 147 doomed API
+    calls an hour for five days and reported "failed 147" each time, which
+    buries the one fact that matters in the noise of the backlog size.
+    """
+
+
+# Substring of the 400 the API returns when the account is out of credit. It
+# arrives as a plain invalid_request_error, so there is no status code or
+# exception class that separates it from a genuinely malformed request.
+_OUT_OF_CREDIT = "credit balance is too low"
+
+
 _client: anthropic.Anthropic | None = None
 
 
@@ -81,7 +97,11 @@ def enrich_article(
             messages=[{"role": "user", "content": user_prompt}],
             output_format=ArticleEnrichment,
         )
+    except (anthropic.AuthenticationError, anthropic.PermissionDeniedError) as exc:
+        raise EnrichmentBlockedError(f"Claude API rejected the credentials: {exc}") from exc
     except anthropic.APIError as exc:
+        if _OUT_OF_CREDIT in str(exc):
+            raise EnrichmentBlockedError(f"Claude API call failed: {exc}") from exc
         raise EnrichmentError(f"Claude API call failed: {exc}") from exc
 
     if response.stop_reason == "refusal":
