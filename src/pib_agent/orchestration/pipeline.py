@@ -2,7 +2,7 @@ import logging
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy.orm import Session
 
@@ -290,19 +290,47 @@ def run_pipeline(
     return execute_pipeline_run(run_id, session_scope=session_scope)
 
 
-def mark_interrupted_runs(*, session_scope: SessionScopeFn = default_session_scope) -> int:
-    """Mark any run left "running" by a previous process (e.g. crash/restart) as failed.
+# A "running" row is only evidence of a crash once it is too old to be a live
+# run. This used to assume any such row at startup was stale, on the grounds
+# that the run lock is in-memory so a run cannot span a restart - but the lock
+# is per-*process*, and on SQLite the scheduled `pib-agent run` is a different
+# process from `pib-agent serve`. Starting the server while the hourly run was
+# mid-pipeline marked that live run failed and fired an ops alert; the run then
+# finished and overwrote its own status, so the history briefly lied.
+#
+# The longest genuine run observed is ~59 minutes (a large enrichment backlog),
+# so three hours is comfortably dead. Nothing gates on the status - it is
+# reporting only - so cleaning up late costs nothing, while cleaning up early
+# corrupts a run that is still working.
+_STALE_RUN_AFTER = timedelta(hours=3)
 
-    Safe to call on every app startup: an orchestrated run never spans a
-    process restart (the run lock is in-memory), so any "running" row found
-    at startup is necessarily stale. Returns the number of rows fixed up.
+
+def mark_interrupted_runs(*, session_scope: SessionScopeFn = default_session_scope) -> int:
+    """Mark runs left "running" by a crashed process as failed.
+
+    Safe to call on every app startup, and safe to call while another process
+    is mid-run: only rows older than _STALE_RUN_AFTER are touched. Returns the
+    number of rows fixed up.
     """
+    now = datetime.now(UTC)
+    cutoff = now - _STALE_RUN_AFTER
+    fixed = 0
     with session_scope() as session:
-        stale = session.query(PipelineRun).filter_by(status="running").all()
-        for run in stale:
+        for run in session.query(PipelineRun).filter_by(status="running").all():
+            started = run.started_at
+            # SQLite hands back a naive datetime for a timezone-aware column,
+            # and every write is UTC, so read it as such rather than comparing
+            # naive against aware and raising.
+            if started is not None and started.tzinfo is None:
+                started = started.replace(tzinfo=UTC)
+            if started is not None and started > cutoff:
+                continue  # young enough that a live process may still own it
+
             run.status = "failed"
-            run.finished_at = datetime.now(UTC)
+            run.finished_at = now
             run.error = "Interrupted (process restarted before this run finished)."
-        if stale:
-            logger.warning("Marked %s stale pipeline run(s) as failed on startup", len(stale))
-        return len(stale)
+            fixed += 1
+
+    if fixed:
+        logger.warning("Marked %s stale pipeline run(s) as failed on startup", fixed)
+    return fixed

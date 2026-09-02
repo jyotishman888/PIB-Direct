@@ -1,3 +1,5 @@
+from datetime import UTC, datetime, timedelta
+
 import pytest
 
 import pib_agent.orchestration.pipeline as pipeline_module
@@ -264,12 +266,21 @@ def test_run_lock_is_reentrant_across_sequential_runs(monkeypatch, session_scope
     assert first.id != second.id
 
 
-def test_mark_interrupted_runs_marks_stale_running_rows(session_scope_factory):
+def _running_row(session_scope_factory, *, age: timedelta) -> int:
     with session_scope_factory() as session:
-        stale = PipelineRun(trigger="scheduled", status="running", stages=[])
-        session.add(stale)
+        run = PipelineRun(
+            trigger="scheduled",
+            status="running",
+            stages=[],
+            started_at=datetime.now(UTC) - age,
+        )
+        session.add(run)
         session.flush()
-        stale_id = stale.id
+        return run.id
+
+
+def test_mark_interrupted_runs_marks_stale_running_rows(session_scope_factory):
+    stale_id = _running_row(session_scope_factory, age=timedelta(hours=6))
 
     fixed = mark_interrupted_runs(session_scope=session_scope_factory)
 
@@ -279,3 +290,16 @@ def test_mark_interrupted_runs_marks_stale_running_rows(session_scope_factory):
         assert run.status == "failed"
         assert run.finished_at is not None
         assert "Interrupted" in run.error
+
+
+def test_mark_interrupted_runs_leaves_a_live_run_alone(session_scope_factory):
+    """Starting the API must not declare the scheduled task's live run dead.
+
+    The run lock is per-process, so on SQLite `serve` and `run` are separate
+    processes and a young "running" row may still be genuinely working.
+    """
+    live_id = _running_row(session_scope_factory, age=timedelta(minutes=5))
+
+    assert mark_interrupted_runs(session_scope=session_scope_factory) == 0
+    with session_scope_factory() as session:
+        assert session.get(PipelineRun, live_id).status == "running"
