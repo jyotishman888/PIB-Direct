@@ -79,6 +79,13 @@ export interface Enrichment {
   model: string
 }
 
+export interface PastQuestion {
+  year: number
+  paper: string
+  question: string
+  syllabus_area: string | null
+}
+
 export interface RelatedArticle {
   id: number
   title: string
@@ -123,6 +130,8 @@ export interface ArticleDetail {
   scraped_at: string
   enrichment: Enrichment | null
   related_articles: RelatedArticle[]
+  // Empty until a real corpus is imported; nothing here is ever generated.
+  past_questions?: PastQuestion[]
 }
 
 export interface ArticleListParams {

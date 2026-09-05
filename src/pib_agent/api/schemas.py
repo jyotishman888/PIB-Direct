@@ -83,6 +83,19 @@ class EnrichmentOut(BaseModel):
     model: str
 
 
+class PastQuestionOut(BaseModel):
+    """A real UPSC question that shares one of this article's syllabus areas.
+
+    Only ever operator-imported (see pyq/importer.py) - a fabricated "this was
+    asked in 2019" would be the fastest way to lose an aspirant's trust.
+    """
+
+    year: int
+    paper: str
+    question: str
+    syllabus_area: str | None
+
+
 class RelatedArticleOut(BaseModel):
     id: int
     title: str
@@ -153,6 +166,9 @@ class ArticleDetail(BaseModel):
     scraped_at: datetime
     enrichment: EnrichmentOut | None
     related_articles: list[RelatedArticleOut]
+    # Empty until the operator imports a corpus, and empty for any article
+    # whose areas nothing was ever asked on.
+    past_questions: list[PastQuestionOut] = []
 
 
 class AuthProviderInfo(BaseModel):

@@ -4,13 +4,21 @@ from pib_agent.api.schemas import (
     EnrichmentOut,
     MainsQuestionOut,
     MinistrySummary,
+    PastQuestionOut,
     PipelineRunOut,
     PrelimsQuestionOut,
     RelatedArticleOut,
     StageResultOut,
     StudyNotesOut,
 )
-from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry, PipelineRun
+from pib_agent.db.models import (
+    Article,
+    ArticleLink,
+    Enrichment,
+    Ministry,
+    PastQuestion,
+    PipelineRun,
+)
 
 
 def to_ministry_summary(ministry: Ministry) -> MinistrySummary:
@@ -62,7 +70,11 @@ def to_pipeline_run_out(run: PipelineRun) -> PipelineRunOut:
     )
 
 
-def to_article_detail(article: Article, links: list[ArticleLink]) -> ArticleDetail:
+def to_article_detail(
+    article: Article,
+    links: list[ArticleLink],
+    past_questions: list[PastQuestion] | None = None,
+) -> ArticleDetail:
     return ArticleDetail(
         id=article.id,
         prid=article.prid,
@@ -84,5 +96,14 @@ def to_article_detail(article: Article, links: list[ArticleLink]) -> ArticleDeta
                 relationship=link.relationship_note,
             )
             for link in links
+        ],
+        past_questions=[
+            PastQuestionOut(
+                year=question.year,
+                paper=question.paper,
+                question=question.question,
+                syllabus_area=question.syllabus_area,
+            )
+            for question in (past_questions or [])
         ],
     )

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry
+from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry, PastQuestion
 
 
 def _make_article(
@@ -333,3 +333,50 @@ def test_sort_relevance_breaks_ties_by_newest_first(api_client):
     body = client.get("/api/articles", params={"sort": "relevance"}).json()
 
     assert [item["title"] for item in body["items"]] == ["Newer tie", "Older tie"]
+
+
+def test_detail_surfaces_past_questions_sharing_a_syllabus_area(api_client):
+    """The tags become evidence: this area really was examined before."""
+    client, scope = api_client
+    with scope() as session:
+        ministry = Ministry(name="Ministry of Finance", slug="ministry-of-finance")
+        article = _make_article(9101, ministry)
+        session.add_all([ministry, article, _make_enrichment(article)])
+        session.add_all(
+            [
+                PastQuestion(
+                    year=2023,
+                    paper="mains",
+                    question="Discuss GST and cooperative federalism.",
+                    syllabus_area="GS Paper 3 - Economy",
+                    source="test",
+                ),
+                PastQuestion(
+                    year=2018,
+                    paper="mains",
+                    question="Assess monsoon variability in the Deccan.",
+                    syllabus_area="GS Paper 1 - Geography",
+                    source="test",
+                ),
+            ]
+        )
+        session.flush()
+        article_id = article.id
+
+    body = client.get(f"/api/articles/{article_id}").json()
+
+    assert [q["year"] for q in body["past_questions"]] == [2023]
+    assert "GST" in body["past_questions"][0]["question"]
+
+
+def test_detail_has_no_past_questions_when_the_corpus_is_empty(api_client):
+    """The normal state until an operator imports real questions."""
+    client, scope = api_client
+    with scope() as session:
+        ministry = Ministry(name="Ministry of Coal", slug="ministry-of-coal")
+        article = _make_article(9102, ministry)
+        session.add_all([ministry, article, _make_enrichment(article)])
+        session.flush()
+        article_id = article.id
+
+    assert client.get(f"/api/articles/{article_id}").json()["past_questions"] == []

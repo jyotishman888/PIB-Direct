@@ -27,6 +27,7 @@ from sqlalchemy.orm import Session
 from pib_agent.api.mapping import to_article_detail, to_article_list_item
 from pib_agent.api.schemas import MinistryListItem, TopicListItem
 from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry
+from pib_agent.pyq.matching import find_past_questions
 from pib_agent.syllabus import GS_AREAS, area_slug
 
 logger = logging.getLogger(__name__)
@@ -107,7 +108,12 @@ def export_static(out_dir: Path, session: Session, days: int = DEFAULT_WINDOW_DA
             links_by_article.setdefault(link.article_id, []).append(link)
 
     for article in articles:
-        detail = to_article_detail(article, links_by_article.get(article.id, []))
+        areas = article.enrichment.syllabus_topics if article.enrichment else []
+        detail = to_article_detail(
+            article,
+            links_by_article.get(article.id, []),
+            find_past_questions(session, areas or []),
+        )
         _write_json(out_dir / "articles" / f"{article.id}.json", detail.model_dump_json())
 
     # Ministry counts are recomputed over the window rather than copied from

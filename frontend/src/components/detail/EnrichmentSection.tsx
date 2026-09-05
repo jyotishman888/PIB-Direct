@@ -3,11 +3,12 @@ import { useEffect } from 'react'
 import type { ReactNode } from 'react'
 
 import { MainsQuestionCard } from '@/components/detail/MainsQuestionCard'
+import { PastQuestionsSection } from '@/components/detail/PastQuestionsSection'
 import { PrelimsQuestionCard } from '@/components/detail/PrelimsQuestionCard'
 import { StudyNotesSection } from '@/components/detail/StudyNotesSection'
 import { recordQuestionTotal } from '@/lib/prelimsAttempts'
 import { examTagStyle } from '@/lib/tagStyles'
-import type { Enrichment } from '@/api/types'
+import type { Enrichment, PastQuestion } from '@/api/types'
 
 const { Title } = Typography
 
@@ -22,9 +23,11 @@ function SectionHeading({ children }: { children: ReactNode }) {
 export function EnrichmentSection({
   articleId,
   enrichment,
+  pastQuestions = [],
 }: {
   articleId: number
   enrichment: Enrichment
+  pastQuestions?: PastQuestion[]
 }) {
   const questionCount = enrichment.prelims_questions.length
 
@@ -69,6 +72,10 @@ export function EnrichmentSection({
           </div>
         </section>
       )}
+
+      {/* Placed against the topics rather than the practice questions: it is
+          evidence for the tags above, not another exercise. */}
+      <PastQuestionsSection questions={pastQuestions} />
 
       {enrichment.prelims_questions.length > 0 && (
         <section>

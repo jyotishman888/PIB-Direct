@@ -9,6 +9,7 @@ from pib_agent.api.deps import get_db
 from pib_agent.api.mapping import to_article_detail, to_article_list_item
 from pib_agent.api.schemas import ArticleDetail, PaginatedArticles
 from pib_agent.db.models import Article, ArticleLink, Enrichment, Ministry
+from pib_agent.pyq.matching import find_past_questions
 from pib_agent.syllabus import area_from_slug
 
 router = APIRouter(prefix="/articles", tags=["articles"])
@@ -88,4 +89,6 @@ def get_article(article_id: int, session: Session = Depends(get_db)) -> ArticleD
         .order_by(ArticleLink.id)
         .all()
     )
-    return to_article_detail(article, links)
+    areas = article.enrichment.syllabus_topics if article.enrichment else []
+    past_questions = find_past_questions(session, areas or [])
+    return to_article_detail(article, links, past_questions)
