@@ -19,8 +19,15 @@ frontend/.env.local
 frontend/.env.*
 !frontend/.env.example
 
-# Runtime data
-/data/
+# Runtime data — the database, PDFs and imported corpora stay local, but the
+# PYQ scaffolding is source: tests/test_pyq_vocabulary.py reads vocabulary.txt,
+# so an ignored copy would fail on a fresh clone.
+/data/*
+!/data/pyq/
+/data/pyq/*
+!/data/pyq/README.md
+!/data/pyq/vocabulary.txt
+!/data/pyq/template.csv
 /logs/
 
 # Test / tooling caches

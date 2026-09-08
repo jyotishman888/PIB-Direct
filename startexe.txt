@@ -1,0 +1,56 @@
+The one you'll use most
+
+scripts\dev.cmd
+Double-click it, or run it from a terminal. Starts the API and frontend in their own windows and opens the browser. Close the two windows to stop.
+
+That indirection isn't cosmetic — anything I launch from a tool session gets killed when the session ends, which is why the servers kept vanishing between turns. Started from your desktop, they survive.
+
+Or start them separately
+
+# API — http://127.0.0.1:8000
+.venv\Scripts\pib-agent.exe serve
+
+# frontend — http://localhost:5173  (separate window)
+cd frontend
+npm run dev
+Use .venv\Scripts\pib-agent.exe rather than uv run when a window must outlive the shell; uv run is fine interactively.
+
+The pipeline
+
+uv run pib-agent run            # scrape -> enrich -> notify -> link -> study -> publish
+uv run pib-agent scrape         # just fetch today's releases
+uv run pib-agent enrich         # summarise anything not yet enriched
+uv run pib-agent study          # study notes for relevant articles
+uv run pib-agent link           # similarity links
+uv run pib-agent notify         # send pending Telegram messages
+uv run pib-agent export-static  # rebuild frontend/public/data
+uv run pib-agent doctor         # is PIB's listing still parseable?
+uv run pib-agent backup         # timestamped SQLite copy
+uv run pib-agent migrate        # apply Alembic migrations
+uv run pib-agent bot            # Telegram long-polling (separate process)
+run is what the hourly scheduled task executes. Don't run it while the task is mid-run — the lock is per-process on SQLite, so two would collide.
+
+Scheduled task
+
+Get-ScheduledTask "PIB Direct pipeline" | Get-ScheduledTaskInfo   # status
+Start-ScheduledTask "PIB Direct pipeline"                         # fire now
+powershell -File scripts\install-scheduler-task.ps1               # (re)install
+powershell -File scripts\install-scheduler-task.ps1 -Remove       # uninstall
+Tests and lint
+
+uv run pytest -q                          # 289 tests, ~2 min
+uv run ruff check src tests scripts
+cd frontend; npx tsc -b; npm run lint; npm run build
+PYQ corpus
+
+python scripts\parse_mains.py data\pdfs\*.pdf --inspect
+python scripts\parse_mains.py data\pdfs\*.pdf -o data\pyq\_raw_mains.json
+python scripts\tag_pyq.py data\pyq\_raw_mains.json --vocab data\pyq\vocabulary.txt -o data\pyq\mains.json
+uv run pib-agent import-pyq data\pyq\mains.json --source "UPSC mains GS2+GS3"
+Two things that bite
+uv run needs the project directory. Run it from C:\Users\user\projects\pib-agent — from anywhere else you get Failed to spawn: pib-agent, program not found. I hit that myself earlier this week.
+
+Port 8000 in use means an old API is still bound:
+
+
+Get-NetTCPConnection -LocalPort 8000 -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }

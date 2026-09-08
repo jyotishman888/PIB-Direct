@@ -114,6 +114,30 @@ def call_api(client, model: str, vocab: list[str], batch: list[dict]) -> list[di
     return json.loads(text)
 
 
+def load_raw(path: str) -> list[dict]:
+    """Rows from parse_mains.py, or a CSV you assembled by hand.
+
+    Hand-collecting mains questions from a text source is often faster and more
+    accurate than OCR-ing a scanned paper, and a spreadsheet is the natural
+    place to do it - so a CSV with year/paper/question columns is accepted as
+    readily as stage 2's JSON.
+    """
+    if path.lower().endswith(".csv"):
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            rows = [dict(r) for r in csv.DictReader(fh)]
+        for row in rows:
+            row["year"] = int(str(row["year"]).strip())
+            row["paper"] = str(row["paper"]).strip().lower()
+            if row.get("gs_paper"):
+                row["gs_paper"] = int(str(row["gs_paper"]).strip())
+            else:
+                row.pop("gs_paper", None)
+        return rows
+
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def load_existing_review(path: str) -> list[dict]:
     """Earlier runs' review rows, so a resume adds to the queue instead of wiping it."""
     if not os.path.exists(path):
@@ -131,7 +155,7 @@ def load_existing_review(path: str) -> list[dict]:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("raw", help="output of parse_mains.py")
+    ap.add_argument("raw", help="output of parse_mains.py, or a CSV with year/paper/question")
     ap.add_argument("--vocab", required=True, help="one canonical term per line")
     ap.add_argument("-o", "--out", required=True, help="importer-ready JSON path")
     ap.add_argument("--field", default="syllabus_area", choices=["syllabus_area", "topic"],
@@ -148,8 +172,7 @@ def main() -> None:
         sys.exit("uv pip install anthropic")
     client = Anthropic()
 
-    with open(args.raw, encoding="utf-8") as fh:
-        rows = json.load(fh)
+    rows = load_raw(args.raw)
     if args.limit:
         rows = rows[: args.limit]
 

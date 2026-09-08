@@ -1,0 +1,39 @@
+# Controlled vocabulary for scripts/tag_pyq.py --vocab
+#
+# Generated from src/pib_agent/syllabus.py. Do not hand-edit: articles and past
+# questions have to be pinned to the *same* strings, which is what makes
+# matching a join instead of fuzzy text overlap. tests/test_pyq_vocabulary.py
+# fails if this file and GS_AREAS drift apart; regenerate with the command in
+# data/pyq/README.md rather than editing here.
+GS Paper 1 - Art and Culture
+GS Paper 1 - Modern Indian History
+GS Paper 1 - Freedom Struggle
+GS Paper 1 - Post-Independence Consolidation
+GS Paper 1 - World History
+GS Paper 1 - Indian Society
+GS Paper 1 - Social Empowerment
+GS Paper 1 - Urbanisation
+GS Paper 1 - World Physical Geography
+GS Paper 1 - Resource Distribution
+GS Paper 1 - Geophysical Phenomena
+GS Paper 2 - Polity and Constitution
+GS Paper 2 - Governance
+GS Paper 2 - Social Justice
+GS Paper 2 - Welfare Schemes
+GS Paper 2 - Health
+GS Paper 2 - Education
+GS Paper 2 - Government Policies and Interventions
+GS Paper 2 - Federalism
+GS Paper 2 - Judiciary
+GS Paper 2 - Human Resources
+GS Paper 2 - Statutory and Regulatory Bodies
+GS Paper 2 - International Relations
+GS Paper 3 - Economy
+GS Paper 3 - Agriculture
+GS Paper 3 - Infrastructure
+GS Paper 3 - Science and Technology
+GS Paper 3 - Environment and Biodiversity
+GS Paper 3 - Disaster Management
+GS Paper 3 - Internal Security
+GS Paper 4 - Ethics and Integrity
+GS Paper 4 - Probity in Governance
