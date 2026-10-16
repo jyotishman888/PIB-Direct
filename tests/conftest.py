@@ -32,6 +32,8 @@ def _isolate_environment_sensitive_settings(monkeypatch):
     # ...nor reach the real site: with SITE_URL inherited from .env, publish
     # tests spent 200s each retrying a live 404 before failing.
     monkeypatch.setenv("SITE_URL", "")
+    # ...and don't let a paused .env skip the stages a test is asserting on.
+    monkeypatch.setenv("CLAUDE_ENABLED", "true")
 
     get_settings.cache_clear()
     yield

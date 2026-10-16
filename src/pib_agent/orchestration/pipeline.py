@@ -6,6 +6,7 @@ from datetime import UTC, datetime, timedelta
 
 from sqlalchemy.orm import Session
 
+from pib_agent.config import get_settings
 from pib_agent.db import PipelineRun
 from pib_agent.db import session_scope as default_session_scope
 from pib_agent.enrichment import run_enrich
@@ -109,6 +110,17 @@ def _stage_summary(name: str, stats: object) -> str:
         served = ", site serving" if stats.site_ok else ""
         return f"pushed {stats.articles} articles{served}"
     return str(stats)  # pragma: no cover - defensive fallback for an unrecognized stats type
+
+
+def _paid(fn: Callable[[], object]) -> Callable[[], object]:
+    """Gate a stage that spends Claude credits on the CLAUDE_ENABLED switch."""
+
+    def _run() -> object:
+        if not get_settings().claude_enabled:
+            raise _StageSkipped("Claude stages disabled (CLAUDE_ENABLED=false).")
+        return fn()
+
+    return _run
 
 
 def _run_notify_stage() -> NotifyStats:
@@ -219,7 +231,7 @@ def execute_pipeline_run(
     try:
         stages = [
             _run_stage("scrape", run_scrape, run_id),
-            _run_stage("enrich", run_enrich, run_id),
+            _run_stage("enrich", _paid(run_enrich), run_id),
             # notify runs before link deliberately. Everything a notification
             # needs (title, ministry, summary, UPSC flag) exists the moment
             # enrichment finishes, and nothing in the message body comes from
@@ -228,11 +240,11 @@ def execute_pipeline_run(
             # taken ~20 minutes, which is 20 minutes of "PIB published, we
             # know, you don't".
             _run_stage("notify", _run_notify_stage, run_id),
-            _run_stage("link", run_similarity, run_id),
+            _run_stage("link", _paid(run_similarity), run_id),
             # study runs last: it's the most expensive stage per article and
             # nothing downstream depends on it, so a slow or failing run here
             # never delays delivery or leaves the corpus unlinked.
-            _run_stage("study", run_study, run_id),
+            _run_stage("study", _paid(run_study), run_id),
             # publish last: it turns whatever the run produced into the bundle
             # the deployed site reads, so it must see every earlier stage's
             # output. A failure here costs freshness, never data.

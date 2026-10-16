@@ -108,6 +108,12 @@ class Settings(BaseSettings):
     # an admin chat are both configured.
     ops_alerts_enabled: bool = True
 
+    # Every stage that spends Claude credits — enrich, link and study — off in
+    # one switch, for when the budget is needed on another project. Scrape,
+    # notify and publish keep running: they cost nothing, and PIB serves only
+    # the current day, so a paused day of scraping is lost permanently.
+    claude_enabled: bool = True
+
     # Off by default so a plain `pib-agent serve` for local dev/testing never
     # silently starts spending Claude/Telegram API calls on a schedule — the
     # user opts in explicitly for unattended daily operation.

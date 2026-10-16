@@ -303,3 +303,25 @@ def test_mark_interrupted_runs_leaves_a_live_run_alone(session_scope_factory):
     assert mark_interrupted_runs(session_scope=session_scope_factory) == 0
     with session_scope_factory() as session:
         assert session.get(PipelineRun, live_id).status == "running"
+
+
+def test_claude_stages_skip_while_the_budget_is_elsewhere(monkeypatch, session_scope_factory):
+    """Scraping and publishing cost nothing and must keep running."""
+    from pib_agent.config import get_settings
+
+    _patch_all_success(monkeypatch)
+    monkeypatch.setenv("CLAUDE_ENABLED", "false")
+    get_settings.cache_clear()
+    try:
+        result = run_pipeline("manual", session_scope=session_scope_factory)
+    finally:
+        get_settings.cache_clear()
+
+    by_name = {s.name: s.status for s in result.stages}
+    assert by_name["enrich"] == "skipped"
+    assert by_name["link"] == "skipped"
+    assert by_name["study"] == "skipped"
+    assert by_name["scrape"] == "success"
+    assert by_name["publish"] == "success"
+    # skipped is not failure: no ops alert, no red run
+    assert result.status == "success"
